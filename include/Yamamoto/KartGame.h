@@ -11,7 +11,7 @@ class KartGame
 {
 public:
     // In kartCtrlStrat.cpp
-    void Init(int);
+    bool Init(int kartNo);
     void GetGorundTireNum();
     void WatchEffectAcceleration();
     void WatchAcceleration();
@@ -90,12 +90,18 @@ public:
     // void DoTurboPower();
     // void CheckBalloonPlayer();
     KartBody *mBody;
-    u8 _4[0x12 - 004];
+    u32 _4;
+    u8 _8;
+    u8 _9;
+    u8 _A[0x4];
+    u16 _E;
+    u16 _10;
     u16 mCountDownDuration;
-    u8 _14[0x20 - 0x14];
+    u8 _14[0x4];
+    float _18[2];
     JGeometry::TVec3f _20;
     JGeometry::TVec3f _2C;
-    JGeometry::TVec3f _34;
+    JGeometry::TVec3f _38;
 };
 
 #endif KARTGAME_H

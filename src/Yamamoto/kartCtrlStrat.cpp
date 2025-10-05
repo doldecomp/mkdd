@@ -1,10 +1,35 @@
+#include "Kaneshige/RaceMgr.h"
 #include "Yamamoto/KartGame.h"
+#include "Yamamoto/kartCtrl.h"
 
 #include "JSystem/JAudio/JASFakeMatch2.h"
 
 // comments inside functions are inline functions being called in that function
 
-void KartGame::Init(int) {}
+bool KartGame::Init(int kartNo) {
+    bool isRight;
+
+    mBody = GetKartCtrl()->getKartBody(kartNo);
+    _8 = 0;
+    _9 = 0;
+    _38.zero();
+    _4 = 0;
+    _18[0] = 0.f;
+    _18[1] = 0.f;
+    _E = 0;
+    _10 = 0;
+    mCountDownDuration = 0;
+
+    _A[0] = 0;
+    _A[1] = 0;
+    _A[2] = 0;
+
+    isRight = RaceMgr::getCurrentManager()->getStartPoint(&_20, &_2C, kartNo);
+
+    _20.y += 300.f;
+
+    return isRight;
+}
 
 void KartGame::GetGorundTireNum() {}
 
