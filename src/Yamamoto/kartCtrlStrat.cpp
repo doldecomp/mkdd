@@ -1,4 +1,5 @@
 #include "Kaneshige/RaceMgr.h"
+#include "Sato/ItemObjMgr.h"
 #include "Yamamoto/KartGame.h"
 #include "Yamamoto/kartCtrl.h"
 
@@ -37,7 +38,14 @@ void KartGame::WatchEffectAcceleration() {}
 
 void KartGame::WatchAcceleration() {}
 
-void KartGame::DoItmCancel() {}
+void KartGame::DoItmCancel() {
+    KartBody *body;
+
+    body = mBody;
+
+    body->mCarStatus |= 0x80000000;
+    GetItemObjMgr()->abortItemShuffle(body->mMynum);
+}
 
 void KartGame::DoStopItm() {}
 

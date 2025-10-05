@@ -89,14 +89,14 @@ public:
     // void FrameWorkL(f32, f32, KartSus *);
     // void DoTurboPower();
     // void CheckBalloonPlayer();
-    KartBody *mBody;
+    KartBody *mBody; // 00
     u32 _4;
     u8 _8;
     u8 _9;
     u8 _A[0x4];
     u16 _E;
     u16 _10;
-    u16 mCountDownDuration;
+    u16 mCountDownDuration; // 12
     u8 _14[0x4];
     float _18[2];
     JGeometry::TVec3f _20;
