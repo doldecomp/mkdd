@@ -80,6 +80,7 @@ public:
     bool isAttributeCollision();                                                                                                                  // 0x801a38a8
     f32 getWallNormal(JGeometry::TVec3f *, JGeometry::TVec3f *);                                                                                 // 0x801a38f4
     void addPullerVelocity();                                                                                                                     // 0x801a3e9c
+    GeographyObj *getObject() const;                                                                                                              // 0x802e0154
 
     // Inlines
     void getVelocity(JGeometry::TVec3f *dest) const { dest->set(mVelocity); }
