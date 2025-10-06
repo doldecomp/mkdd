@@ -84,7 +84,23 @@ void KartGame::GetGorundTireNum() {
     }
 }
 
-void KartGame::WatchEffectAcceleration() {}
+void KartGame::WatchEffectAcceleration() {
+    int num;
+    KartPad *pad;
+    KartBody *body;
+    KartGamePad *gamePad;
+
+    num = mBody->mMynum;
+    body = mBody;
+
+    gamePad = GetKartCtrl()->GetDriveCont(num);
+    pad = GetKartCtrl()->getKartPad(num);
+    if (gamePad->testButton(pad->mAccelBtn)) {
+        body->mKartRPM = GetKartCtrl()->fcnvge(body->mKartRPM, 1.f, 0.050000001f , 0.050000001f);
+    } else {
+        body->mKartRPM = GetKartCtrl()->fcnvge(body->mKartRPM, 0.f, 0.050000001f , 0.050000001f);
+    }
+}
 
 void KartGame::WatchAcceleration() {}
 
