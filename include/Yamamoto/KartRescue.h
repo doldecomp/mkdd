@@ -31,7 +31,6 @@ public:
 
     // Inline/Unused
     // void DoHang();
-// private:
     u8 _0[0xc];            //
     CrsGround mGround;     // c
     u8 _6c[0x74 - 0x6c];   // padding up to offset 0x74

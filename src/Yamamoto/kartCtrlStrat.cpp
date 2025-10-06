@@ -102,7 +102,27 @@ void KartGame::WatchEffectAcceleration() {
     }
 }
 
-void KartGame::WatchAcceleration() {}
+void KartGame::WatchAcceleration() {
+    int num;
+    KartPad *pad;
+    KartBody *body;
+    KartGamePad *gamePad;
+
+    num = mBody->mMynum;
+    body = mBody;
+
+    gamePad = GetKartCtrl()->GetDriveCont(num);
+    if ((body->mCarStatus & 0x400000) && (body->getRescue()->_6c[10] >= 3)) {
+        pad = GetKartCtrl()->getKartPad(num);
+        if (gamePad->testButton(pad->mAccelBtn)) {
+            body->_3c8 = GetKartCtrl()->fcnvge(body->_3c8, body->_3d0, 1.f , 1.f);
+            _8 |= 2;
+        } else {
+            GetKartCtrl()->ChaseFnumber(&body->_3c8, 0.f, 1.f);
+            _8 &= ~2;
+        }
+    }
+}
 
 void KartGame::DoItmCancel() {
     KartBody *body;
