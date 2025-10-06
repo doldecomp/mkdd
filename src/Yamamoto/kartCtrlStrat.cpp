@@ -133,7 +133,36 @@ void KartGame::DoItmCancel() {
     GetItemObjMgr()->abortItemShuffle(body->mMynum);
 }
 
-void KartGame::DoStopItm() {}
+void KartGame::DoStopItm() {
+    u8 num;
+    KartBody *body;
+    ItemObjMgr *itemMgr;
+    ItemObj *item;
+
+    num = mBody->mMynum;
+    body = mBody;
+
+    /* probably copy pasted this from DoItmCancel lmao */
+    body->mCarStatus |= 0x80000000;
+    GetItemObjMgr()->abortItemShuffle(body->mMynum);
+
+    itemMgr = GetItemObjMgr();
+    item = itemMgr->getKartEquipItem(num, 0);
+    itemMgr->deleteHeartItem(num);
+
+    if (item != nullptr) {
+        item->IsSuccessionItem()
+            ? item->setChildStateForceDisappear()
+            : item->setStateForceDisappear();
+    }
+
+    item = itemMgr->getKartEquipItem(num, 1);
+    if (item != nullptr) {
+        item->IsSuccessionItem()
+            ? item->setChildStateForceDisappear()
+            : item->setStateForceDisappear();
+    }
+}
 
 void KartGame::DoChange() {}
 
