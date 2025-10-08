@@ -293,7 +293,7 @@ public:
     f32 _564;
     f32 _568;
     u8 _56c[4]; // padding?
-    u64 mCarStatus;  // 570, 574 | 0x400000:off track
+    u64 mCarStatus;  // 570, 574 | 0x400000: could be off track
     u32 mGameStatus; // 578
     u32 _57c;
     u32 _580;

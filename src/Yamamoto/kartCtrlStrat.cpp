@@ -9,8 +9,6 @@
 // comments inside functions are inline functions being called in that function
 
 bool KartGame::Init(int kartNo) {
-    bool isRight;
-
     mBody = GetKartCtrl()->getKartBody(kartNo);
     _8 = 0;
     _9 = 0;
@@ -26,7 +24,7 @@ bool KartGame::Init(int kartNo) {
     mTimeToChange = 0;
     _C[0] = 0;
 
-    isRight = RaceMgr::getCurrentManager()->getStartPoint(&_20, &_2C, kartNo);
+    bool isRight = RaceMgr::getCurrentManager()->getStartPoint(&_20, &_2C, kartNo);
 
     _20.y += 300.f;
 
@@ -34,21 +32,13 @@ bool KartGame::Init(int kartNo) {
 }
 
 void KartGame::GetGorundTireNum() {
-    u8 num;
-    int idx;
-    KartBody *body;
-    KartSus *sus[4];
-    ExGeographyObj *exGeo;
+    u8 num = mBody->mMynum;
 
-    // lgtm
-    num = mBody->mMynum;
-
-    body = mBody;
+    KartBody *body = mBody;
     body->mTouchNum = 0;
 
-
-    // the compiler will optimize all of these redundant calls out, right?... right????
-    idx = num;
+    KartSus *sus[4];
+    int idx = num;
     sus[0] = GetKartCtrl()->getKartSus(idx * 4 + 0);
     sus[1] = GetKartCtrl()->getKartSus(idx * 4 + 1);
     sus[2] = GetKartCtrl()->getKartSus(idx * 4 + 2);
@@ -68,34 +58,32 @@ void KartGame::GetGorundTireNum() {
 
     GetKartCtrl()->getKartSound(num)->DoSlipSound(num);
 
-    JGeometry::TVec3f _geo0;
-    _geo0.set(body->mPlayerPosMtx[0][3],
+    // TODO: what kind of vectors are this?
+    JGeometry::TVec3f _vec0;
+    _vec0.set(body->mPlayerPosMtx[0][3],
                             body->mPlayerPosMtx[1][3],
                             body->mPlayerPosMtx[2][3]);
 
-    body->mShadowArea.searchShadow(_geo0);
+    body->mShadowArea.searchShadow(_vec0);
 
     if(body->mTouchNum != 0 && body->_58c == 7) {
-        exGeo = (ExGeographyObj*)body->mBodyGround.getObject();
+        // TODO: is getObject return type wrong or is the cast here ok? first one probably
+        ExGeographyObj *exGeo = (ExGeographyObj*)body->mBodyGround.getObject();
 
-        JGeometry::TVec3f _geo2;
-        _geo2.set(0.f, -3.5f, 0.f);
+        JGeometry::TVec3f _vec2;
+        _vec2.set(0.f, -3.5f, 0.f);
 
-        exGeo->AddVel(_geo0, _geo2);
+        exGeo->AddVel(_vec0, _vec2);
     }
 }
 
 void KartGame::WatchEffectAcceleration() {
-    int num;
-    KartPad *pad;
-    KartBody *body;
-    KartGamePad *gamePad;
+    KartBody *body = mBody;
+    int num = body->mMynum;
+    
+    const KartGamePad *gamePad = GetKartCtrl()->GetDriveCont(num);
+    const KartPad *pad = GetKartCtrl()->getKartPad(num);
 
-    num = mBody->mMynum;
-    body = mBody;
-
-    gamePad = GetKartCtrl()->GetDriveCont(num);
-    pad = GetKartCtrl()->getKartPad(num);
     if (gamePad->testButton(pad->mAccelBtn)) {
         body->mKartRPM = GetKartCtrl()->fcnvge(body->mKartRPM, 1.f, 0.050000001f , 0.050000001f);
     } else {
@@ -104,17 +92,12 @@ void KartGame::WatchEffectAcceleration() {
 }
 
 void KartGame::WatchAcceleration() {
-    int num;
-    KartPad *pad;
-    KartBody *body;
-    KartGamePad *gamePad;
+    KartBody *body = mBody;
+    int num = body->mMynum;
 
-    num = mBody->mMynum;
-    body = mBody;
-
-    gamePad = GetKartCtrl()->GetDriveCont(num);
+    const KartGamePad *gamePad = GetKartCtrl()->GetDriveCont(num);
     if ((body->mCarStatus & 0x400000) && (body->getRescue()->mState >= 3)) {
-        pad = GetKartCtrl()->getKartPad(num);
+        KartPad *pad = GetKartCtrl()->getKartPad(num);
         if (gamePad->testButton(pad->mAccelBtn)) {
             body->_3c8 = GetKartCtrl()->fcnvge(body->_3c8, body->_3d0, 1.f , 1.f);
             _8 |= 2;
@@ -126,29 +109,21 @@ void KartGame::WatchAcceleration() {
 }
 
 void KartGame::DoItmCancel() {
-    KartBody *body;
-
-    body = mBody;
+    KartBody *body = mBody;
 
     body->mCarStatus |= 0x80000000;
     GetItemObjMgr()->abortItemShuffle(body->mMynum);
 }
 
 void KartGame::DoStopItm() {
-    u8 num;
-    KartBody *body;
-    ItemObjMgr *itemMgr;
-    ItemObj *item;
+    KartBody *body = mBody;
+    u8 num = body->mMynum;
 
-    num = mBody->mMynum;
-    body = mBody;
-
-    /* probably copy pasted this from DoItmCancel lmao */
     body->mCarStatus |= 0x80000000;
     GetItemObjMgr()->abortItemShuffle(body->mMynum);
 
-    itemMgr = GetItemObjMgr();
-    item = itemMgr->getKartEquipItem(num, 0);
+    ItemObjMgr *itemMgr = GetItemObjMgr();
+    ItemObj *item = itemMgr->getKartEquipItem(num, 0);
     itemMgr->deleteHeartItem(num);
 
     if (item != nullptr) {
@@ -166,21 +141,14 @@ void KartGame::DoStopItm() {
 }
 
 void KartGame::DoChange() {
-    u8 num;
-    KartBody *body;
-    KartGamePad *gpDriver;
-    KartGamePad *gpCoDriv;
-    bool possible;
-    bool change;
+    KartBody *body = mBody;
+    int num = body->mMynum;
 
-    num = mBody->mMynum;
-    body = mBody;
-
-    gpDriver = GetKartCtrl()->GetDriveCont(num);
-    gpCoDriv = GetKartCtrl()->GetCoDriveCont(num);
-
-    change = false;
-    possible = GetKartCtrl()->MakeChangePossible(num);
+    const KartGamePad *gpDriver = GetKartCtrl()->GetDriveCont(num);
+    const KartGamePad *gpCoDriv = GetKartCtrl()->GetCoDriveCont(num);
+    
+    bool change = false;
+    const bool possible = GetKartCtrl()->MakeChangePossible(num);
 
     if (body->getChecker()->CheckCheange(num)) {
         mTimeToChange = 0;
@@ -237,23 +205,17 @@ void KartGame::DoChange() {
 void KartGame::DoSlide() {}
 
 void KartGame::DoDriftTurboSterr() {
-    KartBody *body;
-
-    body = mBody;
+    KartBody *body = mBody;
 
     if (body->mDriftSterr != 0 && body->mDriftSterr < 0x1E)
         body->mDriftSterr++;
 }
 
 void KartGame::SetDriftTurboSterr() {
-    int num;
-    int threshold;
-    KartBody *body;
+    KartBody *body = mBody;
+    const int num = mBody->mMynum;
 
-    body = mBody;
-    num = mBody->mMynum;
-
-    threshold = (body->mGameStatus & gsHasCoDriver) ? 2 : 6;
+    const int threshold = (body->mGameStatus & gsHasCoDriver) ? 2 : 6;
     if ((body->mDriftSterr) < threshold)
         return;
 

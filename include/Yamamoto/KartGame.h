@@ -91,7 +91,7 @@ public:
     // void CheckBalloonPlayer();
     KartBody *mBody; // 00
     u32 _4;
-    u8 _8;
+    u8 _8; // probably a bitmask
     u8 _9;
     u8 _A;
     u8 mTimeToChange;
