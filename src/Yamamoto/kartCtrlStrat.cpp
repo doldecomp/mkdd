@@ -245,7 +245,30 @@ void KartGame::DoDriftTurboSterr() {
         body->mDriftSterr++;
 }
 
-void KartGame::SetDriftTurboSterr() {}
+void KartGame::SetDriftTurboSterr() {
+    int num;
+    int threshold;
+    KartBody *body;
+
+    body = mBody;
+    num = mBody->mMynum;
+
+    threshold = (body->mGameStatus & gsHasCoDriver) ? 2 : 6;
+    if ((body->mDriftSterr) < threshold)
+        return;
+
+    body->mMTState++;
+
+    if (body->mMTState == 1)
+            GetKartCtrl()->getKartSound(num)->DoKartsetSeSound(0x100C9);
+    else if (body->mMTState == 2)
+            GetKartCtrl()->getKartSound(num)->DoKartsetSeSound(0x100CA);
+
+    if (body->mMTState >= 2)
+        body->mMTState = 2;
+
+    body->mDriftSterr = 0;
+}
 
 void KartGame::CheckDriftTurbo() {
     // void JUTGamePad::getMainStickX() const {}
