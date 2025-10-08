@@ -1,6 +1,7 @@
 #include "Kaneshige/RaceMgr.h"
 #include "Sato/ItemObjMgr.h"
 #include "Yamamoto/KartGame.h"
+#include "Yamamoto/kartBody.h"
 #include "Yamamoto/kartCtrl.h"
 
 #include "JSystem/JAudio/JASFakeMatch2.h"
@@ -235,7 +236,14 @@ void KartGame::DoChange() {
 
 void KartGame::DoSlide() {}
 
-void KartGame::DoDriftTurboSterr() {}
+void KartGame::DoDriftTurboSterr() {
+    KartBody *body;
+
+    body = mBody;
+
+    if (body->mDriftSterr != 0 && body->mDriftSterr < 0x1E)
+        body->mDriftSterr++;
+}
 
 void KartGame::SetDriftTurboSterr() {}
 
