@@ -34,8 +34,11 @@ public:
     u8 _0[0xc];            //
     CrsGround mGround;     // c
     u8 _6c[0x74 - 0x6c];   // padding up to offset 0x74
-    u8 mFlags;             // 74
-    u8 _75[0x8c - 0x75];   // remaining padding
+    u8 mFlags;             // 74 0x20: in rescue animation
+    u8 _75;
+    u8 mState;             // 0: no rescue 2: got out of course 3: lakitu holds us 4: lakitu lets us down
+    u8 _77;                // seems to be some kind of frame counter when getting rescued
+    u8 _78[0x8c - 0x78];   // remaining padding
     JGeometry::TVec3f _8c; //
     JGeometry::TVec3f _98; //
     JGeometry::TVec3f _a4; //

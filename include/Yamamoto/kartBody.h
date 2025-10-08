@@ -29,6 +29,14 @@
 #include "Yamamoto/KartTire.h"
 #include "Yamamoto/KartTumble.h"
 
+enum GameStatus {
+    gsHasCoDriver = 1<<0,
+};
+
+enum CarStatus {
+    csInDriverChange = 1<<7,
+};
+
 class KartBody
 {
 public:
@@ -102,7 +110,7 @@ public:
     KartSus *mKartSus[4];
     ExModel *mBodyModel;
     DriverModel *mDriverModels[2];
-    ExModel *mExModels[2];
+    DriverModel *mExModels[2];
     KartShadowModel *mShadowModel;
     CrsGround mBodyGround;
     CrsArea mShadowArea;
@@ -285,7 +293,7 @@ public:
     f32 _564;
     f32 _568;
     u8 _56c[4]; // padding?
-    u64 mCarStatus;  // 570, 574
+    u64 mCarStatus;  // 570, 574 | 0x400000:off track
     u32 mGameStatus; // 578
     u32 _57c;
     u32 _580;

@@ -21,9 +21,9 @@ bool KartGame::Init(int kartNo) {
     _10 = 0;
     mCountDownDuration = 0;
 
-    _A[0] = 0;
-    _A[1] = 0;
-    _A[2] = 0;
+    _A = 0;
+    mTimeToChange = 0;
+    _C[0] = 0;
 
     isRight = RaceMgr::getCurrentManager()->getStartPoint(&_20, &_2C, kartNo);
 
@@ -112,7 +112,7 @@ void KartGame::WatchAcceleration() {
     body = mBody;
 
     gamePad = GetKartCtrl()->GetDriveCont(num);
-    if ((body->mCarStatus & 0x400000) && (body->getRescue()->_6c[10] >= 3)) {
+    if ((body->mCarStatus & 0x400000) && (body->getRescue()->mState >= 3)) {
         pad = GetKartCtrl()->getKartPad(num);
         if (gamePad->testButton(pad->mAccelBtn)) {
             body->_3c8 = GetKartCtrl()->fcnvge(body->_3c8, body->_3d0, 1.f , 1.f);
@@ -164,7 +164,74 @@ void KartGame::DoStopItm() {
     }
 }
 
-void KartGame::DoChange() {}
+void KartGame::DoChange() {
+    u8 num;
+    KartBody *body;
+    KartGamePad *gpDriver;
+    KartGamePad *gpCoDriv;
+    bool possible;
+    bool change;
+
+    num = mBody->mMynum;
+    body = mBody;
+
+    gpDriver = GetKartCtrl()->GetDriveCont(num);
+    gpCoDriv = GetKartCtrl()->GetCoDriveCont(num);
+
+    change = false;
+    possible = GetKartCtrl()->MakeChangePossible(num);
+
+    if (body->getChecker()->CheckCheange(num)) {
+        mTimeToChange = 0;
+        return;
+    }
+
+    if (mTimeToChange)
+        mTimeToChange--;
+
+    // single player kart
+    if ((body->mGameStatus & gsHasCoDriver) == false) {
+        if (gpDriver->testTrigger(GetKartCtrl()->getKartPad(num)->mTrigZ))
+            mTimeToChange = 20;
+
+        if (body->mCarStatus & csInDriverChange) {
+            if (!(body->mExModels[0])->IsChange() && !(body->mExModels[1])->IsChange())
+                body->mCarStatus &= ~csInDriverChange;
+
+        } else if ((gpDriver->testTrigger(GetKartCtrl()->getKartPad(num)->mTrigZ)
+                    || possible || mTimeToChange != 0)) {
+            change = true;
+            mTimeToChange = 0;
+        }
+    // with co-driver, but already in change
+    } else if (body->mCarStatus & csInDriverChange) {
+        if (gpDriver->testButton(GetKartCtrl()->getKartPad(num)->mTrigZ) &&
+            gpCoDriv->testButton(GetKartCtrl()->getKartPad(num)->mTrigZ)) {
+            mTimeToChange = 20;
+        }
+
+        if (!(body->mExModels[0])->IsChange() &&
+            !(body->mExModels[1])->IsChange()) {
+            body->mCarStatus &= ~csInDriverChange;
+        }
+    // with co-driver and ready to change
+    } else if ((gpDriver->testButton(GetKartCtrl()->getKartPad(num)->mTrigZ) &&
+                gpCoDriv->testButton(GetKartCtrl()->getKartPad(num)->mTrigZ)) ||
+                mTimeToChange != 0) {
+            change = true;
+            mTimeToChange = 0;
+        }
+
+    if (!change)
+        return;
+
+    body->mCarStatus &= ~(1ull<<38);
+    body->mCarStatus |= csInDriverChange;;
+
+    GetKartCtrl()->getKartAnime(num)->mFlags |= 1;
+    GetKartCtrl()->getKartSound(num)->DoChangeVoice();
+    GetKartCtrl()->getKartSound(num)->DoChangeStarSound();
+}
 
 void KartGame::DoSlide() {}
 
