@@ -68,7 +68,7 @@ void KartGame::GetGorundTireNum() {
 
     if(body->mTouchNum != 0 && body->_58c == 7) {
         // TODO: is getObject return type wrong or is the cast here ok? first one probably
-        ExGeographyObj *exGeo = (ExGeographyObj*)body->mBodyGround.getObject();
+        ExGeographyObj *exGeo = static_cast<ExGeographyObj*>(body->mBodyGround.getObject());
 
         JGeometry::TVec3f _vec2;
         _vec2.set(0.f, -3.5f, 0.f);
@@ -187,9 +187,9 @@ void KartGame::DoChange() {
     } else if ((gpDriver->testButton(GetKartCtrl()->getKartPad(num)->mTrigZ) &&
                 gpCoDriv->testButton(GetKartCtrl()->getKartPad(num)->mTrigZ)) ||
                 mTimeToChange != 0) {
-            change = true;
-            mTimeToChange = 0;
-        }
+        change = true;
+        mTimeToChange = 0;
+    }
 
     if (!change)
         return;
@@ -202,7 +202,43 @@ void KartGame::DoChange() {
     GetKartCtrl()->getKartSound(num)->DoChangeStarSound();
 }
 
-void KartGame::DoSlide() {}
+void KartGame::DoSlide() {
+    const int num = mBody->mMynum;
+    KartBody *body = mBody;
+
+    if (body->getChecker()->CheckPartsClearKey(num) || !(body->mGameStatus & gsHasCoDriver)) {
+        return;
+    }
+
+    if (body->mSlideTimer != 0)
+        body->mSlideTimer--;
+
+    if (body->mSlideTimer == 0)
+        body->mCarStatus &= ~csDoesSlide;
+
+    if ((body->mCarStatus & csDoesSlide)) {
+        if (body->mSlideTimer >= 29) {
+            body->_2cc.x += body->_2f0.x * body->_528;
+            body->_2cc.y += body->_2f0.y * body->_528;
+            body->_2cc.z += body->_2f0.z * body->_528;
+        }
+
+        return;
+    }
+
+    KartGamePad *gpCoDriv = GetKartCtrl()->GetCoDriveCont(num);
+    if (body->getTouchNum() == 0)
+        return;
+
+    if (GetKartCtrl()->GetCarSpeed(num) <= 50.f)
+        return;
+
+    if (!gpCoDriv->testTrigger(JUTGamePad::L) && !gpCoDriv->testTrigger(JUTGamePad::R)) {
+        return;
+    }
+
+    body->mSlideTimer = 35;
+}
 
 void KartGame::DoDriftTurboSterr() {
     KartBody *body = mBody;

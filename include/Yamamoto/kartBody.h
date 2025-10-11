@@ -34,6 +34,7 @@ enum GameStatus {
 };
 
 enum CarStatus {
+    csDoesSlide = 1<<2,
     csInDriverChange = 1<<7,
 };
 
@@ -319,7 +320,7 @@ public:
     u8 mMynum;
     u8 _5b4;
     u8 _5b5; // also some timer
-    u8 _5b6; // dash timer?
+    u8 mSlideTimer; // dash timer?
     u8 mCameraNum;
     u8 _5b8[8];
     u8 _5c0;
