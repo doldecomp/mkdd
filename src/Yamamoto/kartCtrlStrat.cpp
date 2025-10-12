@@ -1,5 +1,6 @@
 #include "Kaneshige/RaceMgr.h"
 #include "Sato/ItemObjMgr.h"
+#include "Sato/JPEffectPerformer.h"
 #include "Yamamoto/KartGame.h"
 #include "Yamamoto/kartBody.h"
 #include "Yamamoto/kartCtrl.h"
@@ -210,11 +211,13 @@ void KartGame::DoSlide() {
         return;
     }
 
-    if (body->mSlideTimer != 0)
+    if (body->mSlideTimer != 0) {
         body->mSlideTimer--;
+    }
 
-    if (body->mSlideTimer == 0)
+    if (body->mSlideTimer == 0) {
         body->mCarStatus &= ~csDoesSlide;
+    }
 
     if ((body->mCarStatus & csDoesSlide)) {
         if (body->mSlideTimer >= 29) {
@@ -227,17 +230,45 @@ void KartGame::DoSlide() {
     }
 
     KartGamePad *gpCoDriv = GetKartCtrl()->GetCoDriveCont(num);
-    if (body->getTouchNum() == 0)
+    if (body->getTouchNum() == 0 || (GetKartCtrl()->GetCarSpeed(num) <= 50.f)) {
         return;
-
-    if (GetKartCtrl()->GetCarSpeed(num) <= 50.f)
-        return;
+    }
 
     if (!gpCoDriv->testTrigger(JUTGamePad::L) && !gpCoDriv->testTrigger(JUTGamePad::R)) {
         return;
     }
 
     body->mSlideTimer = 35;
+
+    if (RaceMgr::getCurrentManager()->isMirror()) {
+		if (gpCoDriv->testTrigger(JUTGamePad::L)) {
+			body->_528 = -50.f * body->_3a4;
+			GetKartCtrl()->getKartAnime(num)->mFlags |= 0x10;
+			JPEffectPerformer::setEffect(JPEffectPerformer::Effect_Unknown1b, num, body->mPos, 1);
+		} else if (gpCoDriv->testTrigger(JUTGamePad::R)) {
+			body->_528 = 50.f * body->_3a4;
+			GetKartCtrl()->getKartAnime(num)->mFlags |= 0x20;
+            JPEffectPerformer::setEffect(JPEffectPerformer::Effect_Unknown1b, num, body->mPos, 0);
+		}
+	} else {
+		if (gpCoDriv->testTrigger(JUTGamePad::R)) {
+			body->_528 = -50.f * body->_3a4;
+			GetKartCtrl()->getKartAnime(num)->mFlags |= 0x10;
+			JPEffectPerformer::setEffect(JPEffectPerformer::Effect_Unknown1b, num, body->mPos, 1);
+		} else if (gpCoDriv->testTrigger(JUTGamePad::L)) {
+			body->_528 = 50.f * body->_3a4;
+			GetKartCtrl()->getKartAnime(num)->mFlags |= 0x20;
+			JPEffectPerformer::setEffect(JPEffectPerformer::Effect_Unknown1b, num, body->mPos, 0);
+		}
+	}
+
+	body->_2cc.x += body->_2f0.x * body->_528;
+	body->_2cc.y += body->_2f0.y * body->_528;
+	body->_2cc.z += body->_2f0.z * body->_528;
+
+	body->mCarStatus |= csDoesSlide;
+	GetKartCtrl()->getKartSound(num)->DoStrikeSound();
+	GetKartCtrl()->getKartSound(num)->DoTandemVoice(2);
 }
 
 void KartGame::DoDriftTurboSterr() {
