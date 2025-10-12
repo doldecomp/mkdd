@@ -29,18 +29,18 @@
 #include "Yamamoto/KartTire.h"
 #include "Yamamoto/KartTumble.h"
 
-enum GameStatus {
-    gsHasCoDriver = 1<<0,
-};
-
-enum CarStatus {
-    csDoesSlide = 1<<2,
-    csInDriverChange = 1<<7,
-};
-
 class KartBody
 {
 public:
+    enum GameStatus {
+        HasCoDriver = 1<<0,
+    };
+
+    enum CarStatus {
+        DoesSlide = 1<<2,
+        InDriverChange = 1<<7,
+    };
+
     KartBody() {}
 
     void DegubBody(u32);

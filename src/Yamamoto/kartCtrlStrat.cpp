@@ -160,13 +160,13 @@ void KartGame::DoChange() {
         mTimeToChange--;
 
     // single player kart
-    if ((body->mGameStatus & gsHasCoDriver) == false) {
+    if ((body->mGameStatus & KartBody::HasCoDriver) == false) {
         if (gpDriver->testTrigger(GetKartCtrl()->getKartPad(num)->mTrigZ))
             mTimeToChange = 20;
 
-        if (body->mCarStatus & csInDriverChange) {
+        if (body->mCarStatus & KartBody::InDriverChange) {
             if (!(body->mExModels[0])->IsChange() && !(body->mExModels[1])->IsChange())
-                body->mCarStatus &= ~csInDriverChange;
+                body->mCarStatus &= ~KartBody::InDriverChange;
 
         } else if ((gpDriver->testTrigger(GetKartCtrl()->getKartPad(num)->mTrigZ)
                     || possible || mTimeToChange != 0)) {
@@ -174,7 +174,7 @@ void KartGame::DoChange() {
             mTimeToChange = 0;
         }
     // with co-driver, but already in change
-    } else if (body->mCarStatus & csInDriverChange) {
+    } else if (body->mCarStatus & KartBody::InDriverChange) {
         if (gpDriver->testButton(GetKartCtrl()->getKartPad(num)->mTrigZ) &&
             gpCoDriv->testButton(GetKartCtrl()->getKartPad(num)->mTrigZ)) {
             mTimeToChange = 20;
@@ -182,7 +182,7 @@ void KartGame::DoChange() {
 
         if (!(body->mExModels[0])->IsChange() &&
             !(body->mExModels[1])->IsChange()) {
-            body->mCarStatus &= ~csInDriverChange;
+            body->mCarStatus &= ~KartBody::InDriverChange;
         }
     // with co-driver and ready to change
     } else if ((gpDriver->testButton(GetKartCtrl()->getKartPad(num)->mTrigZ) &&
@@ -196,7 +196,7 @@ void KartGame::DoChange() {
         return;
 
     body->mCarStatus &= ~(1ull<<38);
-    body->mCarStatus |= csInDriverChange;;
+    body->mCarStatus |= KartBody::InDriverChange;;
 
     GetKartCtrl()->getKartAnime(num)->mFlags |= 1;
     GetKartCtrl()->getKartSound(num)->DoChangeVoice();
@@ -207,7 +207,7 @@ void KartGame::DoSlide() {
     const int num = mBody->mMynum;
     KartBody *body = mBody;
 
-    if (body->getChecker()->CheckPartsClearKey(num) || !(body->mGameStatus & gsHasCoDriver)) {
+    if (body->getChecker()->CheckPartsClearKey(num) || !(body->mGameStatus & KartBody::HasCoDriver)) {
         return;
     }
 
@@ -216,10 +216,10 @@ void KartGame::DoSlide() {
     }
 
     if (body->mSlideTimer == 0) {
-        body->mCarStatus &= ~csDoesSlide;
+        body->mCarStatus &= ~KartBody::DoesSlide;
     }
 
-    if ((body->mCarStatus & csDoesSlide)) {
+    if ((body->mCarStatus & KartBody::DoesSlide)) {
         if (body->mSlideTimer >= 29) {
             body->_2cc.x += body->_2f0.x * body->_528;
             body->_2cc.y += body->_2f0.y * body->_528;
@@ -266,7 +266,7 @@ void KartGame::DoSlide() {
 	body->_2cc.y += body->_2f0.y * body->_528;
 	body->_2cc.z += body->_2f0.z * body->_528;
 
-	body->mCarStatus |= csDoesSlide;
+	body->mCarStatus |= KartBody::DoesSlide;
 	GetKartCtrl()->getKartSound(num)->DoStrikeSound();
 	GetKartCtrl()->getKartSound(num)->DoTandemVoice(2);
 }
@@ -282,7 +282,7 @@ void KartGame::SetDriftTurboSterr() {
     KartBody *body = mBody;
     const int num = mBody->mMynum;
 
-    const int threshold = (body->mGameStatus & gsHasCoDriver) ? 2 : 6;
+    const int threshold = (body->mGameStatus & KartBody::HasCoDriver) ? 2 : 6;
     if ((body->mDriftSterr) < threshold)
         return;
 
