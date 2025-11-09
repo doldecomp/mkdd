@@ -32,13 +32,18 @@
 class KartBody
 {
 public:
+    // TODO: move in KartGame
     enum GameStatus {
         HasCoDriver = 1<<0,
+        GsUnknown3 = 1<<3,
     };
 
     enum CarStatus {
+        CsUnknown0 = 1<<0,
+        CsUnknown1 = 1<<1,
         DoesSlide = 1<<2,
         InDriverChange = 1<<7,
+        CsUnknown9 = 1<<9,
     };
 
     KartBody() {}

@@ -299,8 +299,65 @@ void KartGame::SetDriftTurboSterr() {
     body->mDriftSterr = 0;
 }
 
-void KartGame::CheckDriftTurbo() {
-    // void JUTGamePad::getMainStickX() const {}
+void KartGame::CheckDriftTurbo(void) {
+	KartBody *body = mBody;
+	int num = body->mMynum;
+
+	if (GetKartCtrl()->GetCarSpeed(num) <= 50.f) {
+		body->mCarStatus &= ~(1ull<<41);
+        body->mMTBoost = 0;
+		body->mDriftSterr = 0;
+		body->mMTState = 0;
+		return;
+	}
+
+	if (body->mGameStatus & KartBody::GsUnknown3)
+		return;
+
+	bool didDriftSterr = false;
+	KartGamePad *gpCoDriv = GetKartCtrl()->GetCoDriveCont(num);
+
+	if (body->mCarStatus & KartBody::CsUnknown0) {
+		if (body->mGameStatus & KartBody::HasCoDriver) {
+			if (gpCoDriv->getMainStickX() < 0.5f) {
+				didDriftSterr = true;
+				DoDriftTurboSterr();
+			}
+		} else if (body->mFrame >= -0.5f) {
+            didDriftSterr = true;
+            DoDriftTurboSterr();
+		}
+
+		if (!didDriftSterr) {
+			SetDriftTurboSterr();
+			body->mDriftSterr = 1;
+		}
+	} else {
+		if ((body->mCarStatus & KartBody::CsUnknown1) != 0) {
+			if (body->mGameStatus & KartBody::HasCoDriver) {
+				if (gpCoDriv->getMainStickX() > -0.30000001f) {
+					didDriftSterr = true;
+					DoDriftTurboSterr();
+				}
+			} else {
+				if (body->mFrame <= 0.5f) {
+					didDriftSterr = true;
+					DoDriftTurboSterr();
+				}
+			}
+
+			if (!didDriftSterr) {
+				SetDriftTurboSterr();
+				body->mDriftSterr = 1;
+			}
+        } else {
+            body->mMTState = 0;
+            body->mDriftSterr = 0;
+        }
+    }
+
+	body->mCarStatus &= ~(1ull<<41);
+	body->mMTBoost = 0;
 }
 
 void KartGame::DoWarmUpRoll() {}
