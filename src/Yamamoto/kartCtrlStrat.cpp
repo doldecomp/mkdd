@@ -362,7 +362,62 @@ void KartGame::CheckDriftTurbo(void) {
 
 void KartGame::DoWarmUpRoll() {}
 
-void KartGame::DoRollAnim() {}
+void KartGame::DoRollAnim() {
+    KartBody *body = mBody;
+	int kartNo = body->mMynum;
+
+    KartGamePad *gpDriver = GetKartCtrl()->GetDriveCont(kartNo);
+    if (gpDriver->getMainStickX() >= 0.2f) {
+        body->_394 = -1.0f;
+    } else if (gpDriver->getMainStickX() <= -0.2f) {
+        body->_394 = 1.0f;
+    } else {
+        body->_394 = .0f;
+    }
+
+    body->mLiftframe = GetKartCtrl()->fcnvge(body->mLiftframe, body->_394, 0.050000001f, 0.050000001f);
+
+    if (GetKartCtrl()->getKartAnime(kartNo)->IsDrift(kartNo) == false &&
+        GetKartCtrl()->getKartAnime(kartNo)->IsDriftStart(kartNo) == false) {
+
+        if (gpDriver->getMainStickX() >= 0.2f) {
+          body->_39c = -1.0f;
+        } else if (gpDriver->getMainStickX() <= -0.2f) {
+          body->_39c = 1.0f;
+        } else {
+          body->_39c = 0.0f;
+        }
+
+        body->_398 = GetKartCtrl()->fcnvge(body->_398, body->_39c, 0.050000001f,
+                                           0.050000001f);
+    }
+
+    if (body->mCarStatus & KartBody::CsUnknown0) {
+        body->_394 = -1.0f;
+        body->mLiftframe = -1.0f;
+        if (GetKartCtrl()->getKartAnime(kartNo)->IsDriftLeft(kartNo)) {
+            body->_39c = 1.0f;
+            body->_398 = 1.0f;
+        } else {
+            body->_39c = -1.0f;
+            body->_398 = -1.0f;
+        }
+
+        return;
+    }
+    
+    if (body->mCarStatus & KartBody::CsUnknown1) {
+        body->_394 = 1.0f;
+        body->mLiftframe = 1.0f;
+        if (GetKartCtrl()->getKartAnime(kartNo)->IsDriftRight(kartNo)) {
+            body->_39c = -1.0f;
+            body->_398 = -1.0f;
+        } else {
+            body->_39c = 1.0f;
+            body->_398 = 1.0f;
+        }
+    }
+}
 
 void KartGame::DoDriftClear() {}
 
