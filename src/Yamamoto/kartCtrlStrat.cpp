@@ -419,7 +419,15 @@ void KartGame::DoRollAnim() {
     }
 }
 
-void KartGame::DoDriftClear() {}
+void KartGame::DoDriftClear() {
+    KartBody *body = mBody;
+
+    body->mMTBoost = 0;
+    body->mDriftSterr = 0;
+    body->mMTState = 0;
+    body->mCarStatus &= ~(1ull << 41);
+    body->mCarStatus &= ~(KartBody::CsUnknown0 | KartBody::CsUnknown1 | (1ull << 47) | (1ull << 48));
+}
 
 void KartGame::DoRoll() {}
 
