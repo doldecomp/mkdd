@@ -429,7 +429,52 @@ void KartGame::DoDriftClear() {
     body->mCarStatus &= ~(KartBody::CsUnknown0 | KartBody::CsUnknown1 | (1ull << 47) | (1ull << 48));
 }
 
-void KartGame::DoRoll() {}
+void KartGame::DoRoll() {
+    KartBody *body = mBody;
+
+    MakeJump();
+
+    // TODO: `fmr f31, f1` after DoWarmupRoll??? Is it returning?
+    DoWarmUpRoll();
+
+    if (GetKartCtrl()->GetCarSpeed(body->mMynum) <= 30.f || GetKartCtrl()->GetCarSpeed(body->mMynum) <= 40.f && body->_3c8 == 0.f) {
+        DoDriftClear();
+    }
+
+    if (GetKartCtrl()->GetCarSpeed(body->mMynum) < 40.f && body->_510 > 2.44222f) {
+        DoDriftClear();
+    }
+
+    if (GetKartCtrl()->GetCarSpeed(body->mMynum) <= 80.f && body->_3cc != 0.f) {
+        DoDriftClear();
+    }
+
+    if (body->mCarStatus & KartBody::CsUnknown3) {
+        DoDriftClear();
+    }
+
+    f32 _unk0 = body->_458;
+    if (_unk0 < 2.f) {
+        body->_4c4 = GetKartCtrl()->fcnvge(body->_4c4, _unk0 * 0.0088235298f, 0.1f, 0.1f);
+    } else {
+        if (_unk0 < 18.f) {
+            body->_4c4 = GetKartCtrl()->fcnvge(body->_4c4, _unk0 * 0.0023529413f, 0.1f, 0.1f);
+        } else {
+            int touchNum = body->getTouchNum();
+            f32 _unk2 = (touchNum == 0)
+                ? 0.023529412f * _unk0
+                : (body->_4f8 / 170.f) * _unk0;
+            
+            GetKartCtrl()->ChaseFnumber(&body->_4c4, _unk2, body->_3b4);
+        }
+    }
+
+    if (!(body->mCarStatus & (KartBody::CsUnknown0 | KartBody::CsUnknown1))) {
+        body->_4c4 = 0.f;
+    }
+
+    DoRollAnim();
+}
 
 void KartGame::DoTestPitch() {
     // void JUTGamePad::getMainStickY() const {}
