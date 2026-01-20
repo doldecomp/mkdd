@@ -44,6 +44,7 @@ public:
         DoesSlide = 1<<2,
         CsUnknown3 = 1<<3,
         InDriverChange = 1<<7,
+        CsUnknown8 = 1<<8,
         CsUnknown9 = 1<<9,
         CsUnknown12 = 1<<12,
         CsUnknown15 = 1<<15,

@@ -1,4 +1,5 @@
 #include "Kaneshige/RaceMgr.h"
+#include "Osako/kartPad.h"
 #include "Sato/ItemObjMgr.h"
 #include "Sato/JPEffectPerformer.h"
 #include "Yamamoto/KartGame.h"
@@ -572,7 +573,41 @@ void KartGame::DoRoll() {
 }
 
 void KartGame::DoTestPitch() {
-    // void JUTGamePad::getMainStickY() const {}
+    KartBody *body = mBody;
+
+    KartGamePad *pad = GetKartCtrl()->GetDriveCont(body->mMynum);
+    if (body->getTouchNum() != 0) {
+        body->_4c0 = 0.f;
+        if (body->mCarStatus & (KartBody::CsUnknown8 | KartBody::CsUnknown9)) {
+            body->getStrat()->PitchClear();
+        }
+        return;
+    }
+
+
+    f32 mainY = pad->getMainStickY();
+    if (mainY > 0.f) {
+        body->mCarStatus |= KartBody::CsUnknown9;
+        body->mCarStatus &= ~KartBody::CsUnknown8;
+    } else if (mainY < 0.f) {
+        body->mCarStatus |= KartBody::CsUnknown8;
+        body->mCarStatus &= ~KartBody::CsUnknown9;
+    }
+
+    f32 x;
+    f32 y = 0.0;
+    if (mainY < 0.5 && mainY > -0.5f) {
+        x = 0.0;
+    } else {
+        y = 0.2f;
+        x = 1.5f * mainY;
+    }
+
+    GetKartCtrl()->ChaseFnumber(&body->_4c0, x, y);
+    if (body->_4c0 == 0.f) {
+        body->getStrat()->PitchClear();
+    }
+
 }
 
 void KartGame::DoLiftTurbo() {}
