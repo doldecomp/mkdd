@@ -581,7 +581,18 @@ void KartGame::DoTurbo() {}
 
 void KartGame::DoRollThrow() {}
 
-void KartGame::DoRollOver() {}
+// literally a no-op always returning 0
+int KartGame::DoRollOver() {
+    KartBody *body = mBody;
+
+    if (body->getTouchNum() == 0 ||
+        body->mCarStatus & (KartBody::CsUnknown12 | KartBody::CsUnknown18) ||
+        body->mGameStatus & (KartBody::GsUnknown3)) {
+            return 0;
+    }
+
+    return 0;
+}
 
 void KartGame::DoWanWan() {
     // void ItemWanWanObj::getDifVel() const {}

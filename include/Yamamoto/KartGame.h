@@ -30,7 +30,7 @@ public:
     void DoLiftTurbo();
     void DoTurbo();
     void DoRollThrow();
-    void DoRollOver();
+    int DoRollOver();
     void DoWanWan();
     void DoPushStart();
     void DoBalance(f32 *, f32);

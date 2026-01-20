@@ -45,7 +45,9 @@ public:
         CsUnknown3 = 1<<3,
         InDriverChange = 1<<7,
         CsUnknown9 = 1<<9,
+        CsUnknown12 = 1<<12,
         CsUnknown15 = 1<<15,
+        CsUnknown18 = 1<<18,
     };
 
     KartBody() {}
