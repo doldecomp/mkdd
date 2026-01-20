@@ -360,7 +360,104 @@ void KartGame::CheckDriftTurbo(void) {
 	body->mMTBoost = 0;
 }
 
-void KartGame::DoWarmUpRoll() {}
+f32 KartGame::DoWarmUpRoll() {
+    int kartNo = mBody->mMynum;
+    KartBody *body = mBody;
+
+    KartGamePad *gpDriver = GetKartCtrl()->GetDriveCont(kartNo);
+    if (body->mCarStatus & KartBody::DoesSlide) {
+        body->mCarStatus &= ~(KartBody::CsUnknown0 | KartBody::CsUnknown1 | 1ull<<41 | 1ull<<47 | 1ull<<48);
+        body->_4d8 = 0.f;
+        body->_4d4 = 0.f;
+        body->_4c4 = 0.f;
+        body->_394 = 0.f;
+        body->mLiftframe = 0.f;
+        body->_39c = 0.f;
+        body->_398 = 0.f;
+        body->mMTBoost = 0;
+        body->mDriftSterr = 0;
+        body->mMTState = 0;
+        body->mSterrNorm = 0.f;
+    }
+
+    if (body->mCarStatus & (KartBody::CsUnknown0 | KartBody::CsUnknown1) &&
+            gpDriver->testTrigger(GetKartCtrl()->getKartPad(kartNo)->mTrigL |
+                                  GetKartCtrl()->getKartPad(kartNo)->mTrigR)) {
+        DoDriftClear();
+        return 0.f;
+    }
+
+    float ret;
+    if (gpDriver->testButton(GetKartCtrl()->getKartPad(kartNo)->mTrigL |
+                             GetKartCtrl()->getKartPad(kartNo)->mTrigR)) {
+        if (body->mCarStatus & KartBody::CsUnknown0) {
+            body->mCarStatus |= (KartBody::CsUnknown0 | 1ull<<47);
+            body->mCarStatus &= ~(KartBody::CsUnknown1 | 1ull<<48);
+            ret = 150.f;
+            CheckDriftTurbo();
+        } else if (body->mCarStatus & KartBody::CsUnknown1) {
+            body->mCarStatus |= (KartBody::CsUnknown1 | 1ull<<48);
+            body->mCarStatus &= ~(KartBody::CsUnknown0 | 1ull<<47);
+            ret = -150.f;
+            CheckDriftTurbo();
+        } else {
+            ret = 0.f;
+            if (body->mFrame < -0.8f) {
+                ret = 150.f;
+                body->_4d4 = 0.f;
+                body->mCarStatus |= (KartBody::CsUnknown0 | 1ull<<47);
+                body->mCarStatus &= ~(KartBody::CsUnknown1 | 1ull<<48);
+                body->mSterrNorm = 0.043611001f;
+                if (body->mFrame < -0.90000004f) {
+                    body->mSterrNorm = 0.1133888f;
+                }
+            } else if (body->mFrame > 0.8f) {
+                ret = -150.f;
+                body->_4d4 = 0.f;
+                body->mCarStatus |= (KartBody::CsUnknown1 | 1ull<<48);
+                body->mCarStatus &= ~(KartBody::CsUnknown0 | 1ull<<47);
+                body->mSterrNorm = 0.043611001f;
+                if (body->mFrame < 0.90000004f) {
+                    body->mSterrNorm = 0.1133888f;
+                }
+            } else {
+                body->mMTBoost = 0;
+                body->mDriftSterr = 0;
+                body->mMTState = 0;
+                body->mCarStatus &= ~(1ull<<41);
+                body->mCarStatus &= ~(KartBody::CsUnknown0 | KartBody::CsUnknown1 | 1ull<<47 | 1ull<<48);
+            }
+        }
+
+        KartAnime *anime = GetKartCtrl()->getKartAnime(kartNo);
+        if (!anime->IsProhibition(kartNo) && !body->mDriverModels[0]->IsSit() &&
+            !body->getChecker()->CheckOnlyTandemPartsClearKey(kartNo) &&
+            !(body->mCarStatus & (KartBody::CsUnknown0 | KartBody::CsUnknown1))) {
+                GetKartCtrl()->getKartAnime(kartNo)->mFlags |= 0x200u;
+        }
+    } else {
+        if (!(body->mCarStatus & KartBody::CsUnknown15) && body->mDriverModels[0]->IsSit() &&
+            !body->mDriverModels[0]->IsStand() && !body->getChecker()->CheckOnlyTandemPartsClearKey(kartNo)) {
+                GetKartCtrl()->getKartAnime(kartNo)->mFlags |= 0x400u;
+        }
+
+        if (body->mMTState >= 2u) {
+           body->mCarStatus |= 1ull<<41;
+           body->mMTBoost = body->mMTBoostMax;
+           JPEffectPerformer::setEffect(JPEffectPerformer::Effect_Unknown1A, kartNo, body->mPos, 0);
+           GetKartCtrl()->getKartSound(body->mMynum)->DoKartMiniTuroboSound();
+           GetKartCtrl()->getKartSound(body->mMynum)->DoTandemVoice(0);
+           body->getStrat()->DoMotor(MotorManager::MotorType_6);
+        }
+
+        body->mDriftSterr = 0;
+        body->mMTState = 0;
+        body->mCarStatus &= ~(KartBody::CsUnknown0 | KartBody::CsUnknown1 | 1ull<<47 | 1ull<<48);
+        ret = 0.f;
+    }
+
+    return ret;
+}
 
 void KartGame::DoRollAnim() {
     KartBody *body = mBody;
