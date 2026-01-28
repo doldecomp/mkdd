@@ -43,12 +43,17 @@ public:
         CsUnknown1 = 1<<1,
         DoesSlide = 1<<2,
         CsUnknown3 = 1<<3,
+        CsUnknown5 = 1<<5,
         InDriverChange = 1<<7,
         CsUnknown8 = 1<<8,
         CsUnknown9 = 1<<9,
+        CsUnknown10 = 1<<10,
+        CsUnknown11 = 1<<11,
         CsUnknown12 = 1<<12,
         CsUnknown15 = 1<<15,
         CsUnknown18 = 1<<18,
+        CsUnknown26 = 1<<26,
+        CsUnknown27 = 1<<27,
     };
 
     KartBody() {}
