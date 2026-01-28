@@ -54,7 +54,7 @@ public:
     f32 _10c;
     f32 _110;
     u8 _114[0x124 - 0x114];
-    u32 _124;
+    u32 _124; // bitmask? 0: on ground?
     Mtx _128;
     Mtx _158;
     Mtx _188;

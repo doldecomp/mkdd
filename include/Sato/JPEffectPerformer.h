@@ -16,6 +16,8 @@ public:
         Effect_Unknown6 = 0x6,      // Something reflection related...?
         Effect_Unknown12 = 0x12,    // Star react.
         Effect_Burn = 0x13,
+        Effect_Unknown1b = 0x1b,    // something slide related
+        Effect_Unknown1A = 0x1A,
         Effect_Star = 0x1c
     };
 

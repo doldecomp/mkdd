@@ -1926,7 +1926,7 @@ void KartBody::Init(int index) {
     _5b0 = 0;
     _5b1 = 0;
     mDriver = 0;
-    _5b6 = 0;
+    mSlideTimer = 0;
     mMynum = 0;
     _5c5 = 0;
     _592 = 0;

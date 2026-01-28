@@ -1,119 +1,956 @@
+#include "JSystem/JGeometry/Vec.h"
+#include "Kaneshige/RaceMgr.h"
+#include "Osako/kartPad.h"
+#include "Sato/ItemObjMgr.h"
+#include "Sato/JPEffectPerformer.h"
 #include "Yamamoto/KartGame.h"
+#include "Yamamoto/kartBody.h"
+#include "Yamamoto/kartCtrl.h"
 
 #include "JSystem/JAudio/JASFakeMatch2.h"
+#include "dolphin/mtx.h"
 
 // comments inside functions are inline functions being called in that function
 
-void KartGame::Init(int) {}
+bool
+KartGame::Init(int kartNo)
+{
+	mBody = GetKartCtrl()->getKartBody(kartNo);
+	_8 = 0;
+	_9 = 0;
+	_38.zero();
+	_4 = 0;
+	_18[0] = 0.f;
+	_18[1] = 0.f;
+	_E = 0;
+	_10 = 0;
+	mCountDownDuration = 0;
 
-void KartGame::GetGorundTireNum() {}
+	_A = 0;
+	mTimeToChange = 0;
+	_C[0] = 0;
 
-void KartGame::WatchEffectAcceleration() {}
+	bool isRight =
+	    RaceMgr::getCurrentManager()->getStartPoint(&_20, &_2C, kartNo);
 
-void KartGame::WatchAcceleration() {}
+	_20.y += 300.f;
 
-void KartGame::DoItmCancel() {}
-
-void KartGame::DoStopItm() {}
-
-void KartGame::DoChange() {}
-
-void KartGame::DoSlide() {}
-
-void KartGame::DoDriftTurboSterr() {}
-
-void KartGame::SetDriftTurboSterr() {}
-
-void KartGame::CheckDriftTurbo() {
-    // void JUTGamePad::getMainStickX() const {}
+	return isRight;
 }
 
-void KartGame::DoWarmUpRoll() {}
+void
+KartGame::GetGorundTireNum()
+{
+	u8 num = mBody->mMynum;
 
-void KartGame::DoRollAnim() {}
+	KartBody *body = mBody;
+	body->mTouchNum = 0;
 
-void KartGame::DoDriftClear() {}
+	KartSus *sus[4];
+	int	 idx = num;
+	sus[0] = GetKartCtrl()->getKartSus(idx * 4 + 0);
+	sus[1] = GetKartCtrl()->getKartSus(idx * 4 + 1);
+	sus[2] = GetKartCtrl()->getKartSus(idx * 4 + 2);
+	sus[3] = GetKartCtrl()->getKartSus(idx * 4 + 3);
 
-void KartGame::DoRoll() {}
+	if (sus[0]->_124 & 1)
+		++body->mTouchNum;
 
-void KartGame::DoTestPitch() {
-    // void JUTGamePad::getMainStickY() const {}
+	if (sus[1]->_124 & 1)
+		++body->mTouchNum;
+
+	if (sus[2]->_124 & 1)
+		++body->mTouchNum;
+
+	if (sus[3]->_124 & 1)
+		++body->mTouchNum;
+
+	GetKartCtrl()->getKartSound(num)->DoSlipSound(num);
+
+	// TODO: what kind of vectors are this?
+	JGeometry::TVec3f _vec0;
+	_vec0.set(body->mPlayerPosMtx[0][3], body->mPlayerPosMtx[1][3],
+		  body->mPlayerPosMtx[2][3]);
+
+	body->mShadowArea.searchShadow(_vec0);
+
+	if (body->mTouchNum != 0 && body->_58c == 7) {
+		// TODO: is getObject return type wrong or is the cast here ok?
+		// first one probably
+		ExGeographyObj *exGeo = static_cast<ExGeographyObj *>(
+		    body->mBodyGround.getObject());
+
+		JGeometry::TVec3f _vec2;
+		_vec2.set(0.f, -3.5f, 0.f);
+
+		exGeo->AddVel(_vec0, _vec2);
+	}
 }
 
-void KartGame::DoLiftTurbo() {}
+void
+KartGame::WatchEffectAcceleration()
+{
+	KartBody *body = mBody;
+	int	  num = body->mMynum;
 
-void KartGame::DoTurbo() {}
+	const KartGamePad *gamePad = GetKartCtrl()->GetDriveCont(num);
+	const KartPad	  *pad = GetKartCtrl()->getKartPad(num);
 
-void KartGame::DoRollThrow() {}
-
-void KartGame::DoRollOver() {}
-
-void KartGame::DoWanWan() {
-    // void ItemWanWanObj::getDifVel() const {}
-    // void ItemWanWanObj::getPullVec(JGeometry::TVec3<float> *) {}
+	if (gamePad->testButton(pad->mAccelBtn)) {
+		body->mKartRPM = GetKartCtrl()->fcnvge(
+		    body->mKartRPM, 1.f, 0.050000001f, 0.050000001f);
+	} else {
+		body->mKartRPM = GetKartCtrl()->fcnvge(
+		    body->mKartRPM, 0.f, 0.050000001f, 0.050000001f);
+	}
 }
 
-void KartGame::DoPushStart() {}
+void
+KartGame::WatchAcceleration()
+{
+	KartBody *body = mBody;
+	int	  num = body->mMynum;
 
-void KartGame::DoBalance(float *, float) {}
-
-void KartGame::MakeClear() {}
-
-void KartGame::MakeBoardDash() {}
-
-void KartGame::MakeJumpDash() {}
-
-void KartGame::MakeSpJumpDash() {}
-
-void KartGame::MakeMashDash() {}
-
-void KartGame::MakeGoldenMashDash() {}
-
-void KartGame::MakeStartDash() {}
-
-void KartGame::MakeCrashDash() {}
-
-void KartGame::MakeWheelSpin() {}
-
-void KartGame::MakeJump() {}
-
-void KartGame::DoAirCheck() {}
-
-void KartGame::DoRearSlidePower() {}
-
-void KartGame::DoRearSlideBody() {
-    // void JGeometry::TVec3<float>::div(float) {}
+	const KartGamePad *gamePad = GetKartCtrl()->GetDriveCont(num);
+	if ((body->mCarStatus & 0x400000) && (body->getRescue()->mState >= 3)) {
+		KartPad *pad = GetKartCtrl()->getKartPad(num);
+		if (gamePad->testButton(pad->mAccelBtn)) {
+			body->_3c8 = GetKartCtrl()->fcnvge(
+			    body->_3c8, body->_3d0, 1.f, 1.f);
+			_8 |= 2;
+		} else {
+			GetKartCtrl()->ChaseFnumber(&body->_3c8, 0.f, 1.f);
+			_8 &= ~2;
+		}
+	}
 }
 
-void KartGame::DoCorner() {}
+void
+KartGame::DoItmCancel()
+{
+	KartBody *body = mBody;
 
-void KartGame::FrameWork(float, KartSus *, KartSus *) {}
-
-void KartGame::DoBodyAction() {}
-
-void KartGame::DoElementForce() {}
-
-bool KartGame::CheckBalloon() {}
-
-void KartGame::SetRank() {}
-
-void KartGame::RankWatchMan() {}
-
-void KartGame::ItemWatchMan(ItemObj *) {}
-
-void KartGame::AfterItemWatchMan() {}
-
-void KartGame::DoFlagCtrl() {}
-
-void KartGame::KeepWatch() {}
-
-void KartGame::DoActionMgr() {
-    // void KartBody::getStar() {}
-    // void ItemObjMgr::getKartHitList(int) {}
+	body->mCarStatus |= 0x80000000;
+	GetItemObjMgr()->abortItemShuffle(body->mMynum);
 }
 
-void KartGame::DoActionCtrl() {}
+void
+KartGame::DoStopItm()
+{
+	KartBody *body = mBody;
+	u8	  num = body->mMynum;
 
-void KartGame::DoStatus() {
-    // void KartCtrl::DoAnime(int) {}
+	body->mCarStatus |= 0x80000000;
+	GetItemObjMgr()->abortItemShuffle(body->mMynum);
+
+	ItemObjMgr *itemMgr = GetItemObjMgr();
+	ItemObj	   *item = itemMgr->getKartEquipItem(num, 0);
+	itemMgr->deleteHeartItem(num);
+
+	if (item != nullptr) {
+		item->IsSuccessionItem() ? item->setChildStateForceDisappear()
+					 : item->setStateForceDisappear();
+	}
+
+	item = itemMgr->getKartEquipItem(num, 1);
+	if (item != nullptr) {
+		item->IsSuccessionItem() ? item->setChildStateForceDisappear()
+					 : item->setStateForceDisappear();
+	}
+}
+
+void
+KartGame::DoChange()
+{
+	KartBody *body = mBody;
+	int	  num = body->mMynum;
+
+	const KartGamePad *gpDriver = GetKartCtrl()->GetDriveCont(num);
+	const KartGamePad *gpCoDriv = GetKartCtrl()->GetCoDriveCont(num);
+
+	bool	   change = false;
+	const bool possible = GetKartCtrl()->MakeChangePossible(num);
+
+	if (body->getChecker()->CheckCheange(num)) {
+		mTimeToChange = 0;
+		return;
+	}
+
+	if (mTimeToChange)
+		mTimeToChange--;
+
+	// single player kart
+	if ((body->mGameStatus & KartBody::HasCoDriver) == false) {
+		if (gpDriver->testTrigger(
+			GetKartCtrl()->getKartPad(num)->mTrigZ))
+			mTimeToChange = 20;
+
+		if (body->mCarStatus & KartBody::InDriverChange) {
+			if (!(body->mExModels[0])->IsChange() &&
+			    !(body->mExModels[1])->IsChange())
+				body->mCarStatus &= ~KartBody::InDriverChange;
+
+		} else if ((gpDriver->testTrigger(
+				GetKartCtrl()->getKartPad(num)->mTrigZ) ||
+			    possible || mTimeToChange != 0)) {
+			change = true;
+			mTimeToChange = 0;
+		}
+		// with co-driver, but already in change
+	} else if (body->mCarStatus & KartBody::InDriverChange) {
+		if (gpDriver->testButton(
+			GetKartCtrl()->getKartPad(num)->mTrigZ) &&
+		    gpCoDriv->testButton(
+			GetKartCtrl()->getKartPad(num)->mTrigZ)) {
+			mTimeToChange = 20;
+		}
+
+		if (!(body->mExModels[0])->IsChange() &&
+		    !(body->mExModels[1])->IsChange()) {
+			body->mCarStatus &= ~KartBody::InDriverChange;
+		}
+		// with co-driver and ready to change
+	} else if ((gpDriver->testButton(
+			GetKartCtrl()->getKartPad(num)->mTrigZ) &&
+		    gpCoDriv->testButton(
+			GetKartCtrl()->getKartPad(num)->mTrigZ)) ||
+		   mTimeToChange != 0) {
+		change = true;
+		mTimeToChange = 0;
+	}
+
+	if (!change)
+		return;
+
+	body->mCarStatus &= ~(1ull << 38);
+	body->mCarStatus |= KartBody::InDriverChange;
+	;
+
+	GetKartCtrl()->getKartAnime(num)->mFlags |= 1;
+	GetKartCtrl()->getKartSound(num)->DoChangeVoice();
+	GetKartCtrl()->getKartSound(num)->DoChangeStarSound();
+}
+
+void
+KartGame::DoSlide()
+{
+	const int num = mBody->mMynum;
+	KartBody *body = mBody;
+
+	if (body->getChecker()->CheckPartsClearKey(num) ||
+	    !(body->mGameStatus & KartBody::HasCoDriver)) {
+		return;
+	}
+
+	if (body->mSlideTimer != 0) {
+		body->mSlideTimer--;
+	}
+
+	if (body->mSlideTimer == 0) {
+		body->mCarStatus &= ~KartBody::DoesSlide;
+	}
+
+	if ((body->mCarStatus & KartBody::DoesSlide)) {
+		if (body->mSlideTimer >= 29) {
+			body->_2cc.x += body->_2f0.x * body->_528;
+			body->_2cc.y += body->_2f0.y * body->_528;
+			body->_2cc.z += body->_2f0.z * body->_528;
+		}
+
+		return;
+	}
+
+	KartGamePad *gpCoDriv = GetKartCtrl()->GetCoDriveCont(num);
+	if (body->getTouchNum() == 0 ||
+	    (GetKartCtrl()->GetCarSpeed(num) <= 50.f)) {
+		return;
+	}
+
+	if (!gpCoDriv->testTrigger(JUTGamePad::L) &&
+	    !gpCoDriv->testTrigger(JUTGamePad::R)) {
+		return;
+	}
+
+	body->mSlideTimer = 35;
+
+	if (RaceMgr::getCurrentManager()->isMirror()) {
+		if (gpCoDriv->testTrigger(JUTGamePad::L)) {
+			body->_528 = -50.f * body->_3a4;
+			GetKartCtrl()->getKartAnime(num)->mFlags |= 0x10;
+			JPEffectPerformer::setEffect(
+			    JPEffectPerformer::Effect_Unknown1b, num,
+			    body->mPos, 1);
+		} else if (gpCoDriv->testTrigger(JUTGamePad::R)) {
+			body->_528 = 50.f * body->_3a4;
+			GetKartCtrl()->getKartAnime(num)->mFlags |= 0x20;
+			JPEffectPerformer::setEffect(
+			    JPEffectPerformer::Effect_Unknown1b, num,
+			    body->mPos, 0);
+		}
+	} else {
+		if (gpCoDriv->testTrigger(JUTGamePad::R)) {
+			body->_528 = -50.f * body->_3a4;
+			GetKartCtrl()->getKartAnime(num)->mFlags |= 0x10;
+			JPEffectPerformer::setEffect(
+			    JPEffectPerformer::Effect_Unknown1b, num,
+			    body->mPos, 1);
+		} else if (gpCoDriv->testTrigger(JUTGamePad::L)) {
+			body->_528 = 50.f * body->_3a4;
+			GetKartCtrl()->getKartAnime(num)->mFlags |= 0x20;
+			JPEffectPerformer::setEffect(
+			    JPEffectPerformer::Effect_Unknown1b, num,
+			    body->mPos, 0);
+		}
+	}
+
+	body->_2cc.x += body->_2f0.x * body->_528;
+	body->_2cc.y += body->_2f0.y * body->_528;
+	body->_2cc.z += body->_2f0.z * body->_528;
+
+	body->mCarStatus |= KartBody::DoesSlide;
+	GetKartCtrl()->getKartSound(num)->DoStrikeSound();
+	GetKartCtrl()->getKartSound(num)->DoTandemVoice(2);
+}
+
+void
+KartGame::DoDriftTurboSterr()
+{
+	KartBody *body = mBody;
+
+	if (body->mDriftSterr != 0 && body->mDriftSterr < 0x1E)
+		body->mDriftSterr++;
+}
+
+void
+KartGame::SetDriftTurboSterr()
+{
+	KartBody *body = mBody;
+	const int num = mBody->mMynum;
+
+	const int threshold =
+	    (body->mGameStatus & KartBody::HasCoDriver) ? 2 : 6;
+	if ((body->mDriftSterr) < threshold)
+		return;
+
+	body->mMTState++;
+
+	if (body->mMTState == 1)
+		GetKartCtrl()->getKartSound(num)->DoKartsetSeSound(0x100C9);
+	else if (body->mMTState == 2)
+		GetKartCtrl()->getKartSound(num)->DoKartsetSeSound(0x100CA);
+
+	if (body->mMTState >= 2)
+		body->mMTState = 2;
+
+	body->mDriftSterr = 0;
+}
+
+void
+KartGame::CheckDriftTurbo(void)
+{
+	KartBody *body = mBody;
+	int	  num = body->mMynum;
+
+	if (GetKartCtrl()->GetCarSpeed(num) <= 50.f) {
+		body->mCarStatus &= ~(1ull << 41);
+		body->mMTBoost = 0;
+		body->mDriftSterr = 0;
+		body->mMTState = 0;
+		return;
+	}
+
+	if (body->mGameStatus & KartBody::GsUnknown3)
+		return;
+
+	bool	     didDriftSterr = false;
+	KartGamePad *gpCoDriv = GetKartCtrl()->GetCoDriveCont(num);
+
+	if (body->mCarStatus & KartBody::CsUnknown0) {
+		if (body->mGameStatus & KartBody::HasCoDriver) {
+			if (gpCoDriv->getMainStickX() < 0.5f) {
+				didDriftSterr = true;
+				DoDriftTurboSterr();
+			}
+		} else if (body->mFrame >= -0.5f) {
+			didDriftSterr = true;
+			DoDriftTurboSterr();
+		}
+
+		if (!didDriftSterr) {
+			SetDriftTurboSterr();
+			body->mDriftSterr = 1;
+		}
+	} else {
+		if ((body->mCarStatus & KartBody::CsUnknown1) != 0) {
+			if (body->mGameStatus & KartBody::HasCoDriver) {
+				if (gpCoDriv->getMainStickX() > -0.30000001f) {
+					didDriftSterr = true;
+					DoDriftTurboSterr();
+				}
+			} else {
+				if (body->mFrame <= 0.5f) {
+					didDriftSterr = true;
+					DoDriftTurboSterr();
+				}
+			}
+
+			if (!didDriftSterr) {
+				SetDriftTurboSterr();
+				body->mDriftSterr = 1;
+			}
+		} else {
+			body->mMTState = 0;
+			body->mDriftSterr = 0;
+		}
+	}
+
+	body->mCarStatus &= ~(1ull << 41);
+	body->mMTBoost = 0;
+}
+
+f32
+KartGame::DoWarmUpRoll()
+{
+	int	  kartNo = mBody->mMynum;
+	KartBody *body = mBody;
+
+	KartGamePad *gpDriver = GetKartCtrl()->GetDriveCont(kartNo);
+	if (body->mCarStatus & KartBody::DoesSlide) {
+		body->mCarStatus &=
+		    ~(KartBody::CsUnknown0 | KartBody::CsUnknown1 | 1ull << 41 |
+		      1ull << 47 | 1ull << 48);
+		body->_4d8 = 0.f;
+		body->_4d4 = 0.f;
+		body->_4c4 = 0.f;
+		body->_394 = 0.f;
+		body->mLiftframe = 0.f;
+		body->_39c = 0.f;
+		body->_398 = 0.f;
+		body->mMTBoost = 0;
+		body->mDriftSterr = 0;
+		body->mMTState = 0;
+		body->mSterrNorm = 0.f;
+	}
+
+	if (body->mCarStatus & (KartBody::CsUnknown0 | KartBody::CsUnknown1) &&
+	    gpDriver->testTrigger(GetKartCtrl()->getKartPad(kartNo)->mTrigL |
+				  GetKartCtrl()->getKartPad(kartNo)->mTrigR)) {
+		DoDriftClear();
+		return 0.f;
+	}
+
+	float ret;
+	if (gpDriver->testButton(GetKartCtrl()->getKartPad(kartNo)->mTrigL |
+				 GetKartCtrl()->getKartPad(kartNo)->mTrigR)) {
+		if (body->mCarStatus & KartBody::CsUnknown0) {
+			body->mCarStatus |= (KartBody::CsUnknown0 | 1ull << 47);
+			body->mCarStatus &=
+			    ~(KartBody::CsUnknown1 | 1ull << 48);
+			ret = 150.f;
+			CheckDriftTurbo();
+		} else if (body->mCarStatus & KartBody::CsUnknown1) {
+			body->mCarStatus |= (KartBody::CsUnknown1 | 1ull << 48);
+			body->mCarStatus &=
+			    ~(KartBody::CsUnknown0 | 1ull << 47);
+			ret = -150.f;
+			CheckDriftTurbo();
+		} else {
+			ret = 0.f;
+			if (body->mFrame < -0.8f) {
+				ret = 150.f;
+				body->_4d4 = 0.f;
+				body->mCarStatus |=
+				    (KartBody::CsUnknown0 | 1ull << 47);
+				body->mCarStatus &=
+				    ~(KartBody::CsUnknown1 | 1ull << 48);
+				body->mSterrNorm = 0.043611001f;
+				if (body->mFrame < -0.90000004f) {
+					body->mSterrNorm = 0.1133888f;
+				}
+			} else if (body->mFrame > 0.8f) {
+				ret = -150.f;
+				body->_4d4 = 0.f;
+				body->mCarStatus |=
+				    (KartBody::CsUnknown1 | 1ull << 48);
+				body->mCarStatus &=
+				    ~(KartBody::CsUnknown0 | 1ull << 47);
+				body->mSterrNorm = 0.043611001f;
+				if (body->mFrame < 0.90000004f) {
+					body->mSterrNorm = 0.1133888f;
+				}
+			} else {
+				body->mMTBoost = 0;
+				body->mDriftSterr = 0;
+				body->mMTState = 0;
+				body->mCarStatus &= ~(1ull << 41);
+				body->mCarStatus &= ~(KartBody::CsUnknown0 |
+						      KartBody::CsUnknown1 |
+						      1ull << 47 | 1ull << 48);
+			}
+		}
+
+		KartAnime *anime = GetKartCtrl()->getKartAnime(kartNo);
+		if (!anime->IsProhibition(kartNo) &&
+		    !body->mDriverModels[0]->IsSit() &&
+		    !body->getChecker()->CheckOnlyTandemPartsClearKey(kartNo) &&
+		    !(body->mCarStatus &
+		      (KartBody::CsUnknown0 | KartBody::CsUnknown1))) {
+			GetKartCtrl()->getKartAnime(kartNo)->mFlags |= 0x200u;
+		}
+	} else {
+		if (!(body->mCarStatus & KartBody::CsUnknown15) &&
+		    body->mDriverModels[0]->IsSit() &&
+		    !body->mDriverModels[0]->IsStand() &&
+		    !body->getChecker()->CheckOnlyTandemPartsClearKey(kartNo)) {
+			GetKartCtrl()->getKartAnime(kartNo)->mFlags |= 0x400u;
+		}
+
+		if (body->mMTState >= 2u) {
+			body->mCarStatus |= 1ull << 41;
+			body->mMTBoost = body->mMTBoostMax;
+			JPEffectPerformer::setEffect(
+			    JPEffectPerformer::Effect_Unknown1A, kartNo,
+			    body->mPos, 0);
+			GetKartCtrl()
+			    ->getKartSound(body->mMynum)
+			    ->DoKartMiniTuroboSound();
+			GetKartCtrl()
+			    ->getKartSound(body->mMynum)
+			    ->DoTandemVoice(0);
+			body->getStrat()->DoMotor(MotorManager::MotorType_6);
+		}
+
+		body->mDriftSterr = 0;
+		body->mMTState = 0;
+		body->mCarStatus &=
+		    ~(KartBody::CsUnknown0 | KartBody::CsUnknown1 | 1ull << 47 |
+		      1ull << 48);
+		ret = 0.f;
+	}
+
+	return ret;
+}
+
+void
+KartGame::DoRollAnim()
+{
+	KartBody *body = mBody;
+	int	  kartNo = body->mMynum;
+
+	KartGamePad *gpDriver = GetKartCtrl()->GetDriveCont(kartNo);
+	if (gpDriver->getMainStickX() >= 0.2f) {
+		body->_394 = -1.0f;
+	} else if (gpDriver->getMainStickX() <= -0.2f) {
+		body->_394 = 1.0f;
+	} else {
+		body->_394 = .0f;
+	}
+
+	body->mLiftframe = GetKartCtrl()->fcnvge(body->mLiftframe, body->_394,
+						 0.050000001f, 0.050000001f);
+
+	if (GetKartCtrl()->getKartAnime(kartNo)->IsDrift(kartNo) == false &&
+	    GetKartCtrl()->getKartAnime(kartNo)->IsDriftStart(kartNo) ==
+		false) {
+
+		if (gpDriver->getMainStickX() >= 0.2f) {
+			body->_39c = -1.0f;
+		} else if (gpDriver->getMainStickX() <= -0.2f) {
+			body->_39c = 1.0f;
+		} else {
+			body->_39c = 0.0f;
+		}
+
+		body->_398 = GetKartCtrl()->fcnvge(body->_398, body->_39c,
+						   0.050000001f, 0.050000001f);
+	}
+
+	if (body->mCarStatus & KartBody::CsUnknown0) {
+		body->_394 = -1.0f;
+		body->mLiftframe = -1.0f;
+		if (GetKartCtrl()->getKartAnime(kartNo)->IsDriftLeft(kartNo)) {
+			body->_39c = 1.0f;
+			body->_398 = 1.0f;
+		} else {
+			body->_39c = -1.0f;
+			body->_398 = -1.0f;
+		}
+
+		return;
+	}
+
+	if (body->mCarStatus & KartBody::CsUnknown1) {
+		body->_394 = 1.0f;
+		body->mLiftframe = 1.0f;
+		if (GetKartCtrl()->getKartAnime(kartNo)->IsDriftRight(kartNo)) {
+			body->_39c = -1.0f;
+			body->_398 = -1.0f;
+		} else {
+			body->_39c = 1.0f;
+			body->_398 = 1.0f;
+		}
+	}
+}
+
+void
+KartGame::DoDriftClear()
+{
+	KartBody *body = mBody;
+
+	body->mMTBoost = 0;
+	body->mDriftSterr = 0;
+	body->mMTState = 0;
+	body->mCarStatus &= ~(1ull << 41);
+	body->mCarStatus &= ~(KartBody::CsUnknown0 | KartBody::CsUnknown1 |
+			      (1ull << 47) | (1ull << 48));
+}
+
+void
+KartGame::DoRoll()
+{
+	KartBody *body = mBody;
+
+	MakeJump();
+
+	f32 warmupRollRet = DoWarmUpRoll();
+
+	if (GetKartCtrl()->GetCarSpeed(body->mMynum) <= 30.f ||
+	    GetKartCtrl()->GetCarSpeed(body->mMynum) <= 40.f &&
+		body->_3c8 == 0.f) {
+		DoDriftClear();
+	}
+
+	if (GetKartCtrl()->GetCarSpeed(body->mMynum) < 40.f &&
+	    body->_510 > 2.44222f) {
+		DoDriftClear();
+	}
+
+	if (GetKartCtrl()->GetCarSpeed(body->mMynum) <= 80.f &&
+	    body->_3cc != 0.f) {
+		DoDriftClear();
+	}
+
+	if (body->mCarStatus & KartBody::CsUnknown3) {
+		DoDriftClear();
+	}
+
+	if (body->_458 < 2.f) {
+		body->_4c4 = GetKartCtrl()->fcnvge(
+		    body->_4c4, warmupRollRet * 0.0088235298f, 0.1f, 0.1f);
+	} else {
+		if (body->_458 < 18.f) {
+			body->_4c4 = GetKartCtrl()->fcnvge(
+			    body->_4c4, warmupRollRet * 0.0023529413f, 0.1f,
+			    0.1f);
+		} else {
+			int touchNum = body->getTouchNum();
+			f32 _unk2 = (touchNum == 0)
+					? 0.023529412f * warmupRollRet
+					: (body->_4f8 / 170.f) * warmupRollRet;
+
+			GetKartCtrl()->ChaseFnumber(&body->_4c4, _unk2,
+						    body->_3b4);
+		}
+	}
+
+	if (!(body->mCarStatus &
+	      (KartBody::CsUnknown0 | KartBody::CsUnknown1))) {
+		body->_4c4 = 0.f;
+	}
+
+	DoRollAnim();
+}
+
+void
+KartGame::DoTestPitch()
+{
+	KartBody *body = mBody;
+
+	KartGamePad *pad = GetKartCtrl()->GetDriveCont(body->mMynum);
+	if (body->getTouchNum() != 0) {
+		body->_4c0 = 0.f;
+		if (body->mCarStatus &
+		    (KartBody::CsUnknown8 | KartBody::CsUnknown9)) {
+			body->getStrat()->PitchClear();
+		}
+		return;
+	}
+
+	f32 mainY = pad->getMainStickY();
+	if (mainY > 0.f) {
+		body->mCarStatus |= KartBody::CsUnknown9;
+		body->mCarStatus &= ~KartBody::CsUnknown8;
+	} else if (mainY < 0.f) {
+		body->mCarStatus |= KartBody::CsUnknown8;
+		body->mCarStatus &= ~KartBody::CsUnknown9;
+	}
+
+	f32 x;
+	f32 y = 0.0;
+	if (mainY < 0.5 && mainY > -0.5f) {
+		x = 0.0;
+	} else {
+		y = 0.2f;
+		x = 1.5f * mainY;
+	}
+
+	GetKartCtrl()->ChaseFnumber(&body->_4c0, x, y);
+	if (body->_4c0 == 0.f) {
+		body->getStrat()->PitchClear();
+	}
+}
+
+void
+KartGame::DoLiftTurbo()
+{
+	KartBody *body = mBody;
+
+	JGeometry::TVec3f vec0;
+	JGeometry::TVec3f vec1;
+	JGeometry::TVec3f vec2;
+	JGeometry::TVec3f vec3;
+
+	if (!(body->mCarStatus & (KartBody::CsUnknown0 | KartBody::CsUnknown1)))
+		body->_518 = 0.f;
+
+	if (!(body->mCarStatus &
+	      (KartBody::CsUnknown0 | KartBody::CsUnknown1)) ||
+	    body->getTouchNum() <= 1 ||
+	    body->mCarStatus &
+		(KartBody::CsUnknown5 | KartBody::CsUnknown10 |
+		 KartBody::CsUnknown26 | KartBody::CsUnknown27) ||
+	    body->mBodyGround.getAttribute() == 6) {
+		body->_564 = 0.f;
+		body->_518 = 0.f;
+		return;
+	}
+
+	if (GetKartCtrl()->GetCarSpeed(body->mMynum) <= 30.f)
+		return;
+
+	if (GetKartCtrl()->GetCarSpeed(body->mMynum) >= 40.f &&
+	    body->_3c8 != 0.f) {
+		GetKartCtrl()->DevMatrixByVector(&vec1, &body->mVel,
+						 body->_110);
+		f32 v = vec1.z * 1.015f;
+		vec1.z *= 1.015f;
+		vec1.x *= 1.075f;
+
+		if (v < 0.f)
+			vec1.z = v * -1.f;
+
+		PSMTXMultVecSR(body->_110, &vec1, &body->mVel);
+	}
+	body->_518 = body->_514;
+
+	f32 v0 = body->_518 * (body->_4dc * body->_3c8);
+	body->_564 = 0.38f;
+
+	vec0.set(body->_344.x, body->_344.y, body->_344.z);
+
+	f32 v1 = v0 * body->_564;
+
+	f32 inv = 1.f - body->_564;
+
+	vec1.set(body->_3a4 * v1, 0.f, body->_3a4 * v0 * inv);
+
+	if (body->mCarStatus & KartBody::CsUnknown1)
+		vec1.x *= -1.f;
+
+	PSMTXMultVec(body->_110, &vec0, &vec2);
+	PSMTXMultVecSR(body->_110, &vec1, &vec3);
+	body->DoForce(&vec2, &vec3);
+
+	vec0.set(body->_344.x, body->_344.y, 0.5f * -(body->_344.z));
+	vec1.set(body->_4dc * v1, 0.f, body->_3a4 * inv);
+
+	if (body->mCarStatus & KartBody::CsUnknown1)
+		vec1.x *= -1.f;
+
+	PSMTXMultVec(body->_110, &vec0, &vec1);
+	PSMTXMultVecSR(body->_110, &vec1, &vec3);
+
+	body->DoForce(&vec2, &vec3);
+}
+
+void
+KartGame::DoTurbo()
+{
+}
+
+void
+KartGame::DoRollThrow()
+{
+}
+
+// literally a no-op always returning 0
+int
+KartGame::DoRollOver()
+{
+	KartBody *body = mBody;
+
+	if (body->getTouchNum() == 0 ||
+	    body->mCarStatus &
+		(KartBody::CsUnknown12 | KartBody::CsUnknown18) ||
+	    body->mGameStatus & (KartBody::GsUnknown3)) {
+		return 0;
+	}
+
+	return 0;
+}
+
+void
+KartGame::DoWanWan()
+{
+	// void ItemWanWanObj::getDifVel() const {}
+	// void ItemWanWanObj::getPullVec(JGeometry::TVec3<float> *) {}
+}
+
+void
+KartGame::DoPushStart()
+{
+}
+
+void
+KartGame::DoBalance(float *, float)
+{
+}
+
+void
+KartGame::MakeClear()
+{
+}
+
+void
+KartGame::MakeBoardDash()
+{
+}
+
+void
+KartGame::MakeJumpDash()
+{
+}
+
+void
+KartGame::MakeSpJumpDash()
+{
+}
+
+void
+KartGame::MakeMashDash()
+{
+}
+
+void
+KartGame::MakeGoldenMashDash()
+{
+}
+
+void
+KartGame::MakeStartDash()
+{
+}
+
+void
+KartGame::MakeCrashDash()
+{
+}
+
+void
+KartGame::MakeWheelSpin()
+{
+}
+
+void
+KartGame::MakeJump()
+{
+}
+
+void
+KartGame::DoAirCheck()
+{
+}
+
+void
+KartGame::DoRearSlidePower()
+{
+}
+
+void
+KartGame::DoRearSlideBody()
+{
+	// void JGeometry::TVec3<float>::div(float) {}
+}
+
+void
+KartGame::DoCorner()
+{
+}
+
+void
+KartGame::FrameWork(float, KartSus *, KartSus *)
+{
+}
+
+void
+KartGame::DoBodyAction()
+{
+}
+
+void
+KartGame::DoElementForce()
+{
+}
+
+bool
+KartGame::CheckBalloon()
+{
+}
+
+void
+KartGame::SetRank()
+{
+}
+
+void
+KartGame::RankWatchMan()
+{
+}
+
+void
+KartGame::ItemWatchMan(ItemObj *)
+{
+}
+
+void
+KartGame::AfterItemWatchMan()
+{
+}
+
+void
+KartGame::DoFlagCtrl()
+{
+}
+
+void
+KartGame::KeepWatch()
+{
+}
+
+void
+KartGame::DoActionMgr()
+{
+	// void KartBody::getStar() {}
+	// void ItemObjMgr::getKartHitList(int) {}
+}
+
+void
+KartGame::DoActionCtrl()
+{
+}
+
+void
+KartGame::DoStatus()
+{
+	// void KartCtrl::DoAnime(int) {}
 }

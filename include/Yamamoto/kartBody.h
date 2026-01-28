@@ -32,6 +32,30 @@
 class KartBody
 {
 public:
+    // TODO: move in KartGame
+    enum GameStatus {
+        HasCoDriver = 1<<0,
+        GsUnknown3 = 1<<3,
+    };
+
+    enum CarStatus {
+        CsUnknown0 = 1<<0,
+        CsUnknown1 = 1<<1,
+        DoesSlide = 1<<2,
+        CsUnknown3 = 1<<3,
+        CsUnknown5 = 1<<5,
+        InDriverChange = 1<<7,
+        CsUnknown8 = 1<<8,
+        CsUnknown9 = 1<<9,
+        CsUnknown10 = 1<<10,
+        CsUnknown11 = 1<<11,
+        CsUnknown12 = 1<<12,
+        CsUnknown15 = 1<<15,
+        CsUnknown18 = 1<<18,
+        CsUnknown26 = 1<<26,
+        CsUnknown27 = 1<<27,
+    };
+
     KartBody() {}
 
     void DegubBody(u32);
@@ -102,7 +126,7 @@ public:
     KartSus *mKartSus[4];
     ExModel *mBodyModel;
     DriverModel *mDriverModels[2];
-    ExModel *mExModels[2];
+    DriverModel *mExModels[2];
     KartShadowModel *mShadowModel;
     CrsGround mBodyGround;
     CrsArea mShadowArea;
@@ -285,7 +309,7 @@ public:
     f32 _564;
     f32 _568;
     u8 _56c[4]; // padding?
-    u64 mCarStatus;  // 570, 574
+    u64 mCarStatus;  // 570, 574 | 0x400000: could be off track
     u32 mGameStatus; // 578
     u32 _57c;
     u32 _580;
@@ -311,7 +335,7 @@ public:
     u8 mMynum;
     u8 _5b4;
     u8 _5b5; // also some timer
-    u8 _5b6; // dash timer?
+    u8 mSlideTimer; // dash timer?
     u8 mCameraNum;
     u8 _5b8[8];
     u8 _5c0;

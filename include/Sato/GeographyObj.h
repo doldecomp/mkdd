@@ -289,14 +289,14 @@ public:
 
     ~ExGeographyObj() {}
     // TODO: check return types
-    virtual bool Search_Bound(const JGeometry::TVec3f &) { return false; }
-    virtual bool Search_BoundRadius(const JGeometry::TVec3f &, f32) { return false; }
-    virtual void Search(const JGeometry::TVec3f &, const JGeometry::TVec3f &) {}
-    virtual void AddVel(const JGeometry::TVec3f &, const JGeometry::TVec3f &) {}
-    virtual void Search_Wall(const JGeometry::TVec3f &, f32) { }
-    virtual void draw(Mtx) {}
-    virtual f32 getMaxHeight() const { return 0.0f; }
-    virtual void lockDisplayList() {}
+    virtual bool Search_Bound(const JGeometry::TVec3f &) { return false; }              // 80
+    virtual bool Search_BoundRadius(const JGeometry::TVec3f &, f32) { return false; }   // 84
+    virtual void Search(const JGeometry::TVec3f &, const JGeometry::TVec3f &) {}        // 88
+    virtual void AddVel(const JGeometry::TVec3f &, const JGeometry::TVec3f &) {}        // 8C
+    virtual void Search_Wall(const JGeometry::TVec3f &, f32) { }                        // 90
+    virtual void draw(Mtx) {}                                                           // 94
+    virtual f32 getMaxHeight() const { return 0.0f; }                                   // 98
+    virtual void lockDisplayList() {}                                                   // 9C
 
     template<class T>
     static T *ExNew(CrsData::SObject &object) { return new T(object); }

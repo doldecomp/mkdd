@@ -136,6 +136,8 @@ public:
     int IsChange();
     int IsChangeBack();
     int IsChangeFront();
+    int IsSit();
+    int IsStand();
 
 public:
     u8 _8c[0xfc - 0x8c];
