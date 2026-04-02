@@ -39,8 +39,8 @@ public:
     };
 
     enum CarStatus {
-        CsUnknown0 = 1<<0,
-        CsUnknown1 = 1<<1,
+        DriftLeft = 1<<0,
+        DriftRight = 1<<1,
         DoesSlide = 1<<2,
         CsUnknown3 = 1<<3,
         CsUnknown5 = 1<<5,

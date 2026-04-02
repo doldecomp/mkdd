@@ -317,7 +317,7 @@ void KartGame::CheckDriftTurbo(void) {
     bool didDriftSterr = false;
     KartGamePad *gpCoDriv = GetKartCtrl()->GetCoDriveCont(num);
 
-    if (body->mCarStatus & KartBody::CsUnknown0) {
+    if (body->mCarStatus & KartBody::DriftLeft) {
         if (body->mGameStatus & KartBody::HasCoDriver) {
             if (gpCoDriv->getMainStickX() < 0.5f) {
                 didDriftSterr = true;
@@ -333,7 +333,7 @@ void KartGame::CheckDriftTurbo(void) {
             body->mDriftSterr = 1;
         }
     } else {
-        if ((body->mCarStatus & KartBody::CsUnknown1) != 0) {
+        if ((body->mCarStatus & KartBody::DriftRight) != 0) {
             if (body->mGameStatus & KartBody::HasCoDriver) {
                 if (gpCoDriv->getMainStickX() > -0.30000001f) {
                     didDriftSterr = true;
@@ -367,7 +367,7 @@ f32 KartGame::DoWarmUpRoll() {
     KartGamePad *gpDriver = GetKartCtrl()->GetDriveCont(kartNo);
     if (body->mCarStatus & KartBody::DoesSlide) {
         body->mCarStatus &=
-            ~(KartBody::CsUnknown0 | KartBody::CsUnknown1 | 1ull << 41 | 1ull << 47 | 1ull << 48);
+            ~(KartBody::DriftLeft | KartBody::DriftRight | 1ull << 41 | 1ull << 47 | 1ull << 48);
         body->_4d8 = 0.f;
         body->_4d4 = 0.f;
         body->_4c4 = 0.f;
@@ -381,7 +381,7 @@ f32 KartGame::DoWarmUpRoll() {
         body->mSterrNorm = 0.f;
     }
 
-    if (body->mCarStatus & (KartBody::CsUnknown0 | KartBody::CsUnknown1) &&
+    if (body->mCarStatus & (KartBody::DriftLeft | KartBody::DriftRight) &&
         gpDriver->testTrigger(GetKartCtrl()->getKartPad(kartNo)->mTrigL |
                               GetKartCtrl()->getKartPad(kartNo)->mTrigR)) {
         DoDriftClear();
@@ -391,14 +391,14 @@ f32 KartGame::DoWarmUpRoll() {
     float ret;
     if (gpDriver->testButton(GetKartCtrl()->getKartPad(kartNo)->mTrigL |
                              GetKartCtrl()->getKartPad(kartNo)->mTrigR)) {
-        if (body->mCarStatus & KartBody::CsUnknown0) {
-            body->mCarStatus |= (KartBody::CsUnknown0 | 1ull << 47);
-            body->mCarStatus &= ~(KartBody::CsUnknown1 | 1ull << 48);
+        if (body->mCarStatus & KartBody::DriftLeft) {
+            body->mCarStatus |= (KartBody::DriftLeft | 1ull << 47);
+            body->mCarStatus &= ~(KartBody::DriftRight | 1ull << 48);
             ret = 150.f;
             CheckDriftTurbo();
-        } else if (body->mCarStatus & KartBody::CsUnknown1) {
-            body->mCarStatus |= (KartBody::CsUnknown1 | 1ull << 48);
-            body->mCarStatus &= ~(KartBody::CsUnknown0 | 1ull << 47);
+        } else if (body->mCarStatus & KartBody::DriftRight) {
+            body->mCarStatus |= (KartBody::DriftRight | 1ull << 48);
+            body->mCarStatus &= ~(KartBody::DriftLeft | 1ull << 47);
             ret = -150.f;
             CheckDriftTurbo();
         } else {
@@ -406,8 +406,8 @@ f32 KartGame::DoWarmUpRoll() {
             if (body->mFrame < -0.8f) {
                 ret = 150.f;
                 body->_4d4 = 0.f;
-                body->mCarStatus |= (KartBody::CsUnknown0 | 1ull << 47);
-                body->mCarStatus &= ~(KartBody::CsUnknown1 | 1ull << 48);
+                body->mCarStatus |= (KartBody::DriftLeft | 1ull << 47);
+                body->mCarStatus &= ~(KartBody::DriftRight | 1ull << 48);
                 body->mSterrNorm = 0.043611001f;
                 if (body->mFrame < -0.90000004f) {
                     body->mSterrNorm = 0.1133888f;
@@ -415,8 +415,8 @@ f32 KartGame::DoWarmUpRoll() {
             } else if (body->mFrame > 0.8f) {
                 ret = -150.f;
                 body->_4d4 = 0.f;
-                body->mCarStatus |= (KartBody::CsUnknown1 | 1ull << 48);
-                body->mCarStatus &= ~(KartBody::CsUnknown0 | 1ull << 47);
+                body->mCarStatus |= (KartBody::DriftRight | 1ull << 48);
+                body->mCarStatus &= ~(KartBody::DriftLeft | 1ull << 47);
                 body->mSterrNorm = 0.043611001f;
                 if (body->mFrame < 0.90000004f) {
                     body->mSterrNorm = 0.1133888f;
@@ -427,14 +427,14 @@ f32 KartGame::DoWarmUpRoll() {
                 body->mMTState = 0;
                 body->mCarStatus &= ~(1ull << 41);
                 body->mCarStatus &=
-                    ~(KartBody::CsUnknown0 | KartBody::CsUnknown1 | 1ull << 47 | 1ull << 48);
+                    ~(KartBody::DriftLeft | KartBody::DriftRight | 1ull << 47 | 1ull << 48);
             }
         }
 
         KartAnime *anime = GetKartCtrl()->getKartAnime(kartNo);
         if (!anime->IsProhibition(kartNo) && !body->mDriverModels[0]->IsSit() &&
             !body->getChecker()->CheckOnlyTandemPartsClearKey(kartNo) &&
-            !(body->mCarStatus & (KartBody::CsUnknown0 | KartBody::CsUnknown1))) {
+            !(body->mCarStatus & (KartBody::DriftLeft | KartBody::DriftRight))) {
             GetKartCtrl()->getKartAnime(kartNo)->mFlags |= 0x200u;
         }
     } else {
@@ -457,7 +457,7 @@ f32 KartGame::DoWarmUpRoll() {
         body->mDriftSterr = 0;
         body->mMTState = 0;
         body->mCarStatus &=
-            ~(KartBody::CsUnknown0 | KartBody::CsUnknown1 | 1ull << 47 | 1ull << 48);
+            ~(KartBody::DriftLeft | KartBody::DriftRight | 1ull << 47 | 1ull << 48);
         ret = 0.f;
     }
 
@@ -494,7 +494,7 @@ void KartGame::DoRollAnim() {
         body->_398 = GetKartCtrl()->fcnvge(body->_398, body->_39c, 0.050000001f, 0.050000001f);
     }
 
-    if (body->mCarStatus & KartBody::CsUnknown0) {
+    if (body->mCarStatus & KartBody::DriftLeft) {
         body->_394 = -1.0f;
         body->mLiftframe = -1.0f;
         if (GetKartCtrl()->getKartAnime(kartNo)->IsDriftLeft(kartNo)) {
@@ -508,7 +508,7 @@ void KartGame::DoRollAnim() {
         return;
     }
 
-    if (body->mCarStatus & KartBody::CsUnknown1) {
+    if (body->mCarStatus & KartBody::DriftRight) {
         body->_394 = 1.0f;
         body->mLiftframe = 1.0f;
         if (GetKartCtrl()->getKartAnime(kartNo)->IsDriftRight(kartNo)) {
@@ -529,7 +529,7 @@ void KartGame::DoDriftClear() {
     body->mMTState = 0;
     body->mCarStatus &= ~(1ull << 41);
     body->mCarStatus &=
-        ~(KartBody::CsUnknown0 | KartBody::CsUnknown1 | (1ull << 47) | (1ull << 48));
+        ~(KartBody::DriftLeft | KartBody::DriftRight | (1ull << 47) | (1ull << 48));
 }
 
 void KartGame::DoRoll() {
@@ -571,7 +571,7 @@ void KartGame::DoRoll() {
         }
     }
 
-    if (!(body->mCarStatus & (KartBody::CsUnknown0 | KartBody::CsUnknown1))) {
+    if (!(body->mCarStatus & (KartBody::DriftLeft | KartBody::DriftRight))) {
         body->_4c4 = 0.f;
     }
 
@@ -622,10 +622,10 @@ void KartGame::DoLiftTurbo() {
     JGeometry::TVec3f vec2;
     JGeometry::TVec3f vec3;
 
-    if (!(body->mCarStatus & (KartBody::CsUnknown0 | KartBody::CsUnknown1)))
+    if (!(body->mCarStatus & (KartBody::DriftLeft | KartBody::DriftRight)))
         body->_518 = 0.f;
 
-    if (!(body->mCarStatus & (KartBody::CsUnknown0 | KartBody::CsUnknown1)) ||
+    if (!(body->mCarStatus & (KartBody::DriftLeft | KartBody::DriftRight)) ||
         body->getTouchNum() <= 1 ||
         body->mCarStatus & (KartBody::CsUnknown5 | KartBody::CsUnknown10 | KartBody::CsUnknown26 |
                             KartBody::CsUnknown27) ||
@@ -651,19 +651,19 @@ void KartGame::DoLiftTurbo() {
 
     body->_518 = body->_514;
 
-    f32 v0 = body->_518 * (body->_4dc * body->_3c8);
+    f32 unk0 = body->_518 * (body->_4dc * body->_3c8);
 
     body->_564 = 0.38f;
-    f32 v1 = body->_564;
+    f32 unk1 = body->_564;
 
     vec0.set(body->_344.x, body->_344.y, body->_344.z);
 
-    f32 v2 = v1 * v0;
-    f32 inv = 1.f - v1;
+    f32 unk2 = unk1 * unk0;
+    f32 inv = 1.f - unk1;
 
-    vec1.set(body->_3a4 * v2, 0.f, body->_3a4 * (v0 * inv));
+    vec1.set(body->_3a4 * unk2, 0.f, body->_3a4 * (inv * unk0));
 
-    if (body->mCarStatus & KartBody::CsUnknown1)
+    if (body->mCarStatus & KartBody::DriftRight)
         vec1.x *= -1.f;
 
     PSMTXMultVec(body->_110, &vec0, &vec2);
@@ -671,9 +671,9 @@ void KartGame::DoLiftTurbo() {
     body->DoForce(&vec2, &vec3);
 
     vec0.set(body->_344.x, body->_344.y, 0.5f * -(body->_344.z));
-    vec1.set(body->_4dc * v2, 0.f, body->_3a4 * (body->_4dc * inv));
+    vec1.set(body->_4dc * unk2, 0.f, body->_3a4 * (body->_4dc * inv));
 
-    if (body->mCarStatus & KartBody::CsUnknown1)
+    if (body->mCarStatus & KartBody::DriftRight)
         vec1.x *= -1.f;
 
     PSMTXMultVec(body->_110, &vec0, &vec2);
