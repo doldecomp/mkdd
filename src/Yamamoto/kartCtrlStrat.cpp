@@ -615,71 +615,74 @@ void KartGame::DoTestPitch() {
 }
 
 void KartGame::DoLiftTurbo() {
-    KartBody *body = mBody;
-
-    JGeometry::TVec3f vec0;
-    JGeometry::TVec3f vec1;
-    JGeometry::TVec3f vec2;
+    KartBody *kartBody = mBody;
+    f32 fVar3;
     JGeometry::TVec3f vec3;
+    JGeometry::TVec3f vec2;
+    JGeometry::TVec3f vec1;
+    JGeometry::TVec3f vec0;
 
-    if (!(body->mCarStatus & (KartBody::DriftLeft | KartBody::DriftRight)))
-        body->_518 = 0.f;
+    if (!(kartBody->mCarStatus & (KartBody::DriftLeft | KartBody::DriftRight))) {
+        kartBody->_518 = 0.0f;
+    }
 
-    if (!(body->mCarStatus & (KartBody::DriftLeft | KartBody::DriftRight)) ||
-        body->getTouchNum() <= 1 ||
-        body->mCarStatus & (KartBody::CsUnknown5 | KartBody::CsUnknown10 | KartBody::CsUnknown26 |
-                            KartBody::CsUnknown27) ||
-        body->mBodyGround.getAttribute() == 6) {
-        body->_564 = 0.f;
-        body->_518 = 0.f;
+    if (!(kartBody->mCarStatus & (KartBody::DriftLeft | KartBody::DriftRight)) ||
+        kartBody->getTouchNum() <= 1 ||
+        kartBody->mCarStatus & (KartBody::CsUnknown5 | KartBody::CsUnknown10 | KartBody::CsUnknown26 | KartBody::CsUnknown27) ||
+        kartBody->mBodyGround.getAttribute() == 6
+    ) {
+        kartBody->_564 = 0.0f;
+        kartBody->_518 = 0.0f;
         return;
     }
 
-    if (GetKartCtrl()->GetCarSpeed(body->mMynum) <= 30.f)
+    if (GetKartCtrl()->GetCarSpeed(kartBody->mMynum) <= 30.0f) {
         return;
-
-    if (GetKartCtrl()->GetCarSpeed(body->mMynum) >= 40.f && body->_3c8 != 0.f) {
-        GetKartCtrl()->DevMatrixByVector(&vec1, &body->mVel, body->_110);
-        vec1.x *= 1.075f;
-        vec1.z *= 1.015f;
-
-        if (vec1.z < 0.f)
-            vec1.z *= -1.f;
-
-        PSMTXMultVecSR(body->_110, &vec1, &body->mVel);
+    }
+    
+    if (GetKartCtrl()->GetCarSpeed(kartBody->mMynum) >= 40.0f && kartBody->_3c8 != 0.0f) {
+        GetKartCtrl()->DevMatrixByVector(&vec2, &kartBody->mVel, kartBody->_110);
+        vec2.x *= 1.075f;
+        vec2.z *= 1.015f;
+        
+        if (vec2.z < 0.0f) {
+            vec2.z *= -1.0f;
+        }
+        
+        PSMTXMultVecSR(kartBody->_110, &vec2, &kartBody->mVel);
     }
 
-    body->_518 = body->_514;
+    kartBody->_518 = kartBody->_514;
 
-    f32 unk0 = body->_518 * (body->_4dc * body->_3c8);
-
-    body->_564 = 0.38f;
-    f32 unk1 = body->_564;
-
-    vec0.set(body->_344.x, body->_344.y, body->_344.z);
-
-    f32 unk2 = unk1 * unk0;
-    f32 inv = 1.f - unk1;
-
-    vec1.set(body->_3a4 * unk2, 0.f, body->_3a4 * (inv * unk0));
-
-    if (body->mCarStatus & KartBody::DriftRight)
-        vec1.x *= -1.f;
-
-    PSMTXMultVec(body->_110, &vec0, &vec2);
-    PSMTXMultVecSR(body->_110, &vec1, &vec3);
-    body->DoForce(&vec2, &vec3);
-
-    vec0.set(body->_344.x, body->_344.y, 0.5f * -(body->_344.z));
-    vec1.set(body->_4dc * unk2, 0.f, body->_3a4 * (body->_4dc * inv));
-
-    if (body->mCarStatus & KartBody::DriftRight)
-        vec1.x *= -1.f;
-
-    PSMTXMultVec(body->_110, &vec0, &vec2);
-    PSMTXMultVecSR(body->_110, &vec1, &vec3);
-
-    body->DoForce(&vec2, &vec3);
+    f32 fVar2 = kartBody->_4dc * kartBody->_3c8 * kartBody->_518;
+    
+    kartBody->_564 = 0.38f;
+    
+    f32 fVar4 = kartBody->_564;
+    vec3.set(kartBody->_344.x,kartBody->_344.y, kartBody->_344.z);
+    
+    fVar3 = fVar2 * fVar4;
+    fVar4 = 1.0f - fVar4;
+    vec2.set(kartBody->_3a4 * fVar3, 0.0f, kartBody->_3a4 * (fVar2 * fVar4));
+    
+    if ((kartBody->mCarStatus & 2) != 0) {
+        vec2.x *= -1.0f;
+    }
+    
+    PSMTXMultVec(kartBody->_110, &vec3, &vec1);
+    PSMTXMultVecSR(kartBody->_110, &vec2, &vec0);
+    kartBody->DoForce(&vec1, &vec0);
+    
+    vec3.set(kartBody->_344.x, kartBody->_344.y,-(kartBody->_344).z * 0.5f);
+    vec2.set(kartBody->_3a4 * fVar3, 0.0f, kartBody->_3a4 * (kartBody->_4dc * fVar4));
+    
+    if ((kartBody->mCarStatus & 2) != 0) {
+        vec2.x *= -1.0f;
+    }
+    
+    PSMTXMultVec(kartBody->_110, &vec3, &vec1);
+    PSMTXMultVecSR(kartBody->_110, &vec2, &vec0);
+    kartBody->DoForce(&vec1, &vec0);
 }
 
 void KartGame::DoTurbo() {}
