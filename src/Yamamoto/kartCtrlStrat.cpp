@@ -766,7 +766,15 @@ void KartGame::DoActionMgr() {
     // void ItemObjMgr::getKartHitList(int) {}
 }
 
-void KartGame::DoActionCtrl() {}
+void KartGame::DoActionCtrl() {
+    // peak mwcc doing an extra compare when checking explicit against true
+    if (mBody->getChecker()->CheckCrash() == true) {
+        return;
+    }
+
+    DoSlide();
+    DoWanWan();
+}
 
 void KartGame::DoStatus() {
     // void KartCtrl::DoAnime(int) {}
