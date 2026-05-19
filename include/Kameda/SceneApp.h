@@ -1,6 +1,7 @@
 #ifndef SCENEAPP_H
 #define SCENEAPP_H
 
+#include "Kameda/Scene.h"
 #include "Osako/GameApp.h"
 
 class SceneApp : public GameApp
@@ -17,6 +18,11 @@ public:
 
 private:
     static SceneApp *mspSceneApp; // 0x804162d8
+
+
+    u8 padding[0x5C - sizeof(GameApp)];
+    Scene::SceneType _5C;
+    s32 _60;
 };
 
 #endif // SCENEAPP_H
