@@ -5,13 +5,12 @@
 
 #include <JSystem/JAudio/JASFakeMatch2.h>
 
-// https://decomp.me/scratch/Ed85k
 Demo2D::Demo2D(JKRHeap *heap) {
   mNode = new (heap, 0) Demo2DHioNode();
   mOrtho = System::mspJ2DOrtho;
   mScreen = new (heap, 0) J2DScreen();
 
-  mScreen->set("Demo.blo", 4, GETJ2DManager()->getArchive());
+  mScreen->set("Demo.blo", 0x0040000, GETJ2DManager()->getArchive());
   init();
 }
 
