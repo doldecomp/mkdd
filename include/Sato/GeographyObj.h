@@ -316,7 +316,7 @@ class TMapObjHioNode : public GeographyObj
 public:
     TMapObjHioNode(u32 id) : GeographyObj(id) {}
     TMapObjHioNode(const CrsData::SObject &rObj) : GeographyObj(rObj) {}
-    virtual ~TMapObjHioNode();
+    virtual ~TMapObjHioNode() {}
 };
 
 #endif
