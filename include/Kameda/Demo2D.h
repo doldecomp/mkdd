@@ -8,34 +8,34 @@ class J2DScreen;
 
 class Demo2DParam : public JORReflexible {
 public:
-  Demo2DParam() : _48(0), _4A(1) {}
-  virtual ~Demo2DParam() {}
+    Demo2DParam() : _48(0), _4A(1) {}
+    virtual ~Demo2DParam() {}
 
-  u16 _48;
-  u8 _4A;
+    u16 _48;
+    u8 _4A;
 }; // class Demo2DParam
 
 class Demo2DHioNode : public HioNode {
 public:
-  Demo2DHioNode() : HioNode("Ｄｅｍｏ２Ｄ", &mParam, 0, 0) {}
+    Demo2DHioNode() : HioNode("Ｄｅｍｏ２Ｄ", &mParam, 0, 0) {}
 
-  Demo2DParam mParam;
+    Demo2DParam mParam;
 }; // class Demo2DHioNode
 
 class Demo2D {
 public:
-  Demo2D(JKRHeap *heap); // 0x8018313c
-  void init();           // 0x8018325c
-  void draw();           // 0x801832d0
-  void calc();           // 0x80183344
+    Demo2D(JKRHeap *heap); // 0x8018313c
+    void init();           // 0x8018325c
+    void draw();           // 0x801832d0
+    void calc();           // 0x80183344
 
-  // Inline/Unused
-  ~Demo2D();
+    // Inline/Unused
+    ~Demo2D();
 
 private:
-  Demo2DHioNode *mNode;
-  J2DOrthoGraph *mOrtho;
-  J2DScreen *mScreen;
+    Demo2DHioNode *mNode;
+    J2DOrthoGraph *mOrtho;
+    J2DScreen *mScreen;
 }; // class Demo2D
 
 #endif // DEMO2D_H
