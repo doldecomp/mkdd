@@ -757,7 +757,12 @@ void KartGame::ItemWatchMan(ItemObj *) {}
 
 void KartGame::AfterItemWatchMan() {}
 
-void KartGame::DoFlagCtrl() {}
+void KartGame::DoFlagCtrl() {
+    KartBody *kartBody = mBody;
+
+    kartBody->_590 &= ~(0x04 | 0x08 | 0x10 | 0x40);
+    kartBody->getDamage()->mFlags &= ~(0x02); 
+}
 
 void KartGame::KeepWatch() {}
 
