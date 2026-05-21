@@ -54,7 +54,7 @@ public:
     bool CheckBalloon();
     void SetRank();
     void RankWatchMan();
-    void ItemWatchMan(ItemObj *);
+    void ItemWatchMan(ItemObj *incomingItem);
     void AfterItemWatchMan();
     void DoFlagCtrl();
     void KeepWatch();

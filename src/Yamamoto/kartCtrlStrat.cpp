@@ -788,7 +788,30 @@ void KartGame::SetRank() {}
 
 void KartGame::RankWatchMan() {}
 
-void KartGame::ItemWatchMan(ItemObj *) {}
+void KartGame::ItemWatchMan(ItemObj *incomingItem) {
+    if (!incomingItem) {
+        return;
+    }
+
+    int kartNo = incomingItem->getOwnerNum();
+    KartBody *kartBody = GetKartCtrl()->getKartBody(kartNo);
+
+    RCMGetKartChecker(kartNo);
+    if (kartBody->getGame()->_E) {
+        return;
+    }
+
+    if (kartBody->getChecker()->CheckOnlyTandemPartsClearKey(kartNo)) {
+        return;
+    }
+
+    if (GetKartCtrl()->CheckTandemItmGet(kartNo)) {
+        return;
+    }
+
+    kartBody->getGame()->_E = (0x08 | 0x10 | 0x20 | 0x40);
+    kartBody->getGame()->mIncomingItem = incomingItem;
+}
 
 void KartGame::AfterItemWatchMan() {
     // they probably just copy pasted the typical body myNum intro here
