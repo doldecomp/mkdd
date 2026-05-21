@@ -784,7 +784,12 @@ void KartGame::DoElementForce() {}
 
 bool KartGame::CheckBalloon() {}
 
-void KartGame::SetRank() {}
+void KartGame::SetRank() {
+    KartBody *kartBody = mBody;
+
+    kartBody->mMyRank = RCMGetKartChecker(kartBody->mMynum)->getRank();
+    kartBody->_59c = 0;
+}
 
 void KartGame::RankWatchMan() {}
 
