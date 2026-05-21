@@ -52,6 +52,7 @@ public:
         CsUnknown12 = 1<<12,
         CsUnknown15 = 1<<15,
         CsUnknown18 = 1<<18,
+        CsUnknown25 = 1<<25,
         CsUnknown26 = 1<<26,
         CsUnknown27 = 1<<27,
     };

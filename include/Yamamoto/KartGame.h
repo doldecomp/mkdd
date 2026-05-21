@@ -32,7 +32,7 @@ public:
     void DoRollThrow();
     int DoRollOver();
     void DoWanWan();
-    void DoPushStart();
+    bool DoPushStart();
     void DoBalance(f32 *, f32);
     void MakeClear();
     void MakeBoardDash();

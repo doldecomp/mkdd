@@ -707,7 +707,19 @@ void KartGame::DoWanWan() {
     // void ItemWanWanObj::getPullVec(JGeometry::TVec3<float> *) {}
 }
 
-void KartGame::DoPushStart() {}
+bool KartGame::DoPushStart() {
+    const int timerEnd = 30;
+    KartBody *body = mBody;
+
+    body->_594++;
+    body->_3c8 = body->_3d0;
+    if (body->_594 == timerEnd) {
+        body->mCarStatus &= ~(KartBody::CsUnknown25);
+        return true;
+    }
+
+    return false;
+}
 
 void KartGame::DoBalance(float *, float) {}
 
