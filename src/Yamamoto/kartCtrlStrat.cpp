@@ -737,7 +737,16 @@ void KartGame::DoBalance(float *a2, float a3) {
     *a2 *= a3;
 }
 
-void KartGame::MakeClear() {}
+void KartGame::MakeClear() {
+    KartBody *body = mBody;
+
+    body->_3c8 = 0.f;
+    body->getStrat()->LiftClear();
+    body->getStrat()->PitchClear();
+    body->getStrat()->AllGravyClear();
+    body->getStrat()->DashClear();
+    body->getStrat()->OtherClear();
+}
 
 void KartGame::MakeBoardDash() {}
 
