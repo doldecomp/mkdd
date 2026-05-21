@@ -721,7 +721,21 @@ bool KartGame::DoPushStart() {
     return false;
 }
 
-void KartGame::DoBalance(float *, float) {}
+void KartGame::DoBalance(float *a2, float a3) {
+    KartBody *kartBody = mBody;
+
+    if ((mBody->mCarStatus & (KartBody::CsUnknown5 | KartBody::CsUnknown10
+                             | KartBody::CsUnknown26 | KartBody::CsUnknown27))) {
+        return;
+    }
+
+    f32 v0 = kartBody->_468;
+    if (v0 > -0.40122193f && v0 < 0.40122193f) {
+        return;
+    }
+
+    *a2 *= a3;
+}
 
 void KartGame::MakeClear() {}
 
