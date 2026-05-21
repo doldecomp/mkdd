@@ -99,7 +99,7 @@ public:
     u16 _E;
     u16 _10;
     u16 mCountDownDuration; // 12
-    u8 _14[0x4];
+    ItemObj *mIncomingItem; // 14, the item that's about to collide with the kart
     float _18[2];
     JGeometry::TVec3f _20;
     JGeometry::TVec3f _2C;

@@ -755,7 +755,31 @@ void KartGame::RankWatchMan() {}
 
 void KartGame::ItemWatchMan(ItemObj *) {}
 
-void KartGame::AfterItemWatchMan() {}
+void KartGame::AfterItemWatchMan() {
+    // they probably just copy pasted the typical body myNum intro here
+    // in the original code, because kartBody gets r31 assigned
+    KartBody *kartBody;
+
+    GetKartCtrl()->getKartSound(mBody->mMynum)->DoItemAlarm();
+    if (_E == (0x01 | 0x02 | 0x04 | 0x10 | 0x20 | 0x40)) {
+        int kartNo = mIncomingItem->getOwnerNum();
+        kartBody = GetKartCtrl()->getKartBody(kartNo);
+
+        if (mIncomingItem->getState() != ItemObj::StateDivested
+                && !kartBody->getChecker()->CheckOnlyTandemPartsClearKey(kartNo) 
+                && !GetKartCtrl()->CheckTandemItmGet(kartNo)) {
+
+            GetKartCtrl()->getKartSound(kartNo)->DoItmHitVoice();
+            GetKartCtrl()->getKartAnime(kartNo)->mFlags |= (1LL<<34);
+        }
+
+        _E = 0;
+    }
+
+    if (_E == (0x02 | 0x04 | 0x10 | 0x20 | 0x40)) {
+        _E = 0;
+    }
+}
 
 void KartGame::DoFlagCtrl() {
     KartBody *kartBody = mBody;
