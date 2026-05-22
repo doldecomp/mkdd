@@ -782,7 +782,24 @@ void KartGame::DoBodyAction() {}
 
 void KartGame::DoElementForce() {}
 
-bool KartGame::CheckBalloon() {}
+bool KartGame::CheckBalloon() {
+    KartBody *kartBody = mBody;
+    int kartNo = kartBody->mMynum;
+
+    if (RaceMgr::getCurrentManager()->getRaceMode() != BALLOON_BATTLE) {
+        return false;
+    }
+
+    if (GetKartCtrl()->HaveBalloon(kartNo) &&
+        !(kartBody->mCarStatus & KartBody::CsUnknown20) &&
+        !(kartBody->mCarStatus & KartBody::CsUnknown22) &&
+        !(kartBody->getThunder()->mFlags & 0x01)
+    ) {
+        return true;
+    }
+
+    return false;
+}
 
 void KartGame::SetRank() {
     KartBody *kartBody = mBody;
