@@ -748,7 +748,46 @@ void KartGame::MakeClear() {
     body->getStrat()->OtherClear();
 }
 
-void KartGame::MakeBoardDash() {}
+void KartGame::MakeBoardDash() {
+    const int boostTime = 60;
+    int kartNo = mBody->mMynum;
+    KartBody *body = mBody;
+
+    if (body->mCarStatus & (KartBody::CsUnknown12)) {
+        return;
+    }
+
+    GetKartCtrl()->getKartSound(kartNo)->DoDashSound();
+
+    body->mCarStatus &= ~(KartBody::CsUnknown14 | KartBody::CsUnknown29 | (1ull << 42));
+
+    body->getStrat()->DoMotor(MotorManager::MotorType_7);
+
+    if (body->mCarStatus & KartBody::CsUnknown17) {
+        body->mBoostTimer = boostTime;
+        return;
+    }
+
+    body->mCarStatus |= (KartBody::CsUnknown15 | KartBody::CsUnknown17);
+    body->mBoostTimer = boostTime;
+
+    body->_52c = 0.4f;
+    body->_474 = 0.313f;
+
+    JPEffectPerformer::setEffect(JPEffectPerformer::Effect_Unknown17, kartNo, body->mPos, 2);
+
+    if (!GetKartCtrl()->CheckCamera(kartNo)) {
+        return;
+    }
+
+    int camNo = GetKartCtrl()->GetCameraNum(kartNo);
+    KartCam *cam = GetKartCtrl()->getKartCam(camNo);
+    if (cam->GetCameraMode()) {
+        return;
+    }
+
+    JPEffectPerformer::setEffectEachCam(JPEffectPerformer::Effect_Unknown23, kartNo, camNo, 0);
+}
 
 void KartGame::MakeJumpDash() {}
 
