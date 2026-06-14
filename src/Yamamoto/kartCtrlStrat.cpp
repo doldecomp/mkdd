@@ -687,7 +687,36 @@ void KartGame::DoLiftTurbo() {
 
 void KartGame::DoTurbo() {}
 
-void KartGame::DoRollThrow() {}
+void KartGame::DoRollThrow() {
+    KartBody *body = mBody;
+
+    JGeometry::TVec3f vec0;
+    JGeometry::TVec3f vec1;
+    JGeometry::TVec3f vec2;
+    JGeometry::TVec3f vec3;
+    JGeometry::TVec3f vec4;
+
+    f32 v3 = (3.f * body->_3a4);
+
+    vec0.set(0.f, 70.f, 0.f);
+    PSMTXMultVec(body->_110, &vec0, &vec1);
+
+    vec0.set(0.f, 70.f, 100.f);
+    PSMTXMultVec(body->_110, &vec0, &vec2);
+
+    vec3.x = vec1.x - vec2.x;
+    vec3.y = vec1.y - vec2.y;
+    vec3.z = vec1.z - vec2.z;
+
+    f32 vec3LenSqrt = GetKartCtrl()->VectorLengthSqrtf(&vec3);
+    if ((vec3LenSqrt - 1.f) > 0.f) {
+        vec4.x = vec3.x * (-v3 * (vec3LenSqrt - 1.f) / vec3LenSqrt);
+        vec4.y = vec3.y * (-v3 * (vec3LenSqrt - 1.f) / vec3LenSqrt);
+        vec4.z = vec3.z * (-v3 * (vec3LenSqrt - 1.f) / vec3LenSqrt);
+
+        body->DoForce(&vec1, &vec4);
+    }
+}
 
 // literally a no-op always returning 0
 int KartGame::DoRollOver() {
