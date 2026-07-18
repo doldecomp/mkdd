@@ -17,7 +17,7 @@ bool KartGame::Init(int kartNo) {
     _8 = 0;
     _9 = 0;
     _38.zero();
-    _4 = 0;
+    mJugemPoint = NULL;
     _18[0] = 0.f;
     _18[1] = 0.f;
     _E = 0;
@@ -818,7 +818,51 @@ void KartGame::MakeBoardDash() {
     JPEffectPerformer::setEffectEachCam(JPEffectPerformer::Effect_Unknown23, kartNo, camNo, 0);
 }
 
-void KartGame::MakeJumpDash() {}
+void KartGame::MakeJumpDash() {
+    if ((mBody->mCarStatus & KartBody::CsUnknown12)) {
+        return;
+    }
+
+    KartBody *body = mBody;
+
+    int kartNo = body->mMynum;
+    GetKartCtrl()->getKartSound(kartNo)->DoDashSound();
+    body->mCarStatus &= ~(KartBody::CsUnknown14 | KartBody::CsUnknown16 | KartBody::CsUnknown17 | (1ull << 42));
+    body->getStrat()->DoMotor(MotorManager::MotorType_7);
+
+    if (body->mCarStatus & KartBody::CsUnknown29) {
+        body->mBoostTimer = 20;
+        return;
+    }
+
+    body->mCarStatus |= KartBody::CsUnknown15 | KartBody::CsUnknown29;
+    body->mBoostTimer = 20;
+    body->_52c = 0.4f;
+    body->_474 = 0.313f;
+
+    JPEffectPerformer::setEffect(JPEffectPerformer::Effect_Unknown17, kartNo, body->mPos, 2);
+
+    if (GetKartCtrl()->CheckCamera(kartNo)) {
+        int camNo = GetKartCtrl()->GetCameraNum(kartNo);
+        KartCam *cam = GetKartCtrl()->getKartCam(camNo);
+
+        if (cam->GetCameraMode() == 0) {
+            JPEffectPerformer::setEffectEachCam(JPEffectPerformer::Effect_Unknown23, kartNo, camNo, 0);
+        }
+    }
+
+    mJugemPoint = body->mBodyGround.getJugemPoint();
+    if (mJugemPoint) {
+        JGeometry::TVec3f(); // ?????
+        mJugemPoint->getPosition(&_38);
+        return;
+    }
+
+    _18[1] = 0.f;
+    _18[0] = 0.f;
+    mJugemPoint = NULL; // it's already null lmao
+    _38.set(body->mPos);
+}
 
 void KartGame::MakeSpJumpDash() {}
 
