@@ -639,47 +639,47 @@ void KartGame::DoLiftTurbo() {
     if (GetKartCtrl()->GetCarSpeed(kartBody->mMynum) <= 30.0f) {
         return;
     }
-    
+
     if (GetKartCtrl()->GetCarSpeed(kartBody->mMynum) >= 40.0f && kartBody->_3c8 != 0.0f) {
         GetKartCtrl()->DevMatrixByVector(&vec2, &kartBody->mVel, kartBody->_110);
         vec2.x *= 1.075f;
         vec2.z *= 1.015f;
-        
+
         if (vec2.z < 0.0f) {
             vec2.z *= -1.0f;
         }
-        
+
         PSMTXMultVecSR(kartBody->_110, &vec2, &kartBody->mVel);
     }
 
     kartBody->_518 = kartBody->_514;
 
     f32 fVar2 = kartBody->_4dc * kartBody->_3c8 * kartBody->_518;
-    
+
     kartBody->_564 = 0.38f;
-    
+
     f32 fVar4 = kartBody->_564;
     vec3.set(kartBody->_344.x,kartBody->_344.y, kartBody->_344.z);
-    
+
     fVar3 = fVar2 * fVar4;
     fVar4 = 1.0f - fVar4;
     vec2.set(kartBody->_3a4 * fVar3, 0.0f, kartBody->_3a4 * (fVar2 * fVar4));
-    
+
     if ((kartBody->mCarStatus & 2) != 0) {
         vec2.x *= -1.0f;
     }
-    
+
     PSMTXMultVec(kartBody->_110, &vec3, &vec1);
     PSMTXMultVecSR(kartBody->_110, &vec2, &vec0);
     kartBody->DoForce(&vec1, &vec0);
-    
+
     vec3.set(kartBody->_344.x, kartBody->_344.y,-(kartBody->_344).z * 0.5f);
     vec2.set(kartBody->_3a4 * fVar3, 0.0f, kartBody->_3a4 * (kartBody->_4dc * fVar4));
-    
+
     if ((kartBody->mCarStatus & 2) != 0) {
         vec2.x *= -1.0f;
     }
-    
+
     PSMTXMultVec(kartBody->_110, &vec3, &vec1);
     PSMTXMultVecSR(kartBody->_110, &vec2, &vec0);
     kartBody->DoForce(&vec1, &vec0);
@@ -914,7 +914,7 @@ void KartGame::AfterItemWatchMan() {
         kartBody = GetKartCtrl()->getKartBody(kartNo);
 
         if (mIncomingItem->getState() != ItemObj::StateDivested
-                && !kartBody->getChecker()->CheckOnlyTandemPartsClearKey(kartNo) 
+                && !kartBody->getChecker()->CheckOnlyTandemPartsClearKey(kartNo)
                 && !GetKartCtrl()->CheckTandemItmGet(kartNo)) {
 
             GetKartCtrl()->getKartSound(kartNo)->DoItmHitVoice();
@@ -933,7 +933,7 @@ void KartGame::DoFlagCtrl() {
     KartBody *kartBody = mBody;
 
     kartBody->_590 &= ~(0x04 | 0x08 | 0x10 | 0x40);
-    kartBody->getDamage()->mFlags &= ~(0x02); 
+    kartBody->getDamage()->mFlags &= ~(0x02);
 }
 
 void KartGame::KeepWatch() {}
