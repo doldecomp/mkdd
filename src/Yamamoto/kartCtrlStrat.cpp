@@ -954,7 +954,45 @@ void KartGame::MakeMashDash() {
     }
 }
 
-void KartGame::MakeGoldenMashDash() {}
+void KartGame::MakeGoldenMashDash() {
+    int kartNo = mBody->mMynum;
+    KartBody *body = mBody;
+
+    if (mBody->mCarStatus & KartBody::CsUnknown12) {
+        return;
+    }
+
+    GetStEfctMgr()->createKinokoDashEmt(kartNo);
+    GetKartCtrl()->getKartSound(kartNo)->DoMashDashSound();
+
+    if (body->mCarStatus & (KartBody::CsUnknown17 | KartBody::CsUnknown29 | (1ull << 42))) {
+        return;
+    }
+
+    body->mCarStatus &= ~(KartBody::CsUnknown17 | KartBody::CsUnknown29 | (1ull << 42));
+    body->getStrat()->DoMotor(MotorManager::MotorType_5);
+
+    if (body->mCarStatus & KartBody::CsUnknown14) {
+        body->mBoostTimer = 80;
+        GetKartCtrl()->getKartSound(kartNo)->DoGoldenDashVoice();
+        return;
+    }
+
+    GetKartCtrl()->getKartSound(kartNo)->DoGoldenDashVoice();
+    body->mCarStatus |= KartBody::CsUnknown14 | KartBody::CsUnknown15;
+    body->mBoostTimer = 80;
+    body->_52c = 0.4f;
+    body->_474 = 0.313f;
+
+    if (GetKartCtrl()->CheckCamera(kartNo)) {
+        int camNo = GetKartCtrl()->GetCameraNum(kartNo);
+        KartCam *cam = GetKartCtrl()->getKartCam(camNo);
+
+        if (cam->GetCameraMode() == 0) {
+            JPEffectPerformer::setEffectEachCam(JPEffectPerformer::Effect_Unknown23, kartNo, camNo, 0);
+        }
+    }
+}
 
 void KartGame::MakeStartDash() {}
 
