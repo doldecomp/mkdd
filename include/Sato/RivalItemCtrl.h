@@ -9,7 +9,7 @@
 
 class RivalKart;
 
-class RivalItemCtrl : RivalCtrlBase, JKRDisposer
+class RivalItemCtrl : public RivalCtrlBase, JKRDisposer
 { 
 public:
     RivalItemCtrl(RivalKart *);          // 0x8027ea50
@@ -45,27 +45,27 @@ public:
     void initItem_WanWan();              // 0x8027fe74
     void useItem_WanWan_Normal();        // 0x8027fed0
     void triggerButton();                // 0x8027ff00
-    void triggerButtonStickFront(float); // 0x8027fff4
-    void triggerButtonStickBack(float);  // 0x802800f8
+    void triggerButtonStickFront(f32);   // 0x8027fff4
+    void triggerButtonStickBack(f32);    // 0x802800f8
     // Inline/Unused
-    // void resetSucItem(ItemObj *);
-    // void endItem();
-    // void setRndCount(unsigned long, unsigned long);
-    // void setRndFlgItemFront(float);
-    // void chkEnableThrowBack();
-    // void initItem_RTurtleSuc();
-    // void useItem_RTurtleSuc_Normal();
-    // void doSpReleaseGTurtle();
-    // void releaseBombFront(const float &, const float &);
-    // void doUseKinoko();
-    // void pressButton();
-    // void releaseButton();
-    // void releaseButtonStickFront(float);
-    // void releaseButtonStickBack(float);
+    void resetSucItem(ItemObj *);
+    void endItem();
+    void setRndCount(u32, u32);
+    void setRndFlgItemFront(f32);
+    void chkEnableThrowBack();
+    void initItem_RTurtleSuc();
+    void useItem_RTurtleSuc_Normal();
+    void doSpReleaseGTurtle();
+    void releaseBombFront(const f32 &, const f32 &);
+    void doUseKinoko();
+    void pressButton();
+    void releaseButton();
+    void releaseButtonStickFront(f32);
+    void releaseButtonStickBack(f32);
     // Inline
     virtual ~RivalItemCtrl(); // 0x8027eae4
 
-    u8 _20[0x44 - 0x20];
+    u8 _20[0x44 - 0x24];
 }; // Size: 0x44
 
 #endif // RIVALITEMCTRL_H

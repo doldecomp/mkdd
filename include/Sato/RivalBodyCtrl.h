@@ -84,7 +84,7 @@ public:
     static bool isPlayerFirst() { return (sCommonFlgs & 2) != 0; }
 
 
-    u8 _20[0xc8 - 0x20];
+    u8 _20[0xc8 - 0x24];
 }; // Size: 0xc8
 
 class CLPointControllerRivalKart
