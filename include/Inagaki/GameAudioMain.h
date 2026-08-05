@@ -123,8 +123,7 @@ private:
     JAISoundHandle _24[4];        //
     JAISoundHandle _34[4];        //
     FxLineConfig *mConfig;        // 44
-    u8 mState;                    // 48
-    u8 _padding[3];               //
+    u8 _48[4];                    //
     PAUSE_STATUS mPauseStatus;    // 4C
     int _50;                      //
     u8 _54[0x64 - 0x54];          //

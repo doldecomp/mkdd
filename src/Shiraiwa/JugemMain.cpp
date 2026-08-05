@@ -446,18 +446,32 @@ void TJugem::getZDir(int param_1, JGeometry::TVec3f *vecZDir) {
         kartZDir.set(_238);
     }
     else {
-        kartZDir.set(local_58.x, 0.0f, local_58.z);
+        kartZDir.x = local_58.x;
+        kartZDir.y = 0.0;
+        kartZDir.z = local_58.z;
     }
 
+    local_58.squared();
     kartZDir.normalize();
 
     if (kartZDir.isZero()) {
-        kartZDir.set(1.0f, 0.0f, 0.0f);
+        kartZDir.x = 1.0;
+        kartZDir.y = 0.0;
+        kartZDir.z = 0.0;
     }
 
     vecZDir->set(kartZDir);
     _238.set(kartZDir);
 }
+
+// TODO: Once we work out correct JGeometry implementations for TRot3f and TQuat4f,
+//      this template below can be uncommented and adjusted as needed.
+// template <>
+// inline void JGeometry::TRot3f::setRotate(const TVec3f &a, const TVec3f &b) {
+//     TQuat4f q;
+//     q.setRotate(a, b);
+//     setQuat(q);
+// }
 
 void TJugem::resetJugemOrigin(const JGeometry::TVec3f &param_1, const JGeometry::TVec3f &param_2) {
     JGeometry::TVec3f jugemOrigin;
@@ -474,6 +488,7 @@ void TJugem::resetJugemOrigin(const JGeometry::TVec3f &param_1, const JGeometry:
     newPos.sub(_22c, mPos);
     newPos.y = 0.0f;
 
+    newPos.squaredZX();
     newPos.normalize();
 
     static JGeometry::TVec3f zAxis(0.0f, 0.0f, 1.0f);
@@ -495,12 +510,15 @@ void TJugem::getJugemOrigin(const JGeometry::TVec3f &param_1, JGeometry::TVec3f 
 }
 
 void TJugem::move(int kartIndex) {
-    JGeometry::TVec3f jugemOrigin;
-    JGeometry::TVec3f zDir;
+    JGeometry::TVec3f local_c8;
+    JGeometry::TVec3f local_d4;
     JGeometry::TVec3f kartPosCopy;
     JGeometry::TVec3f kartPosDiff;
     JGeometry::TVec3f local_f8;
     JGeometry::TVec3f local_104;
+    JGeometry::TVec3f local_110;
+    JGeometry::TVec3f kartZDir;
+    JGeometry::TVec3f local_128;
     
     if (tstObjFlagHidding() != 0) {
         return;
@@ -513,23 +531,48 @@ void TJugem::move(int kartIndex) {
 
         const f32 kSnapThreshold = 0.1f;
         if (kartPosDiff.squared() < kSnapThreshold) {
-            _22c.set(kartPosCopy);
+            _22c.x = kartPosCopy.x;
+            _22c.y = kartPosCopy.y;
+            _22c.z = kartPosCopy.z;
         }
     }
 
-    getZDir(kartIndex, &zDir);
-    getJugemOrigin(zDir, &jugemOrigin);
-    globalMove(&jugemOrigin);
+    ObjUtility::getKartZdir(kartIndex, &kartZDir);
+    if (checkKartCrash()) {
+        local_110.set(_238);
+    } else {
+        local_110.set(kartZDir.x, 0.0f, kartZDir.z);
+    }
 
-    chase(kartIndex, jugemOrigin, _214, jugemOrigin);
-    _214.set(jugemOrigin);
+    local_110.normalize();
+
+    if (local_110.isZero()) {
+        local_110.set(1.0f, 0.0f, 0.0f);
+    }
+    
+    local_d4.set(local_110);
+    _238.set(local_110);
+    local_128.set(local_d4);
+    local_128.setLength(scJugemDistance);
+    
+    if (local_128.y < 0.0f) {
+        local_128.y = 200.0f;
+    } else {
+        local_128.y += 200.0f;
+    }
+
+    local_c8.set(local_128);
+    globalMove(&local_c8);
+    chase(kartIndex, local_c8, _214, local_c8);
+    _214.set(local_c8);
     mSplineInterp.update();
 
-    localMove(&jugemOrigin);
+    localMove(&local_c8);
 
     f32 limitY = 5.0f;
 
     switch (getState()) {
+        
         case 5:
             if (mSplineInterp.checkUnknownBool13() != 0) {
                 limitY = 10.0f;
@@ -543,38 +586,39 @@ void TJugem::move(int kartIndex) {
             break;
     }
 
-    fixPosition(&jugemOrigin, limitY);
-    mVel.sub(jugemOrigin, mPos);
-    setPosition(jugemOrigin);
+    fixPosition(&local_c8, limitY);
+    mVel.sub(local_c8, mPos);
+    setPosition(local_c8);
 
     if (getGlobalState() == 1) {
         if (checkKartCrash()) {
-            mRotMtx.getZDir(zDir);
+            mRotMtx.getZDirInline(local_d4);
         } else {
             ObjUtility::getKartVel(mKartNum, &local_f8);
-            if (local_f8.dot(zDir) >= 0.0f) {
+            if (local_f8.dot(local_d4) >= 0.0f) {
+                limitY = local_f8.squared();
                 local_f8.normalize();
-    
+                
                 local_104.sub(mPos, _22c);
+                limitY = local_104.squared();
                 local_104.normalize();
-
-                zDir.add(local_f8, local_104);
-                zDir.negate();
+                local_d4.add(local_f8, local_104);
+                local_d4.negate();
             } else {
-                mRotMtx.getZDir(zDir);
+                mRotMtx.getZDirInline(local_d4);
             }
         }
     } else {
-        zDir.sub(_22c, mPos);
+        local_d4.sub(_22c, mPos);
     }
 
-    zDir.y = 0.0f;
-    zDir.normalize();
+    local_d4.y = 0.0f;
+    local_d4.normalize();
 
     static JGeometry::TVec3f zAxis(0.0f, 0.0f, 1.0f);
     static JGeometry::TVec3f yAxis(0.0f, 1.0f, 0.0f);
 
-    if (zAxis.dot(zDir) < -0.9999f) {
+    if (zAxis.dot(local_d4) < -0.9999f) {
         f32 s = sinf(JGeometry::TUtilf::PI());
         f32 c = cosf(JGeometry::TUtilf::PI());
         mRotMtx[1][1] = 1.0f;
@@ -587,7 +631,7 @@ void TJugem::move(int kartIndex) {
         mRotMtx[1][0] = 0.0f;
         mRotMtx[0][1] = 0.0f;
     } else {
-        mRotMtx.setRotate(zAxis, zDir);
+        mRotMtx.setRotate(zAxis, local_d4);
     }
 
     if (mJugemItem != nullptr) {
@@ -787,9 +831,8 @@ void TJugem::fixWall(CrsGround &crsGround, JGeometry::TVec3f *pos) {
     const f32 step = 80.0f;
     const f32 stepHalf = 40.0f;
 
-    f32 norm = dir.normalize();
+    int steps = dir.normalize() / step;
     dir.scale(step);
-    int steps = norm / step;
 
     if (steps > 0x14) {
         steps = 0x14;
@@ -804,10 +847,10 @@ void TJugem::fixWall(CrsGround &crsGround, JGeometry::TVec3f *pos) {
     JGeometry::TVec3f next;
 
     for (s32 i = steps; i >= 0; i--) {
-        cur.scaleAdd(i, dir, *pos);
+        JMAVECScaleAdd(&dir, pos, &cur, i);
         cur.y  = heightStep * (steps - i) + _22c.y;
 
-        next.scaleAdd(i + 1, dir, *pos);
+        JMAVECScaleAdd(&dir, pos, &next, i + 1);
         next.y = heightStep * (steps - i - 1) + _22c.y;
 
         crsGround.search(cur);
@@ -870,7 +913,7 @@ void TJugem::setLimitation(JGeometry::TVec3f *param_1, f32 param_2, f32 param_3)
     JGeometry::TVec3f kartVel;
     ObjUtility::getKartVel(mKartNum, &kartVel);
 
-    f32 kartVelMag = kartVel.length();
+    f32 kartVelMag = PSVECMag(&kartVel);
 
     JGeometry::TVec3f local_70;
     local_70.sub(*param_1, mPos);
@@ -883,7 +926,7 @@ void TJugem::setLimitation(JGeometry::TVec3f *param_1, f32 param_2, f32 param_3)
         local_7c = local_70;
         local_7c.y = 0.0f;
 
-        if (local_7c.length() > maxLen) {
+        if (PSVECMag(&local_7c) > maxLen) {
             local_7c.setLength(maxLen);
             local_7c.y = yPosDiff;
             param_1->add(mPos, local_7c);
@@ -918,7 +961,7 @@ void TJugem::chase(int param_1, const JGeometry::TVec3f &param_2, const JGeometr
             local_6c.setLength(sChaseAccel);
             local_6c.y *= 1.5f;
             _220.add(local_6c);
-            vecMag = _220.length();
+            vecMag = PSVECMag(&_220);
             if (vecMag > 10.0f) {
                 _220.setLength(10.0f);
             }
@@ -934,7 +977,7 @@ void TJugem::chase(int param_1, const JGeometry::TVec3f &param_2, const JGeometr
             if (_220.z * local_6c.z < 0.0f) {
                 _220.z += local_6c.z;
             }
-            vecMag = _220.length();
+            vecMag = PSVECMag(&_220);
             if (vecMag < sChaseEndSpeed) {
                 param_4.set(param_2);
                 _220.zero();
@@ -1091,7 +1134,7 @@ bool TJugem::nodeCallBack(J3DJoint* joint, int param_2) {
 
 void TJugem::setCameraNum(u8 cam) {
     #line 1520
-    JUT_ASSERT(cam < scJugemCameraMax);
+    JUT_ASSERT_MSG(cam < scJugemCameraMax, "cam < scJugemCameraMax");
     mCameraNum = cam;
     if (mSignal != nullptr) {
         mSignal->mKartCamIndex = mCameraNum;
@@ -1101,7 +1144,7 @@ void TJugem::setCameraNum(u8 cam) {
 void TJugem::setKartNum(u8 kart) {
     #line 1531
     u8 scJugemKartMax = 8;
-    JUT_ASSERT(kart < scJugemKartMax);
+    JUT_ASSERT_MSG(kart < scJugemKartMax, "kart < scJugemKartMax");
     mKartNum = kart;
 }
 
@@ -1110,7 +1153,7 @@ u32 TJugem::getScreenType() {
     s32 screenType = 0;
 
     #line 1711
-    JUT_ASSERT(consoleNum > 0);
+    JUT_ASSERT_MSG(consoleNum > 0, "consoleNum > 0");
 
     // TODO: See if this can become an enum.
     switch (consoleNum) {
@@ -1126,7 +1169,7 @@ u32 TJugem::getScreenType() {
             break;
         default:
             #line 1725
-            JUT_ASSERT(false);
+            JUT_ASSERT_MSG(false, "false");
             break;
     }
     return screenType;

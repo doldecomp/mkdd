@@ -183,7 +183,6 @@ public:
     void initEffect();
     void initHaveEffect();
     virtual ~ItemFireBall() {} // 0x80249c9c
-    bool IsEfctTypeRed() const { return getItemColorID() == 1; }
 
     JPABaseEmitter *_2ec[3];
     JPABaseEmitter *_2f8[2];

@@ -21,7 +21,8 @@ typedef struct CatchInfo {
 } CatchInfo;
 
 void __unregister_fragment(int fragmentID);
-int __register_fragment(struct __eti_init_info *info, char *TOC);
+// struct __eti_init_info* info
+int __register_fragment(void* info, char* TOC);
 void* __register_global_object(void* object, void* destructor, void* regmem);
 void __destroy_global_chain(void);
 extern char __throw_catch_compare(const char* throwtype, const char* catchtype, s32* offset_result);

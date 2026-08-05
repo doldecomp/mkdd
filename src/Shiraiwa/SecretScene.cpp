@@ -78,9 +78,9 @@ void TAutoPWindow::reset() {
     setType(1);
     mPrintWindow->getTextBox()->hide();
     _30->hide();
-    mPrintWindow->mInfo._2f0 = 0;
-    mPrintWindow->mInfo._2ec = 1;
-    mPrintWindow->mInfo._2f8 = 2;
+    mPrintWindow->_2f0 = 0;
+    mPrintWindow->_2ec = 1;
+    mPrintWindow->_2f8 = 2;
     mTransform->setFrame(0.0f);
     mScreen->animation();
     setAudioIDs(0, 0);
@@ -92,7 +92,7 @@ void TAutoPWindow::setType(u32 type) {
         _34 = _30;
     }
     else {
-        mPrintWindow->mInfo.type = type;
+        mPrintWindow->_2e8 = type;
         _34 = mPrintWindow->getTextBox();
     }
 }
@@ -103,7 +103,7 @@ void TAutoPWindow::setAnimationFrame(f32 frame) {
         mScreen->animation();
     }
     else {
-        mPrintWindow->mInfo.frame = frame;
+        mPrintWindow->_2f4 = frame;
     }
 }
 

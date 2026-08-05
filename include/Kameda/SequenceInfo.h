@@ -12,10 +12,6 @@
 class SequenceInfo
 {
 public:
-    enum GhostSaveLoad {
-
-    };
-
     void init(); // 0x801515f0
     void setRandomSeed(); // 0x80151760
     u32 getRandom(); // 0x80151790

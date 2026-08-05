@@ -36,7 +36,7 @@ private:
     void *mBmgFile;
     PrintWindow *mPrintWindow;
     int mBmgId;
-    JUTColor mColor;
+    JUtility::TColor mColor;
 };
 
 #endif

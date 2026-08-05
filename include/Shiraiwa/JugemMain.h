@@ -34,7 +34,6 @@ public:
     virtual void update();
     virtual void viewCalc(u32);
     virtual void setCurrentViewNo(u32);
-
     virtual const char *getBmdFileName();
     virtual const char *getShadowBmdFileName();
     virtual void createColModel(J3DModelData *);
@@ -84,6 +83,9 @@ public:
 
     void setKartNum(u8);
     static u32 getScreenType();
+    u32 getJ3DModelDataTevStageNum() const {
+        return 0x20020; // TODO: Identify what this value really represents.
+    }
     
     void setCameraNum(u8 cam);
 
@@ -225,9 +227,9 @@ private:
     static Vec scLapPointsIn_multi[10];
 
     // JugemReverse
-    static const Vec scReversePoints2[4];
-    static const Vec scReversePoints0_1p[5];
-    static const Vec scReversePoints0_multi[5];
+    static Vec scReversePoints2[4];
+    static Vec scReversePoints0_1p[5];
+    static Vec scReversePoints0_multi[5];
     static const Vec scReversePoints1_1p[6]; // unused
     static const Vec scReversePoints1_multi[6];
     static s16 scReverseJudgeTime;
