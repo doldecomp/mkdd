@@ -29,6 +29,8 @@ public:
     void draw();           // 0x801832d0
     void calc();           // 0x80183344
 
+    void reset() { init(); }
+
     // Inline/Unused
     ~Demo2D();
 

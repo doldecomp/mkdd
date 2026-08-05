@@ -115,8 +115,8 @@ namespace ReadPrintMessage
                 {
                 case 0:
                 {
-                    JUtility::TColor color = getColor(bmcPtr, tagData[0]);
-                    JUtility::TColor gradient = getColor(bmcPtr, tagData[1]);
+                    JUTColor color = getColor(bmcPtr, tagData[0]);
+                    JUTColor gradient = getColor(bmcPtr, tagData[1]);
                     snprintf(buf, sizeof(buf), "\eCC[%02X%02X%02X%02X]\eGC[%02X%02X%02X%02X]",
                              color.r, color.g, color.b, color.a,
                              gradient.r, gradient.g, gradient.b, gradient.a);
@@ -148,7 +148,7 @@ namespace ReadPrintMessage
                 switch (tagID)
                 {
                 case 0:
-                    JUtility::TColor color = getColor(bmcPtr, tagData[0]);
+                    JUTColor color = getColor(bmcPtr, tagData[0]);
                     snprintf(buf, sizeof(buf), "\eCC[%02X%02X%02X%02X]\eGC[%02X%02X%02X%02X]",
                              color.r, color.g, color.b, color.a,
                              color.r, color.g, color.b, color.a);

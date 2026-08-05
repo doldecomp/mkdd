@@ -1,60 +1,18 @@
 #ifndef JGEOMETRY_QUAT_H
 #define JGEOMETRY_QUAT_H
 
+#include "dolphin/mtx.h"
+
 #include <JSystem/JGeometry/Vec.h>
 #include "JSystem/JGeometry/Util.h"
 #include "JSystem/JMath/JMath.h"
-#include "dolphin/mtx.h"
+
 #include "types.h"
 
 namespace JGeometry {
     template <typename T>
-    struct TQuat4
-    {
+    struct TQuat4 : public TVec4< T > {
     public:
-        /* Constructors */
-        inline TQuat4() {}
-
-        TQuat4(T xyz, T _w)
-        {
-            this->x = xyz;
-            this->y = xyz;
-            this->z = xyz;
-            this->w = _w;
-        }
-
-        TQuat4(T _x, T _y, T _z, T _w)
-        {
-            this->x = _x;
-            this->y = _y;
-            this->z = _z;
-            this->w = _w;
-        }
-
-
-        template <typename A>
-        TQuat4(A _x, A _y, A _z, A _w)
-        {
-            x = _x;
-            y = _y;
-            z = _z;
-            w = _w;
-        }
-
-        template <typename A>
-        void set(A _x, A _y, A _z, A _w) {
-            x = _x;
-            y = _y;
-            z = _z;
-            w = _w;
-        }
-    };
-
-    template <>
-    class TQuat4<f32> : public Quaternion {
-    public:
-        JGeometry::TVec3f& xyz() { return (JGeometry::TVec3f&)*this; }
-
         TQuat4() {}
         TQuat4(f32 _x, f32 _y, f32 _z, f32 _w)
         {
@@ -131,7 +89,7 @@ namespace JGeometry {
             this->w = cosf(pAngle * 0.5f);
         }
 
-        void setRotate(const TVec3f& from, const TVec3f& to, f32 amount)
+        void setRotate(const TVec3f& from, const TVec3f& to)
         {
             TVec3<T> axis;
             axis.cross(from, to);
@@ -142,14 +100,9 @@ namespace JGeometry {
                 return;
             }
 
-            f32 halfAngle = JMAAtan2Radian(len, from.dot(to)) * amount;
+            f32 halfAngle = 0.5f * (JMAAtan2Radian(len, from.dot(to)));
             this->xyz().scale(::sinf(halfAngle) / len, axis);
             this->w = cosf(halfAngle);
-        }
-
-        void setRotate(const TVec3f& a, const TVec3f& b)
-        {
-            setRotate(a, b, 1.0f);
         }
 
         // Assumes unit quaternion. These were renamed to "transform" in SMG.

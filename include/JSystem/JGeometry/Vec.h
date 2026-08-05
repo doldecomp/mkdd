@@ -2,6 +2,7 @@
 #define JGEOMETRY_VEC_H
 
 #include "JSystem/JGeometry/Util.h"
+#include "JSystem/JGeometry/Vec.h"
 
 namespace JGeometry {
     inline void setTVec3f(register const f32 *src, register f32 *dst)
@@ -383,13 +384,54 @@ namespace JGeometry {
             return invsqrt * sq;
         }
     };
+
+    template < typename T >
+    class TVec4 : public Quaternion {
+    public:
+        /* Constructors */
+        TVec4() {}
+
+        template < typename A >
+        TVec4(A _x, A _y, A _z, A _h) {
+            x = _x;
+            y = _y;
+            z = _z;
+            w = _h;
+        }
+
+        /* General operations */
+        template < typename A >
+        void set(const JGeometry::TVec4< A > &rVec) {
+            this->x = rVec.x;
+            this->y = rVec.y;
+            this->z = rVec.z;
+            this->w = rVec.w;
+        }
+
+        template < typename A >
+        void set(A _x, A _y, A _z, A _w) {
+            x = _x;
+            y = _y;
+            z = _z;
+            w = _w;
+        }
+
+        void scale(T val);
+
+        TVec3<T>& xyz() { return (JGeometry::TVec3f&)*this; }
+    };
+
     typedef TVec2<f64> TVec2d;
     typedef TVec2<f32> TVec2f;
     typedef TVec2<s16> TVec2s;
     typedef TVec3<f64> TVec3d;
     typedef TVec3<f32> TVec3f;
     typedef TVec3<s16> TVec3s;
-    
+    typedef TVec4<f64> TVec4d;
+    typedef TVec4<f32> TVec4f;
+    typedef TVec4<s16> TVec4s;
+
+
     // These need to be specialized or explicitly instantiated here to emit them in the right order in RaceMgr, and
     // MWCC doesn't allow explicitly instantiating template constructors, so they're probably both specialized
     template <> template <> inline TVec3f::TVec3(f32 X, f32 Y, f32 Z) { set(X, Y, Z); }

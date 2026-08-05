@@ -3,6 +3,7 @@
 #include "Kaneshige/RaceMgr.h"
 
 #include "JSystem/JAudio/JASFakeMatch2.h"
+#include "dolphin/types.h"
 
 WipeManager *WipeManager::mThis;
 Task *WipeManager::mTask;
@@ -768,7 +769,7 @@ int WipeManager::getWipeState(int kart)
     return _0[kart].mWipeState;
 }
 
-void WipeManager::setWipe(int kart, int wipeType, short p3, short p4, short p5, JUtility::TColor color)
+void WipeManager::setWipe(int kart, int wipeType, s16 p3, s16 p4, s16 p5, JUtility::TColor color)
 {
 #line 964
     JUT_MINMAX_ASSERT(0, kart, 8);

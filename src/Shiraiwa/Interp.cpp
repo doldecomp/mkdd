@@ -1,6 +1,7 @@
 #include "Shiraiwa/Interp.h"
 #include "JSystem/JGeometry/Vec.h"
 #include "JSystem/JUtility/JUTAssert.h"
+#include "Shiraiwa/Coord3D.h"
 
 TBSplineInterp::TBSplineInterp() {
     _5 = 0;
@@ -14,6 +15,7 @@ TBSplineInterp::TBSplineInterp() {
 TBSplineInterp::~TBSplineInterp() {}
 
 void TBSplineInterp::init(JGeometry::TVec3f *pos) {
+#line 41
     mpCurPos = pos;
     JUT_ASSERT(mpCurPos != 0);
 }
@@ -59,8 +61,7 @@ bool TBSplineInterp::update() {
                 _10 = 0;
             }
             else {
-                const JGeometry::TVec3f &point = ((const JGeometry::TVec3f *)mpPoint)[(u8)(_5 - 1)];
-                mpCurPos->set(point);
+                mpCurPos->set(getPointX(_5 - 1), getPointY(_5 - 1), getPointZ(_5 - 1));
                 _13 = false;
             }
         }
@@ -81,7 +82,67 @@ bool TBSplineInterp::checkReachTarget() {
     return _10 > _5;
 }
 
-void TBSplineInterp::updatePos() {}
+void TBSplineInterp::updatePos() {
+    pointUpdate(mRatio);
+
+    u8 indices[4];
+    for (int i = -1; i < 3; i++)
+    {
+        int index = _10 + i;
+
+        if (index > _5 - 1) {
+            if (_12) {
+                index -= _5;
+            }
+            else {
+                index = _5 - 1;
+            }
+        }
+        else {
+            if (index < 0) {
+                if (_12) {
+                    index += _5;
+                }
+                else {
+                    index = 0;                    
+                }      
+            }
+        }
+
+        indices[i+1] = index;
+    }
+
+    if (_14) { // with offset
+        mpCurPos->x = mOffset.x + (mPoint.x * getPointX(indices[0]) +
+            mPoint.y * getPointX(indices[1]) +
+            mPoint.z * getPointX(indices[2]) +
+            mPoint.w * getPointX(indices[3]));
+        mpCurPos->y = mOffset.y + (mPoint.x * getPointY(indices[0]) +
+            mPoint.y * getPointY(indices[1]) +
+            mPoint.z * getPointY(indices[2]) +
+            mPoint.w * getPointY(indices[3]));
+        mpCurPos->z = mOffset.z + (mPoint.x * getPointZ(indices[0]) +
+            mPoint.y * getPointZ(indices[1]) +
+            mPoint.z * getPointZ(indices[2]) +
+            mPoint.w * getPointZ(indices[3]));
+    }
+    else { // without offset
+        mpCurPos->x = (mPoint.x * getPointX(indices[0]) +
+            mPoint.y * getPointX(indices[1]) +
+            mPoint.z * getPointX(indices[2]) +
+            mPoint.w * getPointX(indices[3]));
+        mpCurPos->y = (mPoint.x * getPointY(indices[0]) +
+            mPoint.y * getPointY(indices[1]) +
+            mPoint.z * getPointY(indices[2]) +
+            mPoint.w * getPointY(indices[3]));
+        mpCurPos->z = (mPoint.x * getPointZ(indices[0]) +
+            mPoint.y * getPointZ(indices[1]) +
+            mPoint.z * getPointZ(indices[2]) +
+            mPoint.w * getPointZ(indices[3]));
+    }
+
+
+}
 
 void TBSplineInterp::ratioUpdate() {
     mRatio += mSpeed;
@@ -95,7 +156,24 @@ void TBSplineInterp::ratioUpdate() {
     
 }
 
-void TBSplineInterp::setRotation(u8) {}
+void TBSplineInterp::setRotation(u8 p1) {
+#line 242
+    JUT_ASSERT(mRotate != 0);
+
+    JGeometry::TVec3f v;
+    if (p1 < 1) {
+        v.set(0.0f, 0.0f, 0.0f);
+    }
+    else {
+        v.set(getPointX(p1) - getPointX(p1-1), 0.0f, getPointZ(p1) - getPointZ(p1-1));
+    }
+    
+
+    if (v.length() > 10.0f) {
+        v.normalize();
+        mRotate->setTargetVec(v, mSpeed, mSpeed, mRatio, 'z');
+    }
+}
 
 void TBSplineInterp::setSpeed(f32 speed) {
     mSpeed = speed;
@@ -130,3 +208,5 @@ void TBSplineInterp::restart() {
         mRotate->restart();
     }
 }
+
+#include "JSystem/JAudio/JASFakeMatch2.h"

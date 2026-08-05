@@ -381,12 +381,12 @@ config.libs = [
             Object(Matching, "Runtime/__mem.c"),
             Object(Matching, "Runtime/__va_arg.c"),
             Object(Matching, "Runtime/global_destructor_chain.c"),
-            Object(NonMatching, "Runtime/NMWException.cp"),
+            Object(Matching, "Runtime/NMWException.cp"),
             Object(Matching, "Runtime/CPlusLibPPC.cp"),
             Object(Matching, "Runtime/ptmf.c"),
             Object(Matching, "Runtime/runtime.c"),
             Object(Matching, "Runtime/__init_cpp_exceptions.cpp"),
-            Object(NonMatching, "Runtime/Gecko_ExceptionPPC.cp"),
+            Object(Matching, "Runtime/Gecko_ExceptionPPC.cp"),
             Object(Matching, "Runtime/GCN_mem_alloc.c"),
         ]
     ),
@@ -509,7 +509,7 @@ config.libs = [
     DolphinLib(
         "amcstubs",
         [
-            Object(NonMatching, "dolphin/amcstubs/AmcExi2Stubs.c")
+            Object(Matching, "dolphin/amcstubs/AmcExi2Stubs.c")
         ]        
     ),
     DolphinLib(
@@ -663,12 +663,12 @@ config.libs = [
     DolphinLib(
         "mtx",
         [
-            Object(NonMatching, "dolphin/mtx/mtx.c"),
-            Object(NonMatching, "dolphin/mtx/mtxvec.c"),
-            Object(NonMatching, "dolphin/mtx/mtx44.c"),
+            Object(Matching, "dolphin/mtx/mtx.c"),
+            Object(Matching, "dolphin/mtx/mtxvec.c"),
+            Object(Matching, "dolphin/mtx/mtx44.c"),
             Object(Matching, "dolphin/mtx/mtx44vec.c"),
             Object(Matching, "dolphin/mtx/vec.c"),
-            Object(NonMatching, "dolphin/mtx/quat.c"),
+            Object(Matching, "dolphin/mtx/quat.c"),
         ]
     ),
     DolphinLib(
@@ -1080,14 +1080,14 @@ config.libs = [
         [
             Object(NonMatching, "Kameda/Motor.cpp"),
             Object(NonMatching, "Kameda/MotorManager.cpp"),
-            Object(NonMatching, "Kameda/J2DManager.cpp"),
+            Object(Matching, "Kameda/J2DManager.cpp"),
             Object(Matching, "Kameda/Task.cpp"),
             Object(NonMatching, "Kameda/Goal2D.cpp"),
             Object(NonMatching, "Kameda/PauseManager.cpp"),
             Object(NonMatching, "Kameda/Pause2D.cpp"),
             Object(Matching, "Kameda/WipeManager.cpp"),
             Object(NonMatching, "Kameda/Fade.cpp"),
-            Object(NonMatching, "Kameda/K2DPicture.cpp"),
+            Object(Matching, "Kameda/K2DPicture.cpp"),
             Object(Matching, "Kameda/Scene.cpp"),
             Object(Matching, "Kameda/SceneApp.cpp"),
             Object(NonMatching, "Kameda/SceneTitle.cpp"),
@@ -1103,25 +1103,25 @@ config.libs = [
             Object(NonMatching, "Kameda/PrintProgressive.cpp"),
             Object(NonMatching, "Kameda/PrintMemoryCard.cpp"),
             Object(NonMatching, "Kameda/PreRace2D.cpp"),
-            Object(NonMatching, "Kameda/Go2D.cpp"),
+            Object(Matching, "Kameda/Go2D.cpp"),
             Object(NonMatching, "Kameda/Mario.cpp"),
             Object(NonMatching, "Kameda/SceneMenu.cpp"),
             Object(Matching, "Kameda/Demo2D.cpp"),
-            Object(NonMatching, "Kameda/Go3212D.cpp"),
+            Object(Matching, "Kameda/Go3212D.cpp"),
             Object(NonMatching, "Kameda/CharacterSelect3D.cpp"),
             Object(NonMatching, "Kameda/SceneCourseSelect.cpp"),
             Object(NonMatching, "Kameda/SceneGhostLoadSave.cpp"),
-            Object(NonMatching, "Kameda/PrintWindow.cpp"),
-            Object(NonMatching, "Kameda/CourseName2D.cpp"),
+            Object(Matching, "Kameda/PrintWindow.cpp"),
+            Object(Matching, "Kameda/CourseName2D.cpp"),
             Object(NonMatching, "Kameda/SceneLanEntry.cpp"),
             Object(NonMatching, "Kameda/SceneMapSelect.cpp"),
             Object(Matching, "Kameda/BattleName2D.cpp"),
             Object(NonMatching, "Kameda/LapGhost2D.cpp"),
-            Object(NonMatching, "Kameda/CanNotSaveG2D.cpp"),
+            Object(Matching, "Kameda/CanNotSaveG2D.cpp"),
             Object(NonMatching, "Kameda/LANResult2D.cpp"),
             Object(NonMatching, "Kameda/LANNum2D.cpp"),
-            Object(NonMatching, "Kameda/Cup2D.cpp"),
-            Object(NonMatching, "Kameda/BombStart2D.cpp")
+            Object(Matching, "Kameda/Cup2D.cpp"),
+            Object(Matching, "Kameda/BombStart2D.cpp")
         ]
     ),
     GameLib(
@@ -1220,7 +1220,7 @@ config.libs = [
             Object(NonMatching, "Kawano/osage.cpp"),
             Object(NonMatching, "Kawano/accessory.cpp"),
             Object(NonMatching, "Kawano/laurel.cpp"),
-            Object(NonMatching, "Kawano/driverObj.cpp"),
+            Object(Matching, "Kawano/driverObj.cpp"),
             Object(Matching, "Kawano/SceneTitleLine.cpp"),
             Object(NonMatching, "Kawano/StaffRoll2D.cpp")
         ]
@@ -1230,7 +1230,7 @@ config.libs = [
         [],
         [
             Object(Matching, "Osako/clock.cpp"),
-            Object(NonMatching, "Osako/animator.cpp"),
+            Object(Matching, "Osako/animator.cpp"),
             Object(Matching, "Osako/testApp.cpp"),
             Object(Matching, "Osako/shadowModel.cpp"),
             Object(Matching, "Osako/GameApp.cpp"),
@@ -1271,7 +1271,7 @@ config.libs = [
             Object(NonMatching, "Osako/Award2D.cpp"),
             Object(Matching, "Osako/NameEntryHelper.cpp"),
             Object(NonMatching, "Osako/LANBackground.cpp"),
-            Object(NonMatching, "Osako/LANSelectMode.cpp"),
+            Object(Matching, "Osako/LANSelectMode.cpp"),
             Object(NonMatching, "Osako/LANTitle.cpp"),
             Object(NonMatching, "Osako/LANEntry.cpp"),
             Object(NonMatching, "Osako/LANPlayInfo.cpp"),
@@ -1344,10 +1344,10 @@ config.libs = [
         [
             Object(NonMatching, "Shiraiwa/Coord3D.cpp"),
             Object(NonMatching, "Shiraiwa/MapObjDossun.cpp"),
-            Object(NonMatching, "Shiraiwa/JugemMain.cpp"),
+            Object(Matching, "Shiraiwa/JugemMain.cpp"),
             Object(Matching, "Shiraiwa/JugemLap.cpp"),
-            Object(NonMatching, "Shiraiwa/Interp.cpp"),
-            Object(Equivalent, "Shiraiwa/JugemReverse.cpp"),
+            Object(Matching, "Shiraiwa/Interp.cpp"),
+            Object(Matching, "Shiraiwa/JugemReverse.cpp"),
             Object(Matching, "Shiraiwa/JugemRescue.cpp"),
             Object(Matching, "Shiraiwa/JugemVoidRod.cpp"),
             Object(Matching, "Shiraiwa/JugemStart.cpp"),
@@ -1455,7 +1455,7 @@ config.libs = [
             Object(Matching, "Yamamoto/KartStar.cpp"),
             Object(Matching, "Yamamoto/KartTire.cpp"),
             Object(Matching, "Yamamoto/KartThunder.cpp"),
-            Object(NonMatching, "Yamamoto/KartCrash.cpp"),
+            Object(Matching, "Yamamoto/KartCrash.cpp"),
             Object(NonMatching, "Yamamoto/KartDemoCam.cpp"),
             Object(NonMatching, "Yamamoto/KartFitParam.cpp"),
             Object(Matching, "Yamamoto/KartDisp.cpp"),

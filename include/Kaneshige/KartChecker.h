@@ -188,6 +188,9 @@ public:
 
     void setBombEvent(EBombEvent, ItemObj *);
 
+    void setBEHitBomb(ItemObj *itemObj) { setBombEvent(EVENT_1, itemObj); }
+    void setBEJugem() { setBombEvent(EVENT_3, nullptr); }
+
     void beginWarp(JugemPoint *point)
     {
         if (mWarpState == 0)

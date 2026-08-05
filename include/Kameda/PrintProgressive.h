@@ -23,10 +23,10 @@ public:
     void isChoice();             // 0x8016bcbc
     void getCounter();           // 0x8016bd48
     // Inline/Unused
-    // void ~PrintProgressive();
-    // void calc_bck();
-    // void calc_texChange();
-    // void setCounter(int);
+    ~PrintProgressive();
+    void calc_bck();
+    void calc_texChange();
+    void setCounter(int);
 
     int getState() { return _68; }
     int getOption() { return _6c; }

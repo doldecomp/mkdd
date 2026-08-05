@@ -54,7 +54,7 @@ public:
     void calcIn(int kart, int status, int);                             // 0x80139d5c
     void calcOut(int kart, int status, int);                            // 0x8013a400
     int getWipeState(int kart);                                         // 0x8013aa98
-    void setWipe(int kart, int, short, short, short, JUtility::TColor); // 0x8013ab30
+    void setWipe(int kart, int, s16, s16, s16, JUTColor); // 0x8013ab30
     
     // The tasks
     static void initPre();                                              // 0x8013ad30
@@ -94,7 +94,7 @@ private:
 
         // fabricated inlines, only setColor should be needed?(fixed something in setWipe)
         void setWipeType(int type) { mWipeType = type; }
-        void setColor(JUtility::TColor color)
+        void setColor(JUTColor color)
         {
             mColor.r = color.r;
             mColor.g = color.g;
@@ -115,7 +115,7 @@ private:
         s16 _a; // pre
         s16 _c; // main
         s16 _e; // after
-        JUtility::TColor mColor;
+        JUTColor mColor;
     } _0[8];
     int mScrnCount;
     WipeHioNode *mNode;

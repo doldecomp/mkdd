@@ -14,6 +14,7 @@ public:
     static bool tstPause();      // 0x80135288
     void wipeOut(int);           // 0x80135290
     static int getPauseChoice(); // 0x801352d0
+    void setTA();                // 0x8013541c
 
     void setResultStartFlag(bool flag) {mResultStart = flag; }
     void setGameOverFlag(bool flag) { mGameOver = flag; }
@@ -25,6 +26,8 @@ public:
     static PauseManager *getManager() {
         return mThis;
     }
+
+    bool isResultStart() const { return mResultStart; }
 
 private:
     static PauseManager *mThis;    // 0x80416298

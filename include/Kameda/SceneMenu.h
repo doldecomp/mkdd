@@ -2,6 +2,7 @@
 #define SCENEMENU_H
 
 #include "Kameda/Scene.h"
+#include "kartEnums.h"
 
 class SceneMenu : public Scene
 {
@@ -20,11 +21,12 @@ public:
     };
 
     SceneMenu(JKRArchive *, JKRHeap *);  // 0x8016f78c
+    virtual ~SceneMenu();                // 0x80173908
+    virtual void init();                 // 0x80172e6c
+    virtual void draw();                 // 0x80173960
+    virtual void calc();                 // 0x80173f08
+    
     void reset();                        // 0x801725b8
-    void init();                         // 0x80172e6c
-    ~SceneMenu();                        // 0x80173908
-    void draw();                         // 0x80173960
-    void calc();                         // 0x80173f08
     void calcModeAnm();                  // 0x801750b0
     void caleEngine(BckData *);          // 0x801751ac
     void calcEngineMoji(BckData *);      // 0x801751ec
@@ -72,42 +74,42 @@ public:
     void getRndCharSel(int &, int &);    // 0x80182d14
     void changeText();                   // 0x80182e8c
 private:
-    static int mCharVoice;             // 0x80371338
-    static int mCharGoVoice;           // 0x80371388
-    static int mCharIndex;             // 0x803713d8
-    static int mKartIndex;             // 0x803715d4
-    static int mKartPerf;              // 0x80371628
-    static int mLevelID;               // 0x80371668
-    static int mPlayerIconBckTag;      // 0x80371678
-    static int mHowManyDriversBckTag;  // 0x803717b0
-    static int mHowManyDriversBrkTag;  // 0x80371818
-    static int mSingleTagSelectBckTag; // 0x803718c8
-    static int mSingleTagSelectBtkTag; // 0x80371a20
-    static int mSingleTagSelectBrkTag; // 0x80371ae0
-    static int mSingleTagSelectBpkTag; // 0x80371d50
-    static int mModeBckTag;            // 0x80371d88
-    static int mModeBtkTag;            // 0x80371fe0
-    static int mModeBrkTag;            // 0x803720b0
-    static int mModeBpkTag;            // 0x803721a0
-    static int mBattleBckTag;          // 0x803722a0
-    static int mBattleBrkTag;          // 0x80372318
-    static int mCharCCBckTag;          // 0x80372330
-    static int mCharCCBrkTag;          // 0x80372340
-    static int mCharCCBpkTag;          // 0x80372360
-    static int mChar1BckTag;           // 0x803723f0
-    static int mChar1PlusBckTag;       // 0x80372438
-    static int mChar1PlusBrkTag;       // 0x803724d0
-    static int mChar2BckTag;           // 0x803724e0
-    static int mChar2BrkTag;           // 0x80372580
-    static int mChar3BckTag;           // 0x803725a8
-    static int mChar3BrkTag;           // 0x80372680
-    static int mChar4BckTag;           // 0x803726c0
-    static int mCharName;              // 0x80395648
-    static int mPlayerIconPlayerName;  // 0x80395698
-    static int mPowerMojiName;         // 0x803956a8
-    static int mPowerPicName;          // 0x803956b8
-    static int mBattleName;            // 0x803956c8
-    static int mCharCCName;            // 0x803956d4
+    static const u32 mCharVoice[20];             // 0x80371338
+    static const u32 mCharGoVoice[20];           // 0x80371388
+    static const int mCharIndex[20];             // 0x803713d8
+    static const int mKartIndex[21];             // 0x803715d4
+    static const u8 mKartPerf[63];               // 0x80371628
+    static const ERaceLevel mLevelID[4];         // 0x80371668
+    static const u64 mPlayerIconBckTag[33];      // 0x80371678
+    static const u64 mHowManyDriversBckTag[13];  // 0x803717b0
+    static const u64 mHowManyDriversBrkTag[22];  // 0x80371818
+    static const u64 mSingleTagSelectBckTag[43]; // 0x803718c8
+    static const u64 mSingleTagSelectBtkTag[24]; // 0x80371a20
+    static const u64 mSingleTagSelectBrkTag[78]; // 0x80371ae0
+    static const u64 mSingleTagSelectBpkTag[7];  // 0x80371d50
+    static const u64 mModeBckTag[75];            // 0x80371d88
+    static const u64 mModeBtkTag[26];            // 0x80371fe0
+    static const u64 mModeBrkTag[30];            // 0x803720b0
+    static const u64 mModeBpkTag[6];             // 0x803721a0
+    static const u64 mBattleBckTag[15];          // 0x803722a0
+    static const u64 mBattleBrkTag[3];           // 0x80372318
+    static const u64 mCharCCBckTag[2];           // 0x80372330
+    static const u64 mCharCCBrkTag[4];           // 0x80372340
+    static const u64 mCharCCBpkTag[6];           // 0x80372360
+    static const u64 mChar1BckTag[9];            // 0x803723f0
+    static const u64 mChar1PlusBckTag[19];       // 0x80372438
+    static const u64 mChar1PlusBrkTag[2];        // 0x803724d0
+    static const u64 mChar2BckTag[20];           // 0x803724e0
+    static const u64 mChar2BrkTag[5];            // 0x80372580
+    static const u64 mChar3BckTag[27];           // 0x803725a8
+    static const u64 mChar3BrkTag[8];            // 0x80372680
+    static const u64 mChar4BckTag[26];           // 0x803726c0
+    static const char *mCharName[20];            // 0x80395648
+    static const char *mPlayerIconPlayerName[4]; // 0x80395698
+    static const char *mPowerMojiName[4];        // 0x803956a8
+    static const char *mPowerPicName[4];         // 0x803956b8
+    static const char *mBattleName[3];           // 0x803956c8
+    static const char *mCharCCName[8];           // 0x803956d4
 }; // Size: 0x22c0
 
 #endif

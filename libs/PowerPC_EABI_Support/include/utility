@@ -2,6 +2,14 @@
 #define _STD_PAIR_H
 
 namespace std {
+
+template <class T>
+inline void swap(T &a, T &b) {
+	T tmp(a);
+	a = b;
+	b = tmp;
+}
+
 template <typename T1, typename T2>
 struct pair {
 	T1 first;

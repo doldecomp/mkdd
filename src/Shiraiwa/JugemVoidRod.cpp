@@ -216,10 +216,10 @@ void TJugemVoidRod::hideAll() {
     }
 }
 
-void TJugemVoidRod::setJugemRodItem(TJugemRodItem *rodItem, u32 type) {
-    #line 341
-    JUT_ASSERT_MSG(type < TJugemRodItem::cJugemRodItem_Max, "id < TJugemRodItem::cJugemRodItem_Max");
-    _188[type] = rodItem;
+void TJugemVoidRod::setJugemRodItem(TJugemRodItem *rodItem, u32 id) {
+#line 341
+    JUT_ASSERT(id < TJugemRodItem::cJugemRodItem_Max);
+    _188[id] = rodItem;
 }
 
 void TJugemVoidRod::hold(u32 id) {
@@ -227,7 +227,7 @@ void TJugemVoidRod::hold(u32 id) {
         _184->hide();
     }
 #line 356
-    JUT_ASSERT_MSG(id < TJugemRodItem::cJugemRodItem_Max, "id < TJugemRodItem::cJugemRodItem_Max");
+    JUT_ASSERT(id < TJugemRodItem::cJugemRodItem_Max);
     if (id == 0) {
         _184 = nullptr;
     } else if (_188[id] != nullptr) {

@@ -21,25 +21,25 @@ public:
     virtual u8 do_changeGroupID(u8)                                   // _4C
     {
 #line 41
-        JUT_ASSERT_MSG(0, "0&&\"illegal changeGroupID()\"");
+        JUT_ASSERT(0&&"illegal changeGroupID()");
         return 0;
     }
     virtual u8 do_getCurrentGroupId() { return 0; } // _50
     virtual void *do_alloc(u32, int)                // _24
     {
-        JUT_ASSERT_MSG(0, "0&&\"illegal alloc\"");
+        JUT_ASSERT(0&&"illegal alloc");
         return nullptr;
     };
                                                                                        
-    virtual void do_free(void *) { JUT_ASSERT_MSG(0, "0&&\"illegal free\""); }          // _28
+    virtual void do_free(void *) { JUT_ASSERT(0&&"illegal free"); }          // _28
     
-    virtual void do_freeAll() { JUT_ASSERT_MSG(0, "0&&\"illegal freeAll()\""); }        // _2C
+    virtual void do_freeAll() { JUT_ASSERT(0&&"illegal freeAll()"); }        // _2C
     
-    virtual void do_freeTail() { JUT_ASSERT_MSG(0, "0&&\"illegal freeTail()\""); };     // _30
+    virtual void do_freeTail() { JUT_ASSERT(0&&"illegal freeTail()"); };     // _30
     virtual void do_fillFreeArea(){};                                                   // _34
 
 #line 61
-    virtual int do_resize(void *, u32) { JUT_ASSERT_MSG(0, "0&&\"illegal resize\"") return 0; }; // _38
+    virtual int do_resize(void *, u32) { JUT_ASSERT(0&&"illegal resize") return 0; }; // _38
     virtual int do_getSize(void *) { return 0; };                                                // _3C
     virtual u32 do_getFreeSize() { return 0; };                                                  // _40
     virtual void *do_getMaxFreeBlock() { return 0; };                                            // _44

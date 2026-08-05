@@ -100,6 +100,13 @@ public:
     void lodOff() { mEnableLOD = false; }
     u8 getGhostAlpha() const { return mGhostAlpha; }
 
+    void flashOff() { mFlashState = 0; }
+    void flashOn() {
+        if (mFlashState != 0) return;
+        mFlashState = 1;
+        mFlashTime = 0;
+    }
+
 private:
     static s16 sFlashInterval;          // 0x80414648
     static u8 sGhostA;                  // 0x8041464a

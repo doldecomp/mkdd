@@ -66,11 +66,11 @@ void PrintDvdError::init(int errorId) {
     mColor = getColor(mColorFile, getDefaultColor(mBmgFile));
     
     // Inline setters?
-    mPrintWindow->_2e8 = 1;
-    mPrintWindow->_2ec = 1;
-    mPrintWindow->_2f0 = 1;
-    mPrintWindow->_2f4 = 9.0f;
-    mPrintWindow->_2f8 = 2;
+    mPrintWindow->mInfo.type = 1;
+    mPrintWindow->mInfo._2ec = 1;
+    mPrintWindow->mInfo._2f0 = 1;
+    mPrintWindow->mInfo.frame = 9.0f;
+    mPrintWindow->mInfo._2f8 = 2;
     mPrintWindow->calc();
     
     char *msg = getMessage(mBmgFile, mBmgId);

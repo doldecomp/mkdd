@@ -34,11 +34,11 @@ public:
     int getPreRaceWipeType();       // 0x80132064
     void setRace2DDrawFlag(bool);   // 0x80132070
     void hideRace2D();              // 0x80132084
-    void getHideFrameRace2D();      // 0x80132094
+    int getHideFrameRace2D();       // 0x80132094
     bool isHideRace2D();            // 0x801320a0
     bool isRaceEnd();               // 0x801320c0
     bool isGoalAnmEnd(int);         // 0x80132120
-    void getGoalAnmFrame(int);      // 0x801321b0
+    int getGoalAnmFrame(int);       // 0x801321b0
     bool isAlarm(int);              // 0x801321c4
     void startLANNumAnm();          // 0x801321e8
     void startLANNumResultAnm();    // 0x8013220c
@@ -60,21 +60,22 @@ public:
 
     static J2DManager *getManager() { return mThis; }
 
-    static const char *mKartNumberName[8]; // 0x80394378
-    static int mKart2Status[8];            // 0x803fb9a0
-    static int mStatus2Kart[8];            // 0x803fba10
-    static J2DManager *mThis;              // 0x80416288
-    static bool mNetFlag;                  // 0x8041628c
+    static char *mKartNumberName[8]; // 0x80394378
+    static int mKart2Status[8];      // 0x803fb9a0
+    static int mStatus2Kart[4];      // 0x803fba10
+    static J2DManager *mThis;        // 0x80416288
+    static bool mNetFlag;            // 0x8041628c
 
     JKRArchive *mArchive;
     J2DOrthoGraph *mOrtho;
     bool mDrawFlag;
     bool mInit;
+    bool _a;
     int mAnmFrame;
     bool mWinnerAnmFlag[8];
     bool mLoserAnmFlag[8];
     int mDuration;
-    Demo2D *mDemo2D;
+    Demo2D *mDemo;
     PreRace2D *mPreRace;
     Go3212D *mGo321;
     Go2D *mGo;

@@ -41,6 +41,10 @@ public:
 
     ~MenuTitleLine() { mspMenuTitleLine = nullptr; }
 
+    void draw(const J2DGrafContext *graf) {
+        mScreen.draw(0.0f, 0.0f, graf);
+    }
+
     static MenuTitleLine *create(JKRArchive *archive, JKRHeap *heap)
     {
         if (mspMenuTitleLine == nullptr)

@@ -2,7 +2,7 @@
 #include "Kaneshige/RaceMgr.h"
 #include "Shiraiwa/JugemMain.h"
 
-Vec TJugem::scReversePoints0_1p[5] = {
+const Vec TJugem::scReversePoints0_1p[5] = {
     { -400.0f,  scJugemHeight, -1050.0f },
     { -300.0f,  50.0f,         -250.0f },
     {  -50.0f,  50.0f,         -150.0f },
@@ -10,7 +10,7 @@ Vec TJugem::scReversePoints0_1p[5] = {
     {    0.0f,  50.0f,         -350.0f }
 };
 
-Vec TJugem::scReversePoints0_multi[5] = {
+const Vec TJugem::scReversePoints0_multi[5] = {
     { -400.0f,   scJugemHeight, -1050.0f },
     { -300.0f, 100.0f,          -250.0f },
     {  -50.0f, 100.0f,          -150.0f },
@@ -27,7 +27,7 @@ const Vec TJugem::scReversePoints1_multi[6] = {
     { 0.0f,  70.0f,  -50.0f },
 };
 
-Vec TJugem::scReversePoints2[4] = {
+const Vec TJugem::scReversePoints2[4] = {
     { 0.0f, 0.0f,          0.0f },
     { 0.0f, 0.0f,          0.0f },
     { 0.0f, -450.0f,       0.0f },

@@ -49,68 +49,68 @@ public:
         return mCharacterSelect3D;
     }
 
-    static f32 mCharacterDefScale[20];            // 0x80372ec0
-    static f32 mKartDefScale[21];                 // 0x80372f10
-    static f32 mMarioBody[9];                     // 0x80372f64
-    static f32 mDkBody[9];                        // 0x80372f88
-    static f32 mYoshiBody[9];                     // 0x80372fac
-    static f32 mNokoBody[9];                      // 0x80372fd0
-    static f32 mPeachBody[9];                     // 0x80372ff4
-    static f32 mBabyBody[9];                      // 0x80373018
-    static f32 mWarioBody[9];                     // 0x8037303c
-    static f32 mKoopaBody[9];                     // 0x80373060
-    static f32 mDiddyBody[9];                     // 0x80373084
-    static f32 mKoopaJrBody[9];                   // 0x803730a8
-    static f32 mKinopioBody[9];                   // 0x803730cc
-    static f32 mCatherineBody[9];                 // 0x803730f0
-    static f32 mWaluigiBody[9];                   // 0x80373114
-    static f32 mKingTeresaBody[9];                // 0x80373138
-    static f32 mBonusBody[9];                     // 0x8037315c
-    static f32 mMarioArm[36];                     // 0x80373180
-    static f32 mDkArm[36];                        // 0x80373210
-    static f32 mYoshiArm[36];                     // 0x803732a0
-    static f32 mNokoArm[36];                      // 0x80373330
-    static f32 mPeachArm[36];                     // 0x803733c0
-    static f32 mBabyArm[36];                      // 0x80373450
-    static f32 mWarioArm[36];                     // 0x803734e0
-    static f32 mKoopaArm[36];                     // 0x80373570
-    static f32 mDiddyArm[36];                     // 0x80373648
-    static f32 mKoopaJrArm[36];                   // 0x80373720
-    static f32 mKinopioArm[36];                   // 0x803737b0
-    static f32 mCatherineArm[36];                 // 0x80373840
-    static f32 mWaluigiArm[36];                   // 0x803738d0
-    static f32 mKingTeresaArm[36];                // 0x80373960
-    static f32 mBonusArm[36];                     // 0x803739f0
-    static f32 mMarioDump[36];                    // 0x80373a80
-    static f32 mDkDump[36];                       // 0x80373b10
-    static f32 mYoshiDump[36];                    // 0x80373ba0
-    static f32 mNokoDump[36];                     // 0x80373c30
-    static f32 mPeachDump[36];                    // 0x80373cc0
-    static f32 mBabyDump[36];                     // 0x80373d50
-    static f32 mWarioDump[36];                    // 0x80373de0
-    static f32 mKoopaDump[36];                    // 0x80373e70
-    static f32 mKoopaJrDump[36];                  // 0x80373f48
-    static f32 mCatherineDump[36];                // 0x80373fd8
-    static f32 mWaluigiDump[36];                  // 0x80374068
-    static f32 mKingTeresaDump[36];               // 0x803740f8
-    static f32 mBonusDump[36];                    // 0x80374188
-    static f32 mMarioTire[36];                    // 0x80374218
-    static f32 mDkTire[36];                       // 0x803742a8
-    static f32 mYoshiTire[36];                    // 0x80374338
-    static f32 mNokoTire[36];                     // 0x803743c8
-    static f32 mPeachTire[36];                    // 0x80374458
-    static f32 mBabyTire[36];                     // 0x803744e8
-    static f32 mWarioTire[36];                    // 0x80374578
-    static f32 mKoopaTire[36];                    // 0x80374608
-    static f32 mDiddyTire[36];                    // 0x803746e0
-    static f32 mKoopaJrTire[36];                  // 0x803747b8
-    static f32 mKinopioTire[36];                  // 0x80374848
-    static f32 mCatherineTire[36];                // 0x803748d8
-    static f32 mWaluigiTire[36];                  // 0x80374968
-    static f32 mKingTeresaTire[36];               // 0x803749f8
-    static f32 mBonusTire[36];                    // 0x80374a88
-    static f32 mDiddyDump[36];                    // 0x80416358
-    static f32 mKinopioDump[36];                  // 0x8041635c
+    static const f32 mCharacterDefScale[20];      // 0x80372ec0
+    static const f32 mKartDefScale[21];           // 0x80372f10
+    static const f32 mMarioBody[9];               // 0x80372f64
+    static const f32 mDkBody[9];                  // 0x80372f88
+    static const f32 mYoshiBody[9];               // 0x80372fac
+    static const f32 mNokoBody[9];                // 0x80372fd0
+    static const f32 mPeachBody[9];               // 0x80372ff4
+    static const f32 mBabyBody[9];                // 0x80373018
+    static const f32 mWarioBody[9];               // 0x8037303c
+    static const f32 mKoopaBody[9];               // 0x80373060
+    static const f32 mDiddyBody[9];               // 0x80373084
+    static const f32 mKoopaJrBody[9];             // 0x803730a8
+    static const f32 mKinopioBody[9];             // 0x803730cc
+    static const f32 mCatherineBody[9];           // 0x803730f0
+    static const f32 mWaluigiBody[9];             // 0x80373114
+    static const f32 mKingTeresaBody[9];          // 0x80373138
+    static const f32 mBonusBody[9];               // 0x8037315c
+    static const f32 mMarioArm[4][9];             // 0x80373180
+    static const f32 mDkArm[4][9];                // 0x80373210
+    static const f32 mYoshiArm[4][9];             // 0x803732a0
+    static const f32 mNokoArm[4][9];              // 0x80373330
+    static const f32 mPeachArm[4][9];             // 0x803733c0
+    static const f32 mBabyArm[4][9];              // 0x80373450
+    static const f32 mWarioArm[4][9];             // 0x803734e0
+    static const f32 mKoopaArm[6][9];             // 0x80373570
+    static const f32 mDiddyArm[6][9];             // 0x80373648
+    static const f32 mKoopaJrArm[4][9];           // 0x80373720
+    static const f32 mKinopioArm[4][9];           // 0x803737b0
+    static const f32 mCatherineArm[4][9];         // 0x80373840
+    static const f32 mWaluigiArm[4][9];           // 0x803738d0
+    static const f32 mKingTeresaArm[4][9];        // 0x80373960
+    static const f32 mBonusArm[4][9];             // 0x803739f0
+    static const f32 mMarioDump[4][9];            // 0x80373a80
+    static const f32 mDkDump[4][9];               // 0x80373b10
+    static const f32 mYoshiDump[4][9];            // 0x80373ba0
+    static const f32 mNokoDump[4][9];             // 0x80373c30
+    static const f32 mPeachDump[4][9];            // 0x80373cc0
+    static const f32 mBabyDump[4][9];             // 0x80373d50
+    static const f32 mWarioDump[4][9];            // 0x80373de0
+    static const f32 mKoopaDump[6][9];            // 0x80373e70
+    static const f32 mKoopaJrDump[4][9];          // 0x80373f48
+    static const f32 mCatherineDump[4][9];        // 0x80373fd8
+    static const f32 mWaluigiDump[4][9];          // 0x80374068
+    static const f32 mKingTeresaDump[4][9];       // 0x803740f8
+    static const f32 mBonusDump[4][9];            // 0x80374188
+    static const f32 mMarioTire[4][9];            // 0x80374218
+    static const f32 mDkTire[4][9];               // 0x803742a8
+    static const f32 mYoshiTire[4][9];            // 0x80374338
+    static const f32 mNokoTire[4][9];             // 0x803743c8
+    static const f32 mPeachTire[4][9];            // 0x80374458
+    static const f32 mBabyTire[4][9];             // 0x803744e8
+    static const f32 mWarioTire[4][9];            // 0x80374578
+    static const f32 mKoopaTire[6][9];            // 0x80374608
+    static const f32 mDiddyTire[6][9];            // 0x803746e0
+    static const f32 mKoopaJrTire[4][9];          // 0x803747b8
+    static const f32 mKinopioTire[4][9];          // 0x80374848
+    static const f32 mCatherineTire[4][9];        // 0x803748d8
+    static const f32 mWaluigiTire[4][9];          // 0x80374968
+    static const f32 mKingTeresaTire[4][9];       // 0x803749f8
+    static const f32 mBonusTire[4][9];            // 0x80374a88
+    static void *mDiddyDump;                      // 0x80416358
+    static void *mKinopioDump;                    // 0x8041635c
     static CharacterSelect3D *mCharacterSelect3D; // 0x80416360
 private:
     u8 _0[0x1018];

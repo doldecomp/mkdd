@@ -1,9 +1,28 @@
 #ifndef RACE2D_H
 #define RACE2D_H
 
-#include <JSystem/JKernel/JKRHeap.h>
-#include <JSystem/J2D/J2DPicture.h>
-#include "Kaneshige/KartInfo.h"
+#include "kartEnums.h"
+
+#include "JSystem/J2D/J2DPicture.h"
+#include "JSystem/JKernel/JKRHeap.h"
+#include "JSystem/JORReflexible.h"
+#include "Kameda/Task.h"
+#include "Kaneshige/HioMgr.h"
+
+class Race2DParam : public JORReflexible {
+public:
+    // Inline/Unused
+    Race2DParam();
+    virtual ~Race2DParam() {}
+};
+
+class Race2DHioNode : public HioNode {
+public:
+    Race2DHioNode();
+    virtual ~Race2DHioNode() {}
+
+    Race2DParam mParam;
+};
 
 class Race2D
 { 
@@ -16,8 +35,8 @@ public:
     void drawAlarm();                                                                             // 0x80159a90
     void anmTA(int);                                                                              // 0x80159f00
     void getAlphaAnmTA(int, u8 &);                                                     // 0x8015a688
-    void getBestTimeColor(int, JUtility::TColor &, J2DPicture::TCornerColor &);                   // 0x8015a758
-    void getBestLapColor(int, JUtility::TColor &);                                                // 0x8015a874
+    void getBestTimeColor(int, JUTColor &, J2DPicture::TCornerColor &);                   // 0x8015a758
+    void getBestLapColor(int, JUTColor &);                                                // 0x8015a874
     void drawMiniGame();                                                                          // 0x8015a90c
     void drawBomb();                                                                              // 0x8015a978
     void getBombScale(int, int, int);                                                             // 0x8015af3c
@@ -31,7 +50,7 @@ public:
     void setLayoutData();                                                                         // 0x8015da18
     void calcMiniGame();                                                                          // 0x8015f688
     void calcBomb();                                                                              // 0x8015f6f4
-    void getBombColor(JUtility::TColor, JUtility::TColor);                                        // 0x80160590
+    void getBombColor(JUTColor, JUTColor);                                        // 0x80160590
     void isBombReach(int);                                                                        // 0x80160708
     void isBombWinner(int);                                                                       // 0x80160864
     void setEffectPos(int);                                                                       // 0x80160980
@@ -39,12 +58,12 @@ public:
     void calcTimeFrame(bool, int);                                                                // 0x80161114
     void getCornerColor(int);                                                                     // 0x8016152c
     void setEscapeColor(int);                                                                     // 0x80161894
-    void getTimeColor(JUtility::TColor, JUtility::TColor);                                        // 0x80162844
+    void getTimeColor(JUTColor, JUTColor);                                        // 0x80162844
     void startBombDemo();                                                                         // 0x801629bc
-    void isAlarm(int);                                                                            // 0x801629e0
+    bool isAlarm(int);                                                                            // 0x801629e0
     void getMapPos(int, JGeometry::TVec3f &, JGeometry::TVec2f &);                    // 0x80162a40
     void getCharacterInfo(int, int, f32 &, f32 &, f32 &);                                   // 0x80162dac
-    void getCharacterClr(int, int, int, JUtility::TColor &, JUtility::TColor &, u8 &); // 0x80162ec8
+    void getCharacterClr(int, int, int, JUTColor &, JUTColor &, u8 &); // 0x80162ec8
     void getItemInfo(int, int, int, f32 &, f32 &, f32 &);                                   // 0x801635d0
     void decideItem(int, u8, int &);                                                   // 0x8016374c
     static void calcLapInit();                                                         // 0x80163b74
@@ -80,35 +99,48 @@ public:
     void getGoalRankRot(int, f32 &);                                                            // 0x80168cb4
     void getStartLapTimePos(int, int, f32 &);                                                   // 0x80168d1c
     void getGoalLapTimePos(int, int, f32 &);                                                    // 0x80168e30
-    //void mLapTag;                                                                                 // 0x8036fb10
-    //void mItemExTag;                                                                              // 0x8036fb90
-    //void mItemExDrawTag;                                                                          // 0x8036fc10
-    //void mRankTag;                                                                                // 0x8036ff80
-    //void mRankGoalTag;                                                                            // 0x80370080
-    //void mTimeDrawTag;                                                                            // 0x80370100
-    //void mLapTimeDrawTag;                                                                         // 0x803701a0
-    //void mSpeedTag;                                                                               // 0x803707d0
-    //void mSpeedChipTag;                                                                           // 0x803707e8
-    //void mSpeedDrawTag;                                                                           // 0x80370820
-    //void mShineTimeTag;                                                                           // 0x803708f0
-    //void mPlayerNumberName;                                                                       // 0x803950b8
-    //void mLANPlayerNumberName;                                                                    // 0x803950d8
-    //void mDriverName;                                                                             // 0x803950f8
-    //void mPlayerName;                                                                             // 0x80395148
-    //void mLANPlayerName;                                                                          // 0x80395168
-    //void mCharacterName;                                                                          // 0x80395188
-    //void mItemName;                                                                               // 0x803951d8
-    //void mSpeedName;                                                                              // 0x80395254
-    static JUtility::TColor mPlayerNumberColor[10]; // 0x803fbecc
-    // void mTimeLapName;                                                                            // 0x804145d8
-    static Race2D *mThis;                                                                         // 0x80416300
-    //void mTask;                                                                                   // 0x80416304
+    static const u64 mLapTag[16];        // multidimensional?                                       // 0x8036fb10
+    static const u64 mItemExTag[16];     // multidimensional?                                       // 0x8036fb90
+    static const u64 mItemExDrawTag[48]; // multidimensional?                                       // 0x8036fc10
+    static const u64 mRankTag[32];                                                                  // 0x8036ff80
+    static const u64 mRankGoalTag[16];                                                              // 0x80370080
+    static const u64 mTimeDrawTag[20];                                                              // 0x80370100
+    static const u64 mLapTimeDrawTag[198];                                                          // 0x803701a0
+    static const u64 mSpeedTag[3];                                                                  // 0x803707d0
+    static const u64 mSpeedChipTag[7];                                                              // 0x803707e8
+    static const u64 mSpeedDrawTag[11];                                                             // 0x80370820
+    static const u64 mShineTimeTag[5];                                                              // 0x803708f0
+    static const char *mPlayerNumberName[8];                                                        // 0x803950b8
+    static const char *mLANPlayerNumberName[8];                                                     // 0x803950d8
+    static const char *mDriverName[20];                                                             // 0x803950f8
+    static const char *mPlayerName[8];                                                              // 0x80395148
+    static const char *mLANPlayerName[8];                                                           // 0x80395168
+    static const char *mCharacterName[20];                                                          // 0x80395188
+    static const char *mItemName[31];                                                               // 0x803951d8
+    static const char *mSpeedName[10];                                                              // 0x80395254
+    static JUTColor mPlayerNumberColor[10];                                                 // 0x803fbecc
+    static const char *mTimeLapName[2];                                                             // 0x804145d8
+    static Race2D *mThis;                                                                           // 0x80416300
+    static Task *mTask;                                                                             // 0x80416304
     // Inline/Unused
-    // void Race2DParam::Race2DParam();
-    // void ~Race2D();
-    // void getItemPos(int, int, JGeometry::TVec2<f32> &);
-    // void itemUseInit();
-    // void itemUseMain();
+    ~Race2D();
+    void getItemPos(int, int, JGeometry::TVec2f &);
+    void itemUseInit();
+    void itemUseMain();
+
+    void reset() { init(); }
+    void hide() { mHideFrame = 1; }
+    
+    int getHideFrame() const { return mHideFrame; }
+    void setDrawFlag(bool enable) { mDrawFlag = enable; }
+
+    void endBombDemo() { mIsEndBombDemo = true; }
+private:
+    PLACEHOLDER_BYTES(0, 0x4ebc);
+    int mHideFrame;  // 4ebc
+    bool mDrawFlag; // 4ec0
+    bool mIsEndBombDemo; // 4ec1
+    PLACEHOLDER_BYTES(0x4ec2, 0x4ec4);
 };
 
 #endif // RACE2D_H

@@ -401,7 +401,7 @@ struct J2DPane
     u8 mColorAlpha;                  // _0B3
     bool mIsInfluencedAlpha;         // _0B4
     bool mIsConnected;               // _0B5
-    u8 mRotationAxis;                // _0B6
+    char mRotationAxis;              // _0B6
     u8 mBasePosition;                // _0B7
     f32 mAngleX;                     // _0B8
     f32 mAngleY;                     // _0BC

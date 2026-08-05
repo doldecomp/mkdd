@@ -11,12 +11,18 @@ public:
     enum EffectType
     {
         // TODO
+        Effect_Unknown0 = 0x0,
+        Effect_Unknown1 = 0x1,
+        Effect_Unknown2 = 0x2,
         Effect_Unknown4 = 0x4,      // Something collision related...?
         Effect_Unknown5 = 0x5,      // Sound of some material...?
         Effect_Unknown6 = 0x6,      // Something reflection related...?
+        Effect_UnknownD = 0xD,
+        Effect_UnknownF = 0xF,
         Effect_Unknown12 = 0x12,    // Star react.
         Effect_Burn = 0x13,
-        Effect_Star = 0x1c
+        Effect_Star = 0x1c,
+        Effect_Fireball = 0x24,
     };
 
     void init();                                                       // 80266010

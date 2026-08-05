@@ -76,6 +76,7 @@ extern "C"
     void C_QUATMtx(Quaternion*, const Mtx);
     void C_QUATLerp(const Quaternion*, const Quaternion*, Quaternion*, f32);
     void C_QUATSlerp(const Quaternion*, const Quaternion*, Quaternion*, f32);
+    void C_QUATRotAxisRad(float r, float *axis, Vec *rad);
 
     void PSMTX44MultVec(const Mtx44 m, const Vec *src, Vec *dst);
     void PSMTX44MultVecArray(const Mtx44 m, const Vec *srcBase, Vec *dstBase, u32 count);
