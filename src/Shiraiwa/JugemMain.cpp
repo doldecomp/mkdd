@@ -181,6 +181,18 @@ void TJugem::makeAnmCtrl(int num) {
     JUT_MINMAX_ASSERT(0, num, 5);
 }
 
+void TJugem::resetStaticData() {
+    if (isDemoMode()) {
+        for (int i = 0; i < 3; i++) {
+            TAnmPlayer::resetAnimations(sDemoAnmStateTable[i].tAnmInfo, sDemoAnmStateTable[i].arraySize);
+        }
+    } else {
+        for (int i = 0; i < 5; i++) {
+            TAnmPlayer::resetAnimations(sAnmStateTable[i].tAnmInfo, sAnmStateTable[i].arraySize);
+        }
+    }
+}
+
 void TJugem::loadAnimation() {
     J3DModelData *modelData = mModel.getModelData();
     if (isDemoMode()) {
@@ -195,18 +207,6 @@ void TJugem::loadAnimation() {
 
     for (u16 i = 0; i < modelData->getShapeNum(); i++) {
         modelData->getShapeNodePointer(i)->setTexMtxLoadType(0x2000);
-    }
-}
-
-void TJugem::resetStaticData() {
-    if (isDemoMode()) {
-        for (int i = 0; i < 3; i++) {
-            TAnmPlayer::resetAnimations(sDemoAnmStateTable[i].tAnmInfo, sDemoAnmStateTable[i].arraySize);
-        }
-    } else {
-        for (int i = 0; i < 5; i++) {
-            TAnmPlayer::resetAnimations(sAnmStateTable[i].tAnmInfo, sAnmStateTable[i].arraySize);
-        }
     }
 }
 
@@ -956,8 +956,8 @@ void TJugem::chase(int param_1, const JGeometry::TVec3f &param_2, const JGeometr
     
     if (!param_2.equals(param_3)) {
         local_6c.sub(param_2, param_3);
-        vecMag = PSVECMag(&local_6c);
-        if (vecMag > (sChaseDistance ^ 0x80000000)) {
+        vecMag = local_6c.length();
+        if (vecMag > sChaseDistance) {
             local_6c.setLength(sChaseAccel);
             local_6c.y *= 1.5f;
             _220.add(local_6c);
@@ -1142,7 +1142,7 @@ void TJugem::setCameraNum(u8 cam) {
 }
 
 void TJugem::setKartNum(u8 kart) {
-    #line 1530
+    #line 1531
     u8 scJugemKartMax = 8;
     JUT_ASSERT_MSG(kart < scJugemKartMax, "kart < scJugemKartMax");
     mKartNum = kart;
