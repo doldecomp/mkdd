@@ -21,8 +21,12 @@ public:
         Effect_UnknownF = 0xF,
         Effect_Unknown12 = 0x12,    // Star react.
         Effect_Burn = 0x13,
+        Effect_Unknown17 = 0x17,
+        Effect_Unknown1b = 0x1b,    // something slide related
+        Effect_Unknown1A = 0x1A,
         Effect_Star = 0x1c,
-        Effect_Fireball = 0x24,
+        Effect_Unknown23 = 0x23,
+        Effect_Fireball = 0x24
     };
 
     void init();                                                       // 80266010
@@ -34,7 +38,7 @@ public:
     void getNearestCamPtr(const JGeometry::TVec3f &);                  // 8026651c
     static void setEffect(EffectType, int, const JGeometry::TVec3f &, u8);    // 80266728
     void setEffectSplash(CrsGround *, int, const JGeometry::TVec3f &); // 80266858
-    void setEffectEachCam(EffectType, int, u8, u8);                    // 80266a8c
+    static void setEffectEachCam(EffectType, int, u8, u8);                    // 80266a8c
     void setLandEffect(const JGeometry::TVec3f &, CrsGround *, int);   // 80266bf0
     void getLandingEfctName(CrsGround *);                              // 80266d20
     void getKartEfctEmts(int);                                         // 80266dcc
