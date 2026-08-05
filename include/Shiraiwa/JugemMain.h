@@ -24,8 +24,6 @@ class TJugem : public TMapObjHioNode, public StateObserver
 public:
     TJugem();
     virtual ~TJugem();
-    virtual void MoveExec();
-    virtual void InitExec();
     virtual void loadAnimation();
     virtual void createModel(JKRSolidHeap *, u32);
     virtual void createShadowModel(JKRSolidHeap *, u32);
@@ -36,7 +34,11 @@ public:
     virtual void setCurrentViewNo(u32);
     virtual const char *getBmdFileName();
     virtual const char *getShadowBmdFileName();
+    virtual const char *getJ3DModelDataTevStageNum();
     virtual void createColModel(J3DModelData *);
+
+    virtual void InitExec();
+    virtual void MoveExec();
 
     void makeAnmCtrl(int num);
     void resetStaticData();
