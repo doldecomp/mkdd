@@ -56,7 +56,7 @@ public:
     void setEffectPos(int);                                                                       // 0x80160980
     void calcEscape();                                                                            // 0x80160c14
     void calcTimeFrame(bool, int);                                                                // 0x80161114
-    void getCornerColor(int);                                                                     // 0x8016152c
+    static J2DPicture::TCornerColor getCornerColor(int);                                          // 0x8016152c
     void setEscapeColor(int);                                                                     // 0x80161894
     void getTimeColor(JUTColor, JUTColor);                                        // 0x80162844
     void startBombDemo();                                                                         // 0x801629bc

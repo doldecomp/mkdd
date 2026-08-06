@@ -383,7 +383,7 @@ void Race2D::calcEscape() {}
 
 void Race2D::calcTimeFrame(bool, int) {}
 
-void Race2D::getCornerColor(int) {}
+J2DPicture::TCornerColor Race2D::getCornerColor(int) {}
 
 void Race2D::setEscapeColor(int) {}
 
