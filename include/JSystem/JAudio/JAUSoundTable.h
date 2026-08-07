@@ -6,11 +6,12 @@
 
 struct JAUSoundTableItem
 {
-    u8 mPriority;
-    u8 _1;
-    u16 mResourceId;
-    u32 _4;
-    f32 _8;
+    u8 mPriority; // 0
+    u8 _1; // 1
+    u16 mResourceId; // 2
+    u32 _4; // 4
+    u16 _8; // 8
+    u16 _10; // 10
 };
 
 template <typename Root, typename Section, typename Group, typename Typename_0>
