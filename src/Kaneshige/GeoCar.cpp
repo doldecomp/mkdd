@@ -288,7 +288,7 @@ void GeoCar::reset() {
 void GeoCar::setTargetPoint(u16 targetId) {
     CrsData *crsData = RaceMgr::getManager()->getCourse()->getCrsData();
     u16 pointId = targetId; // probably fake
-    CrsData::PathData *pathData = crsData->getPathData(mObjData->pathID);
+    CrsData::PathData *pathData = crsData->getPathData(mObjData->mPathID);
    
     if (pointId == 0xffff) {
         pointId = 0; 
@@ -300,10 +300,10 @@ void GeoCar::setTargetPoint(u16 targetId) {
     u16 nextPointId = pointId + 1;
     mPointIdx = nextPointId;
 
-    mBasePos = crsData->getPointData(mObjData->pathID, pointId)->pos;
+    mBasePos = crsData->getPointData(mObjData->mPathID, pointId)->pos;
     
     JGeometry::TVec3f v;
-    v = crsData->getPointData(mObjData->pathID, nextPointId)->pos;
+    v = crsData->getPointData(mObjData->mPathID, nextPointId)->pos;
 
     CrsGround ground(nullptr);
     ground.search(mBasePos);
@@ -488,10 +488,10 @@ void GeoCar::MoveExec() { Observer_FindAndExec(GeoCar, 6); }
 
 void GeoCar::getTargetPosition(JGeometry::TVec3f *out) {
     CrsData *crsData = RaceMgr::getManager()->getCourse()->getCrsData();
-    CrsData::PointData *point = crsData->getPointData(mObjData->pathID, mPointIdx);
+    CrsData::PointData *point = crsData->getPointData(mObjData->mPathID, mPointIdx);
     out->set(point->pos);
     if (mPointIdx != 0) {
-        CrsData::PointData *prevPoint = crsData->getPointData(mObjData->pathID, mPointIdx - 1);
+        CrsData::PointData *prevPoint = crsData->getPointData(mObjData->mPathID, mPointIdx - 1);
         JGeometry::TVec3f up(0.0f, 1.0f, 0.0f);
         JGeometry::TVec3f dist;
         dist.sub(point->pos, prevPoint->pos);
@@ -522,7 +522,7 @@ void GeoCar::setAllObjectCollision(bool doSet) {
 u16 GeoCar::getPathID() {
     u16 ret = 0xffff;
     if (mObjData)
-        ret = mObjData->pathID;
+        ret = mObjData->mPathID;
     return ret;
 }
 
@@ -630,12 +630,12 @@ void GeoCar::checkTargetPoint() {
     CrsData *crsData = RaceMgr::getManager()->getCourse()->getCrsData();
 
     JGeometry::TVec3f pointPos;
-    pointPos.set(crsData->getPointData(mObjData->pathID, mPointIdx)->pos);
+    pointPos.set(crsData->getPointData(mObjData->mPathID, mPointIdx)->pos);
 
     JGeometry::TVec3f dist;
     dist.sub(pointPos, mPos);
     if (dist.length() <= mTargetRadius) {
-        CrsData::PathData *path = RCMGetCourse()->getCrsData()->getPathData(mObjData->pathID);
+        CrsData::PathData *path = RCMGetCourse()->getCrsData()->getPathData(mObjData->mPathID);
         u16 pointCount = path->pointCount;
         mPointIdx++;
         if (mPointIdx < pointCount)
@@ -646,13 +646,13 @@ void GeoCar::checkTargetPoint() {
         if (path->isClosed())
             return;
     
-        CrsData::PointData *lastPoint = RCMGetCourse()->getCrsData()->getPointData(mObjData->pathID, pointCount - 1);
+        CrsData::PointData *lastPoint = RCMGetCourse()->getCrsData()->getPointData(mObjData->mPathID, pointCount - 1);
         
         if (lastPoint->linkPoint) {
             u16 linkPointId = 0xffff;            
             for (u16 i = 0; i < (u16)pointCount; i++) {
-                //CrsData::PointData *point = RCMGetCourse()->getCrsData()->getPointData(mObjData->pathID, i);
-                if (RCMGetCourse()->getCrsData()->getPointData(mObjData->pathID, i)->linkPoint == lastPoint->linkPoint) {
+                //CrsData::PointData *point = RCMGetCourse()->getCrsData()->getPointData(mObjData->mPathID, i);
+                if (RCMGetCourse()->getCrsData()->getPointData(mObjData->mPathID, i)->linkPoint == lastPoint->linkPoint) {
                     linkPointId = i;
                     break;
                 }                

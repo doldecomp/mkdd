@@ -142,7 +142,7 @@ void GeoRabbitMark::reset() {
     _1c0 = 0;
 
 #line 476
-    JUT_ASSERT_MSG(mObjData->pathID != 0xffff, "UNLINK PATH")
+    JUT_ASSERT_MSG(mObjData->mPathID != 0xffff, "UNLINK PATH")
     bool initialized = false;
     if (mState == 0)
         initialized = true;
@@ -152,9 +152,9 @@ void GeoRabbitMark::reset() {
 void GeoRabbitMark::resetPose(bool initialized) {
     mVel.zero();
     if (initialized) {
-        CrsData::PathData *pathData = RaceMgr::getManager()->getCourse()->getCrsData()->getPathData(mObjData->pathID);
+        CrsData::PathData *pathData = RaceMgr::getManager()->getCourse()->getCrsData()->getPathData(mObjData->mPathID);
         u16 pointId = getGeoRnd()->getRandom() % pathData->pointCount;
-        CrsData::PointData *pointData = RaceMgr::getManager()->getCourse()->getCrsData()->getPointData(mObjData->pathID, pointId);
+        CrsData::PointData *pointData = RaceMgr::getManager()->getCourse()->getCrsData()->getPointData(mObjData->mPathID, pointId);
         mPos.set(pointData->pos);
     }
     else {

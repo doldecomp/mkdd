@@ -54,6 +54,6 @@ void GeoStartLine::createColModel(J3DModelData *) { }
 const char *GeoStartLine::getBmdFileName() {
     static const char *cTreeBmdName = "/Objects/StartLine.bmd";
     return cTreeBmdName;
- }
+}
 
- void GeoStartLine::calc() {}
+void GeoStartLine::calc() {}

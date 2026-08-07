@@ -68,7 +68,7 @@ void GeoObjPathMove::nodeProc() {
 }
 
 CrsData::PathData *GeoObjPathMove::getPathData() {
-    return RCMGetCourse()->getCrsData()->getPathData(mObj.pathID);
+    return RCMGetCourse()->getCrsData()->getPathData(mObj.mPathID);
 }
 
 u16 GeoObjPathMove::getMaxPathNodeNum() {
@@ -76,7 +76,7 @@ u16 GeoObjPathMove::getMaxPathNodeNum() {
 }
 
 void GeoObjPathMove::getPathPos(JGeometry::TVec3f *pos, u16 pointID) {
-    *pos = RCMGetCourse()->getCrsData()->getPointData(mObj.pathID, pointID)->pos;
+    *pos = RCMGetCourse()->getCrsData()->getPointData(mObj.mPathID, pointID)->pos;
 }
 
 void GeoObjPathMoveWaveY::initPath(stRandom *rand, JGeometry::TVec3f *pos, const f32 &p3) {

@@ -118,7 +118,7 @@ public:
 
     void setItemColReaction(u8 p1, u8 p2) { mReaction.setFlg(p1, p2); }
 
-    bool IsPathMove() const { return mObjData->pathID != 0xffff; }
+    bool IsPathMove() const { return mObjData->mPathID != 0xffff; }
 
     template<class T>
     static T *New(const CrsData::SObject &object) { return new T(object); }

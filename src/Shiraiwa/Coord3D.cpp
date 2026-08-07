@@ -23,7 +23,7 @@ void TFreeMove::velUpdate(JGeometry::TVec3f &, f32, f32) {}
 
 TPathMove::TPathMove(const CrsData::SObject *) {}
 
-void TPathMove::update() {}
+u8 TPathMove::update() {}   // return type is some bool/integer type.
 
 void TPathMove::init(JGeometry::TVec3f *, JGeometry::TVec3f *) {}
 
@@ -35,7 +35,7 @@ void TPathMove::setTargetNode(u16, f32, f32) {}
 
 void TPathMove::getNodePosition(JGeometry::TVec3f *, u16) {}
 
-void TPathMove::getNextNode() {}
+u16 TPathMove::getNextNode() {}
 
 void TPathMove::updatePos() {}
 
@@ -57,7 +57,7 @@ void TFreeRotate::init(JGeometry::TPos3f *matrix) {
 
 void TFreeRotate::setTargetVec(const JGeometry::TVec3f &, const JGeometry::TVec3f &, f32, f32, f32) {}
 
-void TFreeRotate::setTargetVec(const JGeometry::TVec3f &, f32, f32, f32, u8) {}
+void TFreeRotate::setTargetVec(const JGeometry::TVec3f &, f32, f32, f32, unsigned char) {}
 
 void TFreeRotate::setTargetQuat(const JGeometry::TQuat4f &q, f32 inc, f32 maxSpd, f32 target) {
     mpMatrix->getQuat(_18);
@@ -95,7 +95,7 @@ void TFreeRotate::angleUpdate() {
 
 void TFreeRotate::velUpdate() {
     if (mSpeed < mMaxSpeed) {
-         mSpeed += mSpeedInc;
+        mSpeed += mSpeedInc;
         if (mSpeed > mMaxSpeed) {
             mSpeed = mMaxSpeed;
         }

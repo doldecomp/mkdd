@@ -125,10 +125,10 @@ void GeoKuribo::reset() {
     _21c = 0.0;
     resetAnimation();
 #line 326
-    JUT_ASSERT_MSG(mObjData->pathID != 0xffff, "UNLINK PATH");
+    JUT_ASSERT_MSG(mObjData->mPathID != 0xffff, "UNLINK PATH");
 
     CrsData *crsData = RaceMgr::getManager()->getCourse()->getCrsData();
-    mPos.set(crsData->getPointData(mObjData->pathID, 0)->pos);
+    mPos.set(crsData->getPointData(mObjData->mPathID, 0)->pos);
     mGround.search(mPos);
     mPos.y = mGround.getHeight();
     mGround.getNormal(&mUpDir);
@@ -151,7 +151,7 @@ void GeoKuribo::resetWalkDirection(s16 pointID) {
     CrsData *crsData = RaceMgr::getManager()->getCourse()->getCrsData();
     s16 startID = pointID; // fakematch?
 
-    CrsData::PathData *pathData = crsData->getPathData(mObjData->pathID);
+    CrsData::PathData *pathData = crsData->getPathData(mObjData->mPathID);
     u16 pointCount = (u16)pathData->pointCount;
 
     if (tstKuriboFlagDecPoint()) {
@@ -163,7 +163,7 @@ void GeoKuribo::resetWalkDirection(s16 pointID) {
         startID++;
     }
     mPointID = startID;
-    CrsData::PointData *pointData = crsData->getPointData(mObjData->pathID, mPointID);
+    CrsData::PointData *pointData = crsData->getPointData(mObjData->mPathID, mPointID);
 
     JGeometry::TVec3f vel;
     vel.sub(pointData->pos, mPos);
@@ -332,7 +332,7 @@ void GeoKuribo::initFuncWalk() {
 }
 
 void GeoKuribo::doFuncWalk() {
-    CrsData::PointData *pointData = RaceMgr::getManager()->getCourse()->getCrsData()->getPointData(mObjData->pathID, mPointID);
+    CrsData::PointData *pointData = RaceMgr::getManager()->getCourse()->getCrsData()->getPointData(mObjData->mPathID, mPointID);
 
     u8 anm_no = GeographyObj::getAnmCtrl()->AnmController::getNowTransNo();
     J3DFrameCtrl *ctrl = GeographyObj::getAnmCtrl()->AnmController::getFrameCtrl(anm_no);
@@ -384,7 +384,7 @@ void GeoKuribo::doFuncWalk() {
     vel2.sub(pointData->pos, mPos);
 
     if (vel2.squared() < (sPointR*sPointR)) {
-        CrsData::PathData *pathData = RCMGetCourse()->getCrsData()->getPathData(mObjData->pathID);
+        CrsData::PathData *pathData = RCMGetCourse()->getCrsData()->getPathData(mObjData->mPathID);
         s16 pointId = pathData->pointCount;
         u8 anm_no = GeographyObj::getAnmCtrl()->AnmController::getNowTransNo();
         J3DFrameCtrl *ctrl = GeographyObj::getAnmCtrl()->AnmController::getFrameCtrl(anm_no);
