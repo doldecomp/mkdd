@@ -59,11 +59,16 @@ public:
         mLapSplits[lap] = other;
     }
 
-    void calcLapTime(int lap, RaceTime nextSplit)
+    const RaceTime& getLapSplit(int lap) const
     {
 #line 109
         JUT_MINMAX_ASSERT(0, lap, NUM_LAP_SPLITS)
-        nextSplit.sub(nextSplit, mLapSplits[lap]);
+        return mLapSplits[lap];
+    }
+
+    void calcLapTime(int lap, RaceTime &nextSplit)
+    {
+        nextSplit.sub(getLapSplit(lap).get());
     }
 
 private:
