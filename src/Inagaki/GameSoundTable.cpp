@@ -1,11 +1,35 @@
 #include "Inagaki/GameSoundTable.h"
 #include "JSystem/JAudio/Interface/JAISound.h"
+#include "JSystem/JAudio/JAUSoundTable.h"
 
 #include "JSystem/JAudio/JASFakeMatch11.h"
+#include "JSystem/JAudio/System/JASGadget.h"
+#include "JSystem/JUtility/JUTAssert.h"
 
 namespace GameAudio {
 
-u16 CustomSoundTable::getBgmSeqResourceID(JAISoundID soundID) const {}
+u16 CustomSoundTable::getBgmSeqResourceID(JAISoundID soundID) const {
+    bool resourceNotNull = false;
+    if(JASGlobalInstance<JAUSoundTable>::sInstance != NULL
+        && JASGlobalInstance<JAUSoundTable>::sInstance->getResource() != NULL)
+    {
+        resourceNotNull = true;
+    }
+
+    // I don't really know where this "isValid" call could come from
+    #line 27
+    JUT_ASSERT_MSG(resourceNotNull, "isValid()");
+
+    JAUSoundTableItem* tableItem = JASGlobalInstance<JAUSoundTable>::sInstance->getData(soundID);
+    const u8 typeId = JASGlobalInstance<JAUSoundTable>::sInstance->getTypeID(soundID);
+
+    if(tableItem != NULL) {
+        // Did not succeed to get 100% without this switch...
+        switch(typeId) case 0x20:
+            return tableItem->_10;
+    }
+    return -1;
+}
 
 u32 CustomSoundTable::getSoundType(JAISoundID soundID) const {}
 
