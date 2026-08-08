@@ -70,6 +70,8 @@ public:
     void killWipe(int idx) { mKillFlag[idx] = true; }
     void startWipe(int idx) { mMoveFlag[idx] = true; }
     void stopWipe(int idx) { mMoveFlag[idx] = false; }
+    int getScreenCount() const { return mScrnCount; }
+
     static WipeManager *getManager() { return mThis; }
 
 private:
