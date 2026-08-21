@@ -118,8 +118,8 @@ int MapSoundObjectMgr::getPlayerGoalRank() {
     u32 n = Main::getAudio()->getCamera()->getSceneMax();
     KartSoundMgr *soundMgr = KartSoundMgr::smStart;
     for (int i = 0; soundMgr && i < n; i++, soundMgr = soundMgr->mNext) {
-        if (soundMgr->_63 == 3) {
-            return (soundMgr->_65 >= 5) ? 1 : 0;
+        if (soundMgr->mPrevConductStatus == 3) {
+            return (soundMgr->mRank >= 5) ? 1 : 0;
         }
     }
     return 2;

@@ -111,6 +111,14 @@ public:
     }
 
     CustomMgr *getCustomMgr() { return mMgr; }
+
+    u32 getFrameCount() const {
+        return _80;
+    }
+
+    f32 getBgmVolume() const {
+        return _9c;
+    }
     // } FABRICATED
 
     CameraMgr *getCamera() {
@@ -145,9 +153,12 @@ private:
     JAISoundHandle _68;           //
     JAISoundHandle _6c;           //
     JAISoundHandle _70;           //
-    u8 _74[0xa8 - 0x74];          //
+    u8 _74[0x80 - 0x74];          //
+    u32 _80;                      // mFrameCount?
     JAISoundHandle _84[4];        // 
-    u8 _94[0xa8 - 0x94];          //
+    u8 _94[0x9c - 0x94];          //
+    f32 _9c;                      // mBgmVolume?
+    u8 _a0[0xa8 - 0xa0];          //
 
 }; // Size: 0xa8
 

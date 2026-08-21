@@ -45,6 +45,19 @@ public:
     {
         // TODO
         Mat_1 = 1,
+        Mat_5 = 5,
+        Mat_6 = 6,
+        Mat_7 = 7,
+        Mat_8 = 8,
+        Mat_9 = 9,
+        Mat_10 = 10,
+        Mat_15 = 15,
+        Mat_16 = 16,
+        Mat_17 = 17,
+        Mat_18 = 18,
+        Mat_19 = 19,
+        Mat_25 = 25,
+        Mat_27 = 27,
         Mat_255 = 0xff,
     };
 
