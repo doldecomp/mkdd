@@ -62,8 +62,12 @@ from typing import Dict, List, Optional, Tuple
 script_dir = os.path.dirname(os.path.realpath(__file__))
 root_dir = os.path.abspath(os.path.join(script_dir, ".."))
 
+def is_windows() -> bool:
+    return os.name == "nt"
+
+EXE = ".exe" if is_windows() else ""
 DEFAULT_MAP = os.path.join(root_dir, "orig", "MarioClub_us", "files", "debugInfoM.MAP")
-NM = os.environ.get("NM", os.path.join(root_dir, "build", "binutils", "powerpc-eabi-nm.exe"))
+NM = os.environ.get("NM", os.path.join(root_dir, "build", "binutils", f"powerpc-eabi-nm{EXE}"))
 OBJDIFF_JSON = os.path.join(root_dir, "objdiff.json")
 
 

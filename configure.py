@@ -26,6 +26,8 @@ from tools.project import (
     is_windows,
 )
 
+from tools.dev_symbols_order_check import configure_symbols_order_check
+
 # Game versions
 DEFAULT_VERSION = 0
 VERSIONS = [
@@ -77,6 +79,11 @@ parser.add_argument(
     "--debug",
     action="store_true",
     help="build with debug info (non-matching)",
+)
+parser.add_argument(
+    "--check-symbols-order",
+    action="store_true",
+    help="add symbols order check at the end of the build"
 )
 if not is_windows():
     parser.add_argument(
@@ -142,6 +149,9 @@ version_num = VERSIONS.index(config.version)
 debug = args.debug
 if config.version == "MarioClub_us":
     debug = True
+
+if args.check_symbols_order:
+    configure_symbols_order_check(config)
 
 # Apply arguments
 config.build_dir = args.build_dir
