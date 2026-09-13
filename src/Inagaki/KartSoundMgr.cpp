@@ -2064,7 +2064,169 @@ void KartSoundMgr::crushRenzokuTaisaku() {
     }
 }
 
-void KartSoundMgr::slipParamSet() {}
+void KartSoundMgr::slipParamSet() {
+    if(mKillSw || _66 == 2) {
+        return;
+    }
+
+    if(_66 != 0)
+    {
+        return;
+    }
+
+    u8 playerMode = Parameters::getPlayerMode();
+
+    u8 r4;
+    if(_e4[0] != 1 && _e4[1] != 1 && _e4[2] != 1 && _e4[3] != 1)
+    {
+        return;
+    }
+
+    f32 f1 = MIN(150.f, _84);
+    switch(_104) {
+        case 6:
+            _101 += 1;
+            _102 = 30.f + ((-25.f * f1) / 150.f);
+            if(_101 > _102) {
+                _101 = 0;
+                if(_103 == 0) {
+                    startSoundHandleNumber(2, 0x10007, 0);
+                    _103 = 1;
+                }
+                else {
+                    startSoundHandleNumber(2, 0x10008, 0);
+                    _103 = 0;
+                }
+            }
+            break;
+        case 13:
+            _101 += 1;
+            _102 = 30.f + ((-25.f * f1) / 150.f);
+            if(_101 > _102) {
+                startSoundHandleNumber(2, 0x1005c, 0);
+            }
+            break;
+        case 5:
+            _101 += 1;
+            _102 = 15.f + ((-13.f * f1) / 150.f);
+            if(_101 > _102) {
+                _101 = 0;
+                if(_103 == 0) {
+                    startSoundHandleNumber(2, 0x10005, 0);
+                    _103 = 1;
+                }
+                else {
+                    startSoundHandleNumber(2, 0x10006, 0);
+                    _103 = 0;
+                }
+            }
+            break;
+        case 10:
+            startSoundHandleNumber(2, 0x10036, 0);
+            break;
+        case 11:
+            startSoundHandleNumber(2, 0x1004e, 0);
+            break;
+        case 12:
+            startSoundHandleNumber(2, 0x10059, 0);
+            break;
+        case 14:
+            startSoundHandleNumber(2, 0x1004f, 0);
+            break;
+        case 15:
+            startSoundHandleNumber(2, 0x10057, 0);
+            break;
+        case 16:
+            startSoundHandleNumber(2, 0x10058, 0);
+            break;
+        case 17:
+            startSoundHandleNumber(2, 0x1004D, 0);
+            break;
+        case 19:
+            startSoundHandleNumber(2, 0x1003B, 0);
+            break;
+        case 20:
+            startSoundHandleNumber(2, 0x1003A, 0);
+            break;
+        case 21:
+            startSoundHandleNumber(2, 0x10082, 0);
+            break;
+        case 22:
+            startSoundHandleNumber(2, 0x1005f, 0);
+            break;
+        case 23:
+            startSoundHandleNumber(2, 0x10069, 0);
+            break;
+        case 7:
+        case 8:
+        case 9:
+        case 18:
+        default:
+            if(_104 <= 9) {
+            startSoundHandleNumber(2, 0x10000 + _104, 0);
+            }
+            break;
+    }
+    f32 pan;
+    f32 volume;
+    f32 pitch;
+
+    f1 = 0.f;
+
+    volume = 0.f;
+    pitch = 0.f;
+    _104 = 0xff;
+    u8 count = 0;
+    for(u8 index = 0; index < 4; index++)
+    {
+        if(_e4[index] == 1) {
+            count++;
+
+            if(playerMode == 0) {
+                f1 += _a4[index];
+            }
+
+            volume += _b4[index];
+            pitch += _c4[index];
+            _e4[index] = 0;
+        }
+    }
+
+    if(playerMode == 0)
+    {
+        f1 = f1 / count;
+        pan = Common::panDeform(f1, 3.f);
+    }
+    else {
+        pan = Common::setMultiPlayModePan(mKartCount);
+    }
+
+    volume = volume / count;
+    pitch = pitch / count;
+
+    JAISoundHandle& handle = (*this)[2];
+    if(!handle.isSoundAttached())
+    {
+        return;
+    }
+    if(Parameters::getMirrorSwitch())
+    {
+        pan = 1.f - pan;
+    }
+
+    handle->getAuxiliary().movePan(pan, 3);
+
+    if(handle.isSoundAttached())
+    {
+        handle->getAuxiliary().moveVolume(volume * mCameraVolume, 0);
+    }
+
+    if(_5d != 0)
+    {
+        pitch *= Parameters::getChibiPitch(handle->getID());
+    }
+    handle->getAuxiliary().movePitch(pitch, 0);
+}
 
 void KartSoundMgr::checkEcho() {}
 
