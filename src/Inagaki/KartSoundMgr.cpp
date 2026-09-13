@@ -2360,6 +2360,32 @@ void KartSoundMgr::clearInvincibleBgm(u8 r4) {
     }
 }
 
-void KartSoundMgr::setChibiFlag(bool, bool) {}
+void KartSoundMgr::setChibiFlag(bool r4, bool r5) {
+    Parameters::setChibiFlag(_61, r4);
+
+    if(r4)
+    {
+        if(_5d != r4 && r5)
+        {
+            setSe(0x10038);
+        }
+        GameAudioMain::getAudio()->setThunderMode(_61);
+    } else {
+        if(_5d != r4 && r5)
+        {
+            setSe(0x10039);
+        }
+        GameAudioMain::getAudio()->clearThunderMode(_61);
+
+        for(s32 index = 0; index < _10; index++)
+        {
+            if((*this)[index].isSoundAttached())
+            {
+                (*this)[index]->getAuxiliary().movePitch(1.f, 0);
+            }
+        }
+    }
+    _5d = r4;
+}
 
 }
