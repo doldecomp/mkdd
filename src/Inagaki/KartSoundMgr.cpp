@@ -2228,7 +2228,24 @@ void KartSoundMgr::slipParamSet() {
     handle->getAuxiliary().movePitch(pitch, 0);
 }
 
-void KartSoundMgr::checkEcho() {}
+void KartSoundMgr::checkEcho() {
+    if(_70 == _6c)
+    {
+        return;
+    }
+
+    for(s32 i = 0; i < _10; i++)
+    {
+        if((*this)[i].isSoundAttached())
+        {
+            (*this)[i]->getAuxiliary().moveFxMix(_6c, 0);
+        }
+    }
+
+    _70 = _6c;
+
+
+}
 
 void KartSoundMgr::setInvincibleBgm(u8) {}
 
