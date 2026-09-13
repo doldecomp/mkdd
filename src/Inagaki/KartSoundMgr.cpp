@@ -2243,11 +2243,53 @@ void KartSoundMgr::checkEcho() {
     }
 
     _70 = _6c;
-
-
 }
 
-void KartSoundMgr::setInvincibleBgm(u8) {}
+void KartSoundMgr::setInvincibleBgm(u8 r4) {
+    if(mKillSw || _66 == 2)
+    {
+        return;
+    }
+
+    if(_66 != 0){
+        if(Main::getAudio()->get_9c() == 0.f)
+        {
+            return;
+        }
+        switch(r4)
+        {
+            case 1:
+                _60 |= 1;
+                startSoundHandleNumber(5, 0x1003F, 0);
+                return;
+            case 2:
+                startSoundHandleNumber(5, 0x10040, 0);
+                _60 |= 2;
+                return;
+            default:
+                #line 0xb5b
+                JUT_WARNING_F(false, "%s", "KartSoundMgr::startInvincibleBgm : 不明なBITです。\n");
+                return;
+        }
+    }
+    else {
+        switch(r4)
+        {
+            case 1:
+                Main::getAudio()->setInvincibleBgm(_61, r4);
+                _60 |= 1;
+                return;
+            case 2:
+                Main::getAudio()->setInvincibleBgm(_61, r4);
+                _60 |= 2;
+                return;
+            default:
+                #line 0xb6b
+                JUT_WARNING_F(false, "%s", "KartSoundMgr::startInvincibleBgm : 不明なBITです。\n");
+                return;
+        }
+    }
+}
 
 void KartSoundMgr::clearInvincibleBgm(u8) {}
 
