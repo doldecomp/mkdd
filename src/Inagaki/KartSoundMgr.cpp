@@ -1983,7 +1983,22 @@ void KartSoundMgr::setSe(u32 soundID) {
     setEcho(soundCustomHandle, _6c);
 }
 
-void KartSoundMgr::setChibiPitch(JAISoundHandle *) {}
+void KartSoundMgr::setChibiPitch(JAISoundHandle *handle) {
+    if(_5d == 0) {
+        return;
+    }
+
+    if(handle == NULL)
+    {
+        return;
+    }
+
+    if(handle->isSoundAttached())
+    {
+        (*handle)->getAuxiliary().movePitch(
+            Parameters::getChibiPitch((*handle)->getID()), 0);
+    }
+}
 
 void KartSoundMgr::adjustEngine() {}
 
