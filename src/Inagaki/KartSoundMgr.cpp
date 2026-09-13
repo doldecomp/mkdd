@@ -1853,7 +1853,32 @@ void KartSoundMgr::setBoundSe(f32 f1) {
     setChibiPitch(&handle);
 }
 
-void KartSoundMgr::setWheelSpinSe() {}
+void KartSoundMgr::setWheelSpinSe() {
+    if(mKillSw || _66 == 2) {
+        return;
+    }
+
+    if(_66 != 0)
+    {
+        return;
+    }
+
+    const u8 characterType = Parameters::getCharacterType(_61);
+
+    if(characterType == 1)
+    {
+        startSoundHandleNumber(4, 0x10077, 0);
+    }
+    else {
+        if(_105 < 0x19) 
+        {
+            startSoundHandleNumber(4, WheelSpinSe[_105], 0);
+        }
+    }
+
+    JAISoundHandle& handle = (*this)[4];
+    setChibiPitch(&handle);
+}
 
 void KartSoundMgr::setSpinSe() {}
 
