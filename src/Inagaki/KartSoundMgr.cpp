@@ -2000,7 +2000,58 @@ void KartSoundMgr::setChibiPitch(JAISoundHandle *handle) {
     }
 }
 
-void KartSoundMgr::adjustEngine() {}
+void KartSoundMgr::adjustEngine() {
+    u32 engineType = Parameters::getEngineType((u8)_61);
+    if(_f8 != 0)
+    {
+        switch(_f4)
+        {
+            case 0x10014:
+                if(_f8 > 0x78)
+                {
+                    _f0 += DashEngineIncPerFrame[(u8)engineType];
+                    _f8--;
+                    return;
+                }
+                if(_f8 > 0x6e)
+                {
+                    _f8--;
+                    return;
+                }
+                if(_f8 == 0 || _f0 < 0.0f) {
+                    _f8 = 0;
+                    _f0 = 0.f;
+                    _f4 = 0;
+                    return;
+                }
+                _f0 -= DashEngineDecPerFrame[(u8)engineType];
+                _f8 -= 1;
+                return;
+
+            case 0x10044:
+                if(_f8 > 0x30)
+                {
+                    _f0 = 0.05f + _f0;
+                    _f8--;
+                    return;
+                }
+                if(_f8 > 0x2c)
+                {
+                    _f8--;
+                    return;
+                }
+                if(_f8 == 0 || _f0 < 0.0f) {
+                    _f8 = 0;
+                    _f0 = 0.f;
+                    _f4 = 0;
+                    return;
+                }
+                _f0 -= 0.2f;
+                _f8 -= 1;
+                return;
+        }
+    }
+}
 
 void KartSoundMgr::crushRenzokuTaisaku() {
     if(_9c != 0)
