@@ -1902,7 +1902,32 @@ void KartSoundMgr::setSpinSe() {
     setChibiPitch(&handle);
 }
 
-void KartSoundMgr::setSpinTurnSe() {}
+void KartSoundMgr::setSpinTurnSe() {
+    if(mKillSw || _66 == 2) {
+        return;
+    }
+
+    if(_66 != 0)
+    {
+        return;
+    }
+
+    const u8 characterType = Parameters::getCharacterType(_61);
+
+    if(characterType == 1)
+    {
+        startSoundHandleNumber(1, 0x100c6, 0);
+    }
+    else {
+        if(_105 < 0x19)
+        {
+            startSoundHandleNumber(1, SpinTurnSe[_105], 0);
+        }
+    }
+
+    JAISoundHandle& handle = (*this)[1];
+    setChibiPitch(&handle);
+}
 
 void KartSoundMgr::setSe(u32) {}
 
