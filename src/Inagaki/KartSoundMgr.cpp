@@ -1824,7 +1824,34 @@ void KartSoundMgr::setJumpUpSe(u32 soundID) {
 
 }
 
-void KartSoundMgr::setBoundSe(f32) {}
+void KartSoundMgr::setBoundSe(f32 f1) {
+    if(mKillSw || _66 == 2) {
+        return;
+    }
+
+    if(_66 == 1 && (u8)Parameters::getRaceMode() != 2)
+    {
+        return;
+    }
+
+    if(_105 >= 0x19) 
+    {
+        return;
+    }
+
+    startSoundHandleNumber(4, BoundSe[_105], 0);
+
+    
+    JAISoundHandle& handle = (*this)[4];
+    
+    if(handle.isSoundAttached()) {
+        handle->getAuxiliary().movePitch((0.5f * f1) + 0.5f, 0);
+        if(handle.isSoundAttached()) {
+            handle->getAuxiliary().moveVolume(f1 * mCameraVolume, 0);
+        }
+    }
+    setChibiPitch(&handle);
+}
 
 void KartSoundMgr::setWheelSpinSe() {}
 
