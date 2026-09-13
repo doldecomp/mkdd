@@ -2291,7 +2291,74 @@ void KartSoundMgr::setInvincibleBgm(u8 r4) {
     }
 }
 
-void KartSoundMgr::clearInvincibleBgm(u8) {}
+void KartSoundMgr::clearInvincibleBgm(u8 r4) {
+    if(mKillSw || _66 == 2)
+    {
+        return;
+    }
+
+    if(_66 != 0){
+        if(Main::getAudio()->get_9c() == 0.f)
+        {
+            return;
+        }
+        switch(r4)
+        {
+            case 1:
+                _60 ^= 1;
+                break;
+            case 2:
+                _60 ^= 2;
+                break;
+            case 3:
+                _60 = 0;
+                break;
+            default:
+                #line 0xb87
+                JUT_WARNING_F(false, "%s", "KartSoundMgr::startInvincibleBgm : 不明なBITです。\n");
+                break;
+        }
+        if(_60 == 0)
+        {
+            JAISoundHandle& handle = (*this)[5];
+            if(handle.isSoundAttached())
+            {
+                handle->stop();
+            }
+        }
+        else {
+            switch(_60)
+            {
+                case 1:
+                    startSoundHandleNumber(5, 0x1003F, 0);
+                    break;
+                case 2:
+                    startSoundHandleNumber(5, 0x10040, 0);
+                    break;;
+            }
+        }
+    }
+    else {
+        switch(r4)
+        {
+            case 1:
+                Main::getAudio()->clearInvincibleBgm(_61, r4);
+                _60 ^= 1;
+                return;
+            case 2:
+                Main::getAudio()->clearInvincibleBgm(_61, r4);
+                _60 ^= 2;
+                return;
+            case 3:
+                _60 = 0;
+                return;
+            default:
+                #line 0xba8
+                JUT_WARNING_F(false, "%s", "KartSoundMgr::startInvincibleBgm : 不明なBITです。\n");
+                return;
+        }
+    }
+}
 
 void KartSoundMgr::setChibiFlag(bool, bool) {}
 
