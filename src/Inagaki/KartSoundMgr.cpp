@@ -1929,7 +1929,59 @@ void KartSoundMgr::setSpinTurnSe() {
     setChibiPitch(&handle);
 }
 
-void KartSoundMgr::setSe(u32) {}
+void KartSoundMgr::setSe(u32 soundID) {
+    if(mKillSw || _66 == 2) {
+        return;
+    }
+
+    Main* main = Main::getAudio();
+    u32 swBit;
+    CustomSoundTable* soundTable = main->getSoundTable();
+    if(_8d == 3)
+    {
+        swBit = soundTable->getSwBit(soundID);
+        if(swBit & 0x8000000)
+        {
+            return;
+        }
+    }
+
+    if(_66 != 0) {
+        swBit = soundTable->getSwBit(soundID);
+        if(swBit & 0x80000000)
+        {
+            return;
+        }
+    }
+
+    if(soundID - 0x10000 == 0x41)
+    {
+        if(0.f == Main::getAudio()->get_9c()) {
+            return;
+        }
+    }
+    u32 scene = 0;
+    CameraMgr* camera = Main::getAudio()->getCamera();
+
+    if(camera->getSceneMax() > 1 && camera->getSceneMax() > mKartCount)
+    {
+        scene = (1 << mKartCount) ^ 0xf;
+    }
+
+    JAISoundHandle* soundCustomHandle = startSoundCustom(soundID, scene);
+
+    // Double check needed for isSoundAttached..
+    if(_66 != 0 && soundCustomHandle != NULL
+        && soundCustomHandle->isSoundAttached() && soundCustomHandle->isSoundAttached()) {
+        (*soundCustomHandle)->getAuxiliary().moveVolume(0.8f * mCameraVolume, 0);
+    }
+
+    if(soundID - 0x10000 != 0x38 && soundID - 0x10000 != 0x39){
+        setChibiPitch(soundCustomHandle);
+    }
+
+    setEcho(soundCustomHandle, _6c);
+}
 
 void KartSoundMgr::setChibiPitch(JAISoundHandle *) {}
 
