@@ -12,7 +12,6 @@
 #include "JSystem/JAudio/System/JASGadget.h"
 #include "JSystem/JGeometry/Vec.h"
 #include "JSystem/JUtility/JUTAssert.h"
-#include "JSystem/JAudio/JASFakeMatch2.h"
 
 #include "Kaneshige/Course/CrsArea.h"
 #include "Kaneshige/Course/CrsGround.h"
@@ -31,13 +30,157 @@ const s16 SignalDownIntervalBase[3] = { 0x0014, 0x000A, 0x0005 };
 static const u8 cKartRankClassTable0[7] = {0, 0, 1, 1, 1, 2, 2};
 static const u8 cKartRankClassTable1[7] = {0, 0, 1, 1, 2, 2, 2};
 
-u32 BoundSe[0x19];
-u32 WheelSpinSe[0x19];
-u32 SpinSe[0x19];
-u32 SpinTurnSe[0x19];
+u32 WheelSpinSe[25];
+u32 SpinSe[25];
+u32 SpinTurnSe[25];
+u32 BoundSe[24];
+
+static void initBoundSe() {
+    BoundSe[0]  = 0x10046;
+    BoundSe[1]  = 0x10045;
+    BoundSe[2]  = 0x10049;
+    BoundSe[3]  = 0x10048;
+    BoundSe[4]  = 0x10045;
+    BoundSe[5]  = 0x10045;
+    BoundSe[6]  = 0x10045;
+    BoundSe[7]  = 0x10045;
+    BoundSe[8]  = 0x10045;
+    BoundSe[9]  = 0x10045;
+    BoundSe[10] = 0x10045;
+    BoundSe[11] = 0x1004a;
+    BoundSe[12] = 0x10047;
+    BoundSe[13] = 0x10045;
+    BoundSe[14] = 0x10045;
+    BoundSe[15] = 0x1004a;
+    BoundSe[16] = 0x10045;
+    BoundSe[17] = 0x10045;
+    BoundSe[18] = 0x10045;
+    BoundSe[19] = 0x10045;
+    BoundSe[20] = 0x10045;
+    BoundSe[21] = 0x10045;
+    BoundSe[22] = 0x10045;
+    BoundSe[23] = 0x10045;
+}
+
+static void initWheelSpinSe() {
+    WheelSpinSe[0]  = 0x1006f;
+    WheelSpinSe[1]  = 0x1006e;
+    WheelSpinSe[2]  = 0x1006e;
+    WheelSpinSe[3]  = 0x10072;
+    WheelSpinSe[4]  = 0x10071;
+    WheelSpinSe[5]  = 0x1006e;
+    WheelSpinSe[6]  = 0x1006e;
+    WheelSpinSe[7]  = 0x1006e;
+    WheelSpinSe[8]  = 0x1006e;
+    WheelSpinSe[9]  = 0x1006e;
+    WheelSpinSe[10] = 0x1006e;
+    WheelSpinSe[11] = 0x10074;
+    WheelSpinSe[12] = 0x1006e;
+    WheelSpinSe[13] = 0x1006e;
+    WheelSpinSe[14] = 0x1006e;
+    WheelSpinSe[15] = 0x10074;
+    WheelSpinSe[16] = 0x1006e;
+    WheelSpinSe[17] = 0x10075;
+    WheelSpinSe[18] = 0x1006e;
+    WheelSpinSe[19] = 0x1006e;
+    WheelSpinSe[20] = 0x10070;
+    WheelSpinSe[21] = 0x10070;
+    WheelSpinSe[22] = 0x10073;
+    WheelSpinSe[23] = 0x10076;
+    WheelSpinSe[24] = 0x1006e;
+}
+
+static void initSpinSe() {
+    SpinSe[0]  = 0x1009e;
+    SpinSe[1]  = 0x1009d;
+    SpinSe[2]  = 0x100a6;
+    SpinSe[3]  = 0x100a1;
+    SpinSe[4]  = 0x100a0;
+    SpinSe[5]  = 0x100b0;
+    SpinSe[6]  = 0x100af;
+    SpinSe[7]  = 0x100af;
+    SpinSe[8]  = 0x100af;
+    SpinSe[9]  = 0x100af;
+    SpinSe[10] = 0x100a7;
+    SpinSe[11] = 0x100a9;
+    SpinSe[12] = 0x100ad;
+    SpinSe[13] = 0x100ab;
+    SpinSe[14] = 0x100aa;
+    SpinSe[15] = 0x100a3;
+    SpinSe[16] = 0x100ac;
+    SpinSe[17] = 0x100a4;
+    SpinSe[18] = 0x1009e;
+    SpinSe[19] = 0x100a8;
+    SpinSe[20] = 0x1009f;
+    SpinSe[21] = 0x1009f;
+    SpinSe[22] = 0x100a2;
+    SpinSe[23] = 0x100a5;
+    SpinSe[24] = 0x1009d;
+}
+
+void initSpinTurnSe() {
+    SpinTurnSe[0]  = 0x100b6;
+    SpinTurnSe[1]  = 0x100b5;
+    SpinTurnSe[2]  = 0x100be;
+    SpinTurnSe[3]  = 0x100b9;
+    SpinTurnSe[4]  = 0x100b8;
+    SpinTurnSe[5]  = 0x100c8;
+    SpinTurnSe[6]  = 0x100c7;
+    SpinTurnSe[7]  = 0x100c7;
+    SpinTurnSe[8]  = 0x100c7;
+    SpinTurnSe[9]  = 0x100c7;
+    SpinTurnSe[10] = 0x100bf;
+    SpinTurnSe[11] = 0x100c1;
+    SpinTurnSe[12] = 0x100c5;
+    SpinTurnSe[13] = 0x100c3;
+    SpinTurnSe[14] = 0x100c2;
+    SpinTurnSe[15] = 0x100bb;
+    SpinTurnSe[16] = 0x100c4;
+    SpinTurnSe[17] = 0x100bc;
+    SpinTurnSe[18] = 0x100b6;
+    SpinTurnSe[19] = 0x100c0;
+    SpinTurnSe[20] = 0x100b7;
+    SpinTurnSe[21] = 0x100b7;
+    SpinTurnSe[22] = 0x100ba;
+    SpinTurnSe[23] = 0x100bd;
+    SpinTurnSe[24] = 0x100b5;
+}
+
+namespace {
+    struct InitBoundSe {
+        InitBoundSe() {
+            initBoundSe();
+        }
+    };
+    struct InitWheelSpinSe {
+        InitWheelSpinSe() {
+            initWheelSpinSe();
+        }
+    };
+    struct InitSpinSe {
+        InitSpinSe() {
+            initSpinSe();
+        }
+    };
+    struct InitSpinTurnSe {
+        InitSpinTurnSe() {
+            initSpinTurnSe();
+        }
+    };
+
+    InitBoundSe sInitBoundSe;
+    InitWheelSpinSe sInitWheelSpinSe;
+    InitSpinSe sInitSpinSe;
+    InitSpinTurnSe sInitSpinTurnSe;
+}
 
 f32 GA_ENEMY_VOLUME_DOWN_VALUE = 0.85f;
+}
 
+#include "JSystem/JAudio/JASFakeMatch14.h"
+
+
+namespace GameAudio {
 
 const f32 EngineKeisuuRaceUp[] = {
     0.006f, 0.006f, 0.005f, 0.003f,
