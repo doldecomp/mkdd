@@ -33,138 +33,122 @@ static const u8 cKartRankClassTable1[7] = {0, 0, 1, 1, 2, 2, 2};
 u32 WheelSpinSe[25];
 u32 SpinSe[25];
 u32 SpinTurnSe[25];
-u32 BoundSe[24];
-
-static void initBoundSe() {
-    BoundSe[0]  = 0x10046;
-    BoundSe[1]  = 0x10045;
-    BoundSe[2]  = 0x10049;
-    BoundSe[3]  = 0x10048;
-    BoundSe[4]  = 0x10045;
-    BoundSe[5]  = 0x10045;
-    BoundSe[6]  = 0x10045;
-    BoundSe[7]  = 0x10045;
-    BoundSe[8]  = 0x10045;
-    BoundSe[9]  = 0x10045;
-    BoundSe[10] = 0x10045;
-    BoundSe[11] = 0x1004a;
-    BoundSe[12] = 0x10047;
-    BoundSe[13] = 0x10045;
-    BoundSe[14] = 0x10045;
-    BoundSe[15] = 0x1004a;
-    BoundSe[16] = 0x10045;
-    BoundSe[17] = 0x10045;
-    BoundSe[18] = 0x10045;
-    BoundSe[19] = 0x10045;
-    BoundSe[20] = 0x10045;
-    BoundSe[21] = 0x10045;
-    BoundSe[22] = 0x10045;
-    BoundSe[23] = 0x10045;
-}
-
-static void initWheelSpinSe() {
-    WheelSpinSe[0]  = 0x1006f;
-    WheelSpinSe[1]  = 0x1006e;
-    WheelSpinSe[2]  = 0x1006e;
-    WheelSpinSe[3]  = 0x10072;
-    WheelSpinSe[4]  = 0x10071;
-    WheelSpinSe[5]  = 0x1006e;
-    WheelSpinSe[6]  = 0x1006e;
-    WheelSpinSe[7]  = 0x1006e;
-    WheelSpinSe[8]  = 0x1006e;
-    WheelSpinSe[9]  = 0x1006e;
-    WheelSpinSe[10] = 0x1006e;
-    WheelSpinSe[11] = 0x10074;
-    WheelSpinSe[12] = 0x1006e;
-    WheelSpinSe[13] = 0x1006e;
-    WheelSpinSe[14] = 0x1006e;
-    WheelSpinSe[15] = 0x10074;
-    WheelSpinSe[16] = 0x1006e;
-    WheelSpinSe[17] = 0x10075;
-    WheelSpinSe[18] = 0x1006e;
-    WheelSpinSe[19] = 0x1006e;
-    WheelSpinSe[20] = 0x10070;
-    WheelSpinSe[21] = 0x10070;
-    WheelSpinSe[22] = 0x10073;
-    WheelSpinSe[23] = 0x10076;
-    WheelSpinSe[24] = 0x1006e;
-}
-
-static void initSpinSe() {
-    SpinSe[0]  = 0x1009e;
-    SpinSe[1]  = 0x1009d;
-    SpinSe[2]  = 0x100a6;
-    SpinSe[3]  = 0x100a1;
-    SpinSe[4]  = 0x100a0;
-    SpinSe[5]  = 0x100b0;
-    SpinSe[6]  = 0x100af;
-    SpinSe[7]  = 0x100af;
-    SpinSe[8]  = 0x100af;
-    SpinSe[9]  = 0x100af;
-    SpinSe[10] = 0x100a7;
-    SpinSe[11] = 0x100a9;
-    SpinSe[12] = 0x100ad;
-    SpinSe[13] = 0x100ab;
-    SpinSe[14] = 0x100aa;
-    SpinSe[15] = 0x100a3;
-    SpinSe[16] = 0x100ac;
-    SpinSe[17] = 0x100a4;
-    SpinSe[18] = 0x1009e;
-    SpinSe[19] = 0x100a8;
-    SpinSe[20] = 0x1009f;
-    SpinSe[21] = 0x1009f;
-    SpinSe[22] = 0x100a2;
-    SpinSe[23] = 0x100a5;
-    SpinSe[24] = 0x1009d;
-}
-
-void initSpinTurnSe() {
-    SpinTurnSe[0]  = 0x100b6;
-    SpinTurnSe[1]  = 0x100b5;
-    SpinTurnSe[2]  = 0x100be;
-    SpinTurnSe[3]  = 0x100b9;
-    SpinTurnSe[4]  = 0x100b8;
-    SpinTurnSe[5]  = 0x100c8;
-    SpinTurnSe[6]  = 0x100c7;
-    SpinTurnSe[7]  = 0x100c7;
-    SpinTurnSe[8]  = 0x100c7;
-    SpinTurnSe[9]  = 0x100c7;
-    SpinTurnSe[10] = 0x100bf;
-    SpinTurnSe[11] = 0x100c1;
-    SpinTurnSe[12] = 0x100c5;
-    SpinTurnSe[13] = 0x100c3;
-    SpinTurnSe[14] = 0x100c2;
-    SpinTurnSe[15] = 0x100bb;
-    SpinTurnSe[16] = 0x100c4;
-    SpinTurnSe[17] = 0x100bc;
-    SpinTurnSe[18] = 0x100b6;
-    SpinTurnSe[19] = 0x100c0;
-    SpinTurnSe[20] = 0x100b7;
-    SpinTurnSe[21] = 0x100b7;
-    SpinTurnSe[22] = 0x100ba;
-    SpinTurnSe[23] = 0x100bd;
-    SpinTurnSe[24] = 0x100b5;
-}
+u32 BoundSe[49];
 
 namespace {
     struct InitBoundSe {
         InitBoundSe() {
-            initBoundSe();
+            BoundSe[0]  = 0x10046;
+            BoundSe[1]  = 0x10045;
+            BoundSe[2]  = 0x10049;
+            BoundSe[3]  = 0x10048;
+            BoundSe[4]  = 0x10045;
+            BoundSe[5]  = 0x10045;
+            BoundSe[6]  = 0x10045;
+            BoundSe[7]  = 0x10045;
+            BoundSe[8]  = 0x10045;
+            BoundSe[9]  = 0x10045;
+            BoundSe[10] = 0x10045;
+            BoundSe[11] = 0x1004a;
+            BoundSe[12] = 0x10047;
+            BoundSe[13] = 0x10045;
+            BoundSe[14] = 0x10045;
+            BoundSe[15] = 0x1004a;
+            BoundSe[16] = 0x10045;
+            BoundSe[17] = 0x10045;
+            BoundSe[18] = 0x10045;
+            BoundSe[19] = 0x10045;
+            BoundSe[20] = 0x10045;
+            BoundSe[21] = 0x10045;
+            BoundSe[22] = 0x10045;
+            BoundSe[23] = 0x10045;
         }
     };
     struct InitWheelSpinSe {
         InitWheelSpinSe() {
-            initWheelSpinSe();
+            WheelSpinSe[0]  = 0x1006f;
+            WheelSpinSe[1]  = 0x1006e;
+            WheelSpinSe[2]  = 0x1006e;
+            WheelSpinSe[3]  = 0x10072;
+            WheelSpinSe[4]  = 0x10071;
+            WheelSpinSe[5]  = 0x1006e;
+            WheelSpinSe[6]  = 0x1006e;
+            WheelSpinSe[7]  = 0x1006e;
+            WheelSpinSe[8]  = 0x1006e;
+            WheelSpinSe[9]  = 0x1006e;
+            WheelSpinSe[10] = 0x1006e;
+            WheelSpinSe[11] = 0x10074;
+            WheelSpinSe[12] = 0x1006e;
+            WheelSpinSe[13] = 0x1006e;
+            WheelSpinSe[14] = 0x1006e;
+            WheelSpinSe[15] = 0x10074;
+            WheelSpinSe[16] = 0x1006e;
+            WheelSpinSe[17] = 0x10075;
+            WheelSpinSe[18] = 0x1006e;
+            WheelSpinSe[19] = 0x1006e;
+            WheelSpinSe[20] = 0x10070;
+            WheelSpinSe[21] = 0x10070;
+            WheelSpinSe[22] = 0x10073;
+            WheelSpinSe[23] = 0x10076;
+            WheelSpinSe[24] = 0x1006e;
         }
     };
     struct InitSpinSe {
         InitSpinSe() {
-            initSpinSe();
+            SpinSe[0]  = 0x1009e;
+            SpinSe[1]  = 0x1009d;
+            SpinSe[2]  = 0x100a6;
+            SpinSe[3]  = 0x100a1;
+            SpinSe[4]  = 0x100a0;
+            SpinSe[5]  = 0x100b0;
+            SpinSe[6]  = 0x100af;
+            SpinSe[7]  = 0x100af;
+            SpinSe[8]  = 0x100af;
+            SpinSe[9]  = 0x100af;
+            SpinSe[10] = 0x100a7;
+            SpinSe[11] = 0x100a9;
+            SpinSe[12] = 0x100ad;
+            SpinSe[13] = 0x100ab;
+            SpinSe[14] = 0x100aa;
+            SpinSe[15] = 0x100a3;
+            SpinSe[16] = 0x100ac;
+            SpinSe[17] = 0x100a4;
+            SpinSe[18] = 0x1009e;
+            SpinSe[19] = 0x100a8;
+            SpinSe[20] = 0x1009f;
+            SpinSe[21] = 0x1009f;
+            SpinSe[22] = 0x100a2;
+            SpinSe[23] = 0x100a5;
+            SpinSe[24] = 0x1009d;
         }
     };
     struct InitSpinTurnSe {
         InitSpinTurnSe() {
-            initSpinTurnSe();
+            SpinTurnSe[0]  = 0x100b6;
+            SpinTurnSe[1]  = 0x100b5;
+            SpinTurnSe[2]  = 0x100be;
+            SpinTurnSe[3]  = 0x100b9;
+            SpinTurnSe[4]  = 0x100b8;
+            SpinTurnSe[5]  = 0x100c8;
+            SpinTurnSe[6]  = 0x100c7;
+            SpinTurnSe[7]  = 0x100c7;
+            SpinTurnSe[8]  = 0x100c7;
+            SpinTurnSe[9]  = 0x100c7;
+            SpinTurnSe[10] = 0x100bf;
+            SpinTurnSe[11] = 0x100c1;
+            SpinTurnSe[12] = 0x100c5;
+            SpinTurnSe[13] = 0x100c3;
+            SpinTurnSe[14] = 0x100c2;
+            SpinTurnSe[15] = 0x100bb;
+            SpinTurnSe[16] = 0x100c4;
+            SpinTurnSe[17] = 0x100bc;
+            SpinTurnSe[18] = 0x100b6;
+            SpinTurnSe[19] = 0x100c0;
+            SpinTurnSe[20] = 0x100b7;
+            SpinTurnSe[21] = 0x100b7;
+            SpinTurnSe[22] = 0x100ba;
+            SpinTurnSe[23] = 0x100bd;
+            SpinTurnSe[24] = 0x100b5;
         }
     };
 
@@ -217,6 +201,7 @@ u8 KartSoundMgr::smEntryKartCount;
 u8 KartSoundMgr::smGoalKartCount;
 
 u8 KartSoundMgr::smKartRankClassMem[7] = {};
+u8 KartSoundMgr::smDummy[4] = {};
 
 KartSoundMgr::KartSoundMgr(Vec *pos, JKRHeap *heap, u8 p3, u8 p4)
     : SoundMgr(pos, heap, 12) {
@@ -741,16 +726,6 @@ void KartSoundMgr::setSlip(u8 wheel, u8 r5, u8 r6, f32 slip) {
                     f29 = 0.1f;
                     r6_2 = 0x17;
                     break;
-                case 4:
-                case 9:
-                case 15:
-                case 16:
-                case 17:
-                case 18:
-                case 19:
-                case 25:
-                case 26:
-                case 27:
                 default:
                     f29 = 0.f;
                     r6_2 = 0xff;
@@ -785,7 +760,6 @@ void KartSoundMgr::setSlip(u8 wheel, u8 r5, u8 r6, f32 slip) {
                 switch(r6)
                 {
                     default:
-                    case 3:
                         f1 = 0.0026666666f;
                         f0 = 0.7f;
                         f31 = (f1 * f4) + f0;
@@ -797,24 +771,7 @@ void KartSoundMgr::setSlip(u8 wheel, u8 r5, u8 r6, f32 slip) {
                         f1 = 0.2f;
                         f30 = f1 + f0;
                         break;
-                    case 0:
-                    case 1:
-                    case 4:
-                    case 6:
-                    case 7:
-                    case 8:
-                    case 9:
-                    case 15:
-                    case 16:
-                    case 17:
-                    case 18:
-                    case 19:
-                    case 21:
-                    case 23:
-                    case 24:
-                    case 25:
-                    case 26:
-                    case 27:
+                    case 3:
                         f1 = 0.0026666666f;
                         f0 = 0.7f;
                         f31 = (f1 * f4) + f0;
@@ -986,7 +943,7 @@ void KartSoundMgr::setConductStatus(f32 f1, f32 f2, bool r4, bool r5, bool r6, u
                 setConductSignal();
                 setWaterCutoffPort(0);
                 break;
-            case 1:
+            case 2:
                 setConductOutOfCourse(r7);
                 setWaterCutoffPort(0);
                 if(_66 != 0)
@@ -1004,7 +961,7 @@ void KartSoundMgr::setConductStatus(f32 f1, f32 f2, bool r4, bool r5, bool r6, u
                 }
                 startSoundHandleNumber(7, 0x40074, 0);
                 break;
-            case 2:
+            case 4:
                 setConductTrouble(f1, r7);
                 setWaterCutoffPort(0);
 
@@ -1036,7 +993,7 @@ void KartSoundMgr::setConductStatus(f32 f1, f32 f2, bool r4, bool r5, bool r6, u
                 setConductAfterGoal(r6);
                 _5e = 1;
                 break;
-            case 4:
+            case 1:
                 setConductRace(r6);
                 // _66
                 break;
@@ -1316,6 +1273,8 @@ void KartSoundMgr::setConductPressed() {
     handle->getAuxiliary().movePitch(pitch, 0);
 }
 
+}
+
 static const f32 EngineKarabukashiLength[] = {
     90.f, 40.f, 90.f, 30.f,
     40.f, 35.f, 30.f, 95.f,
@@ -1381,6 +1340,8 @@ static const f32 DownEngineLoopEnd[] = {
     0.f, 0.f, 0.f, 0.f,
     0.f
 };
+
+namespace GameAudio {
 
 void KartSoundMgr::setConductSignal() {
     if(_63 != _8d)
@@ -1624,7 +1585,7 @@ void KartSoundMgr::setConductRace(bool r4) {
         if (f2 == 0.f) {
             r27 = 0;
         } else {
-            r27 = -127.f -((126.f * f2));
+            r27 = 127.f -((126.f * f2));
         }
     }
 
@@ -1896,8 +1857,8 @@ void KartSoundMgr::setBrakeSe(u32 soundID) {
     JAISoundHandle& handle = (*this)[6];
     if(handle.isSoundAttached())
     {
-        volume = (0.003f * _84) + 0.6f;
-        pitch = (0.008f * _84) + 0.25f;
+        volume = (0.008f * _84) + 0.25f;
+        pitch = (0.003f * _84) + 0.6f;
         if(_5d != 0)
         {
             pitch = pitch * Parameters::getChibiPitch(soundID);

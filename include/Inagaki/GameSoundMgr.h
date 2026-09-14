@@ -28,8 +28,8 @@ public:
     virtual void init();
     virtual void setSe(u32 id);
 
-    void setEcho(JAISoundHandle *handlePtr, f32 mix);
     JAISoundHandle *startSoundCustom(u32 soundID, u32 p2);
+    void setEcho(JAISoundHandle *handlePtr, f32 mix);
     virtual void loop();
 
     static void setKillSwAll(bool killSw);
@@ -181,6 +181,9 @@ void SoundWithEchoMgr<T>::setInitialEcho(JAISoundHandle *handlePtr) {
     }
 }
 
+extern const f32 EngineKeisuuRaceUp[9];
+extern const f32 EngineKeisuuRaceDown[9];
+
 class KartSoundMgr : public SoundMgr<KartSoundMgr>
 {
 public:
@@ -239,6 +242,7 @@ public:
     static u8 smGoalKartCount;
 
     static u8 smKartRankClassMem[7];
+    static u8 smDummy[4];
 
 private:
     // FABRICATED {
