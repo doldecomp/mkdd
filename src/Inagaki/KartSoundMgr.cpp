@@ -30,10 +30,10 @@ const s16 SignalDownIntervalBase[3] = { 0x0014, 0x000A, 0x0005 };
 static const u8 cKartRankClassTable0[7] = {0, 0, 1, 1, 1, 2, 2};
 static const u8 cKartRankClassTable1[7] = {0, 0, 1, 1, 2, 2, 2};
 
+u32 BoundSe[25];
 u32 WheelSpinSe[25];
 u32 SpinSe[25];
 u32 SpinTurnSe[25];
-u32 BoundSe[49];
 
 namespace {
     struct InitBoundSe {
@@ -201,7 +201,6 @@ u8 KartSoundMgr::smEntryKartCount;
 u8 KartSoundMgr::smGoalKartCount;
 
 u8 KartSoundMgr::smKartRankClassMem[7] = {};
-u8 KartSoundMgr::smDummy[4] = {};
 
 KartSoundMgr::KartSoundMgr(Vec *pos, JKRHeap *heap, u8 p3, u8 p4)
     : SoundMgr(pos, heap, 12) {
@@ -598,7 +597,7 @@ void KartSoundMgr::setSlip(u8 wheel, u8 r5, u8 r6, f32 slip) {
 
     u8 r6_2;
     switch(r5) {
-    case 0x11:
+        case 0x11:
         {
             if(mWaterDepths[wheel] <= f30)
             {
@@ -662,7 +661,7 @@ void KartSoundMgr::setSlip(u8 wheel, u8 r5, u8 r6, f32 slip) {
                         f29 = f30;
                     }
                     else {
-                        f29 = 0.1f;
+                        f29 = -0.1f;
                     }
                     r6_2 = 3;
                     break;
@@ -1204,7 +1203,6 @@ void KartSoundMgr::setConductLocomotiveAccel() {
     }
 }
 
-
 void KartSoundMgr::setConductLocomotiveSpeed(bool) {
     u32 r6;
     JAISound* sound;
@@ -1533,7 +1531,7 @@ void KartSoundMgr::setConductTrouble(f32 f1, u8 r4) {
         volume = 0.55f;
     }
 
-    f32 pitch = (EnginePitchKeisuuTrouble[(u8)Parameters::getEngineType(_61)] * _92) + 0.6f;
+    f32 pitch = (EnginePitchKeisuuTrouble[(u8)Parameters::getEngineType(_61)] * _92) + 0.5f;
 
     if(_66 != 0){
         volume *= GA_ENEMY_VOLUME_DOWN_VALUE;
@@ -2150,7 +2148,7 @@ void KartSoundMgr::adjustEngine() {
                     _f4 = 0;
                     return;
                 }
-                _f0 -= 0.2f;
+                _f0 -= 0.02f;
                 _f8 -= 1;
                 return;
         }
