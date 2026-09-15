@@ -28,8 +28,8 @@ public:
     virtual void init();
     virtual void setSe(u32 id);
 
-    void setEcho(JAISoundHandle *handlePtr, f32 mix);
     JAISoundHandle *startSoundCustom(u32 soundID, u32 p2);
+    void setEcho(JAISoundHandle *handlePtr, f32 mix);
     virtual void loop();
 
     static void setKillSwAll(bool killSw);
@@ -181,12 +181,15 @@ void SoundWithEchoMgr<T>::setInitialEcho(JAISoundHandle *handlePtr) {
     }
 }
 
+extern const f32 EngineKeisuuRaceUp[9];
+extern const f32 EngineKeisuuRaceDown[9];
+
 class KartSoundMgr : public SoundMgr<KartSoundMgr>
 {
 public:
     KartSoundMgr(Vec *, JKRHeap *, u8, u8);                           // 0x80123118
     ~KartSoundMgr();                                                  // 0x80123328
-    void startSoundHandleNumber(u8, u32, u32);                        // 0x801233fc
+    virtual void startSoundHandleNumber(u8, u32, u32);                // 0x801233fc
     virtual void dispose();                                           // 0x801236d0
     virtual void init();                                              // 0x80123708
     void changeDriver(bool);                                          // 0x80123ad4
@@ -225,24 +228,95 @@ public:
     void clearInvincibleBgm(u8);                                      // 0x80128c30
     void setChibiFlag(bool, bool);                                    // 0x80128e98
 
+    // UNUSED {
+    void startSoundEngine(u8, u32);
+    void changeAttribute(u8);
+    void checkCourseSound(u8);
+    void setHandleVolume(JAISoundHandle&, f32);
+    void setWaterDepth(f32);
+    void getEngineIDOffsetAtt();
+    // } UNUSED
+
     static u8 smKartCount;
     static u8 smEntryKartCount;
     static u8 smGoalKartCount;
 
     static u8 smKartRankClassMem[7];
+    static u8 smDummy[4];
 
-    u8 _5c[0x61 - 0x5c];
+private:
+    // FABRICATED {
+    bool isGoalVolumeEqual(f32 volume) const {
+        return mGoalVolume == volume;
+    }
+
+    bool isCameraVolumeEqual(f32 volume) const {
+        return mCameraVolume == volume;
+    }
+
+    void startSoundFromID(u32 id);
+// } FABRICATED
+public:
+    u8 _5c;
+    u8 _5d;
+    u8 _5e;
+    u8 _5f;
+    u8 _60;
     u8 _61;
     u8 mKartCount; // 62
     u8 _63;
     u8 _64;
     u8 _65;
     u8 _66;
-    u8 _67[0x6c - 0x67];
+    u8 _67;
+    f32 _68;
     f32 _6c;
-    u8 _70[0x8d - 0x70];
+    f32 _70;
+    u32 _74;
+    u32 _78;
+    u32 _7c;
+    u32 _80;
+    f32 _84;
+    f32 _88;
+    u8 _8c;
     u8 _8d;
-    u8 _8e[0x134 - 0x8e];
+    u16 _8e;
+    u16 _90;
+    u16 _92;
+    u16 _94;
+    s16 _96;
+    f32 _98;
+    u8 _9c;
+    u8 _9d[3]; // padding
+    f32 _a0;
+    f32 _a4[4];
+    f32 _b4[4];
+    f32 _c4[4];
+    f32 mWaterDepths[4]; // d4
+    u8 _e4[4];
+    u8 _e8[4];
+    f32 _ec;
+    f32 _f0;
+    u32 _f4;
+    u16 _f8;
+    u8 _fa[2]; // padding
+    f32 _fc;
+    u8 _100;
+    u8 _101;
+    u8 _102;
+    u8 _103;
+    u8 _104;
+    u8 _105;
+    u8 _106[0x110 - 0x106];
+    f32 _110;
+    f32 _114;
+    f32 _118;
+    u32 _11c;
+    f32 mGoalVolume;
+    f32 mCameraVolume; // 124
+    f32 mDeltaVolume; // 128
+    u32 mGoalVolumeCounter; // 12c
+    CrsArea* _130;
 };
 
 class CharacterSoundMgr : public SoundMgr<CharacterSoundMgr> {
@@ -344,6 +418,10 @@ public:
     static CustomAudience<4> *getAudience() { return smAudience; }
 private:
     static CustomAudience<4> *smAudience; // 0x80416278
+
+    JGeometry::TVec3f& getPlayPos(s32 index) { // fabricated
+        return _64[index];
+    }
 
     u8 _5c;
     u8 _5d;

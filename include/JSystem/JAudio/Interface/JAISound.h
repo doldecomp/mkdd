@@ -230,6 +230,20 @@ struct JAISoundFader
         mIntensity = 0.0f;
         fadeIn(fadeCount);
     }
+
+    // Same as fadeInFromOut but branching order is inversed
+    // Needed by KartSoundMgr...
+    void fadeInFromOut2(u32 fadeCount)
+    {
+        mIntensity = 0.f;
+        if (fadeCount != 0) {
+            mTransition.set(1.0f, mIntensity, fadeCount);
+        }
+        else
+        {
+            forceIn();
+        }
+    }
     bool isOut() { return (mTransition.mCount == 0 && mIntensity < 0.01f); }
     void calc() { mIntensity = mTransition.apply(mIntensity); }
     f32 getIntensity() { return mIntensity; }
