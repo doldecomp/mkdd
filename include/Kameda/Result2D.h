@@ -57,7 +57,7 @@ public:
     void setDrawVS(); // 0x8014cb58
     void setDrawTA(); // 0x8014cc10
     void setDrawMG(); // 0x8014cd94
-    void getResultSelector(); // 0x8014ce48
+    static int getResultSelector(); // 0x8014ce48
     void setRaceRank(); // 0x8014ce50
     void setGPRank(); // 0x8014d924
     void setVS(); // 0x8014df84
@@ -81,9 +81,12 @@ public:
     void getFrameColor(JUTColor &); // 0x80150500
     void getScale(int); // 0x8015057c
     void setScale(int); // 0x801505c4
-    void setGPClr(); // 0x80150804
-    void getAnmEnd(); // 0x80150830
-    
+    static void setGPClr(); // 0x80150804
+    bool getAnmEnd(); // 0x80150830
+
+    static inline bool getDrawFlag();
+    static inline void setDrawFlag(bool drawFlag);
+
     static const u64 mSetWordLineTag[9]; // 0x8036ec18
     static const u64 mResultLayoutTag[11]; // 0x8036ec60
     static const u64 mResultLineTag[20]; // 0x8036ecb8
@@ -101,6 +104,11 @@ public:
     // Inline/Unused
     ~Result2D();
     void getCharPos(int);
+
+public:
+    u8 _0[0x1980];              // 0x0
+    u32 _1980;                  // 0x1980
+    u8 _1984[0x1c24 - 0x1984];  // 0x1984
 }; // class Result2D
 
 #endif // RESULT2D_H

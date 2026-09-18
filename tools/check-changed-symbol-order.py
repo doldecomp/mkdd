@@ -36,9 +36,17 @@ def source_to_unit() -> dict:
         units = json.load(f).get("units", [])
     out = {}
     for u in units:
-        sp = u.get("metadata", {}).get("source_path")
-        if sp:
-            out[norm(sp)] = (u["name"], u.get("base_path", ""))
+        metadata = u.get("metadata", {})
+        if not metadata:
+            continue
+        sp = metadata.get("source_path")
+        if not sp:
+            continue
+        out[norm(sp)] = (
+            u["name"],
+            u.get("base_path", ""),
+            metadata.get("complete", False),
+        )
     return out
 
 
@@ -58,9 +66,13 @@ def main(argv) -> int:
             print(f"skip  {f}  (not a tracked decomp unit)")
             skipped.append(f)
             continue
-        unit, base = entry
+        unit, base, complete = entry
         if base and not os.path.exists(os.path.join(root_dir, base)):
             print(f"skip  {f}  ({unit}: object not built)")
+            skipped.append(f)
+            continue
+        if not complete:
+            print(f"skip  {f}  ({unit}: object not marked as complete)")
             skipped.append(f)
             continue
 
