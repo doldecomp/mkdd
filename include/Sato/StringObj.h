@@ -100,6 +100,21 @@ public:
         _3c = val;
     }
 
+    
+    void link_set_30(u32 num, bool val) {
+#line 112
+        JUT_MINMAX_ASSERT(0, num, mStrNodeList.getNumLinks());
+        mStrNodeList.getNth(num)->getObject()->_30 = val;                            
+    }
+                            
+    void setNodeLength(u32 num, f32 val) {
+#line 202
+        JUT_MINMAX_ASSERT(0, num, mStrNodeList.getNumLinks());
+        mStrNodeList.getNth(num)->getObject()->_34 = val;                            
+    }
+
+
+
     // VTBL: 0x0
     JSUList<StringNode> mStrNodeList;           // 0x4
     f32 _10;
@@ -108,7 +123,7 @@ public:
     f32 _1c;
     f32 _20;                                    // Scaling multiplier of some sort.
     f32 _24;                                    // Something related to distance calculations...?
-    Vec _28;
+    JGeometry::TVec3f _28;
     StringNode *_34;
     GameAudio::ObjectSoundMgr *mObjSoundMgr;    // 0x38
     u32 _3c;
