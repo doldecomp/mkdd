@@ -97,7 +97,7 @@ public:
     double GetTireRadius(int);
     bool IsBurn(int);
     bool IsWallReact(int);
-    u32 HaveBalloon(int);
+    bool HaveBalloon(int);
     int GetDriftCnt(int);
     bool IsMiniGame();
     bool IsMiniGameEnd();

@@ -11,7 +11,7 @@ class KartGame
 {
 public:
     // In kartCtrlStrat.cpp
-    void Init(int);
+    bool Init(int kartNo);
     void GetGorundTireNum();
     void WatchEffectAcceleration();
     void WatchAcceleration();
@@ -22,7 +22,7 @@ public:
     void DoDriftTurboSterr();
     void SetDriftTurboSterr();
     void CheckDriftTurbo();
-    void DoWarmUpRoll();
+    f32 DoWarmUpRoll();
     void DoRollAnim();
     void DoDriftClear();
     void DoRoll();
@@ -30,9 +30,9 @@ public:
     void DoLiftTurbo();
     void DoTurbo();
     void DoRollThrow();
-    void DoRollOver();
+    int DoRollOver();
     void DoWanWan();
-    void DoPushStart();
+    bool DoPushStart();
     void DoBalance(f32 *, f32);
     void MakeClear();
     void MakeBoardDash();
@@ -54,7 +54,7 @@ public:
     bool CheckBalloon();
     void SetRank();
     void RankWatchMan();
-    void ItemWatchMan(ItemObj *);
+    void ItemWatchMan(ItemObj *incomingItem);
     void AfterItemWatchMan();
     void DoFlagCtrl();
     void KeepWatch();
@@ -89,13 +89,21 @@ public:
     // void FrameWorkL(f32, f32, KartSus *);
     // void DoTurboPower();
     // void CheckBalloonPlayer();
-    KartBody *mBody;
-    u8 _4[0x12 - 004];
-    u16 mCountDownDuration;
-    u8 _14[0x20 - 0x14];
+    KartBody *mBody; // 00
+    u32 _4;
+    u8 _8; // probably a bitmask
+    u8 _9;
+    u8 _A;
+    u8 mTimeToChange;
+    u8 _C[0x2];
+    u16 _E;
+    u16 _10;
+    u16 mCountDownDuration; // 12
+    ItemObj *mIncomingItem; // 14, the item that's about to collide with the kart
+    float _18[2];
     JGeometry::TVec3f _20;
     JGeometry::TVec3f _2C;
-    JGeometry::TVec3f _34;
+    JGeometry::TVec3f _38;
 };
 
 #endif KARTGAME_H
