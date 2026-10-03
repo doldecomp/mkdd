@@ -6,6 +6,7 @@
 #include "Kaneshige/Course/CrsGround.h"
 
 class KartBody;
+class Spline;
 
 class KartSus
 {
@@ -24,7 +25,7 @@ public:
     void DoSusAction(int); // amogus
     void DoTireAction();
     // Inlines
-    KartBody *getKartBody() { return mBody; }
+    KartBody *getKartBody();
 
     // Unused
     void InitTestTirePose(int);
@@ -37,7 +38,7 @@ public:
     KartBody *mBody; // 0xc
     KartLoader *mLoader;
     CrsGround mCrsGnd;
-    u8 _74[4];
+    Spline *mSpline; // 0x74
     JGeometry::TVec3f _78[4];
     u8 _a8[0xb0 - 0xa8];
     f32 _b0;
@@ -50,10 +51,10 @@ public:
     JGeometry::TVec3f _e4;
     JGeometry::TVec3f _f0;
     f32 mTireRadius;
-    u8 _100[0x10c - 0x100];
+    f32 _100[3];
     f32 _10c;
     f32 _110;
-    u8 _114[0x124 - 0x114];
+    f32 _114[4];
     u32 _124;
     Mtx _128;
     Mtx _158;
