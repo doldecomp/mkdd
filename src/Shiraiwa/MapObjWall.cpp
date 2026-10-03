@@ -17,10 +17,28 @@ TMapObjWall::TMapObjWall(const CrsData::SObject &obj) : TMapObjHioNode(obj) {
     reset();
 }
 
+TMapObjWall::~TMapObjWall() {}
+
+void TMapObjWall::reset() {}
+
 const char *TMapObjWall::getBmdFileName() {
     static const char *cBmdName = "/Objects/wl_wall1.bmd";
     return cBmdName;
 }
+
+void TMapObjWall::loadAnimation() {}
+
+void TMapObjWall::createModel(JKRSolidHeap *, u32) {}
+
+void TMapObjWall::calc() {}
+
+void TMapObjWall::InitExec() {}
+
+void TMapObjWall::MoveExec() {}
+
+void TMapObjWall::initFunc_Move() {}
+
+void TMapObjWall::doFunc_Move() {}
 
 void TMapObjWall::initFunc_Rest() {}
 
@@ -31,3 +49,5 @@ void TMapObjWall::doFunc_Rest() {
         }
     }
 }
+
+void TMapObjWall::createColModel(J3DModelData *) {}
