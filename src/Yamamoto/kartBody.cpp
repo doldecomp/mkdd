@@ -321,7 +321,7 @@ void KartBody::SetUpRigidBodyStartGridPose() {
     JGeometry::TVec3f vec2;
     JGeometry::TVec3f vec3;
 
-    vec1.setNormal(getSus(0)->_c0, getSus(1)->_c0, getSus(2)->_c0);
+    vec1.setNormal(getSus(0)->mContactPos, getSus(1)->mContactPos, getSus(2)->mContactPos);
 
     vec1.scale(-1.0f);
     vec2.cross(vec1, _338);
@@ -340,24 +340,24 @@ void KartBody::SetUpRigidBodyStartGridPose() {
     _110[2][2] = vec3.z;
 
     mPos.x = (
-        getSus(0)->_c0.x + 
-        getSus(1)->_c0.x + 
-        getSus(2)->_c0.x + 
-        getSus(3)->_c0.x
+        getSus(0)->mContactPos.x + 
+        getSus(1)->mContactPos.x + 
+        getSus(2)->mContactPos.x + 
+        getSus(3)->mContactPos.x
     ) / 4.0f;
 
     mPos.y = (
-        getSus(0)->_c0.y + 
-        getSus(1)->_c0.y + 
-        getSus(2)->_c0.y + 
-        getSus(3)->_c0.y
+        getSus(0)->mContactPos.y + 
+        getSus(1)->mContactPos.y + 
+        getSus(2)->mContactPos.y + 
+        getSus(3)->mContactPos.y
     ) / 4.0f;
     
     mPos.z = (
-        getSus(0)->_c0.z + 
-        getSus(1)->_c0.z + 
-        getSus(2)->_c0.z + 
-        getSus(3)->_c0.z
+        getSus(0)->mContactPos.z + 
+        getSus(1)->mContactPos.z + 
+        getSus(2)->mContactPos.z + 
+        getSus(3)->mContactPos.z
     ) / 4.0f;
 
     _110[0][3] = mPos.x;

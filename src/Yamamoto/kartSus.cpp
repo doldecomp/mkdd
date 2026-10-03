@@ -12,38 +12,38 @@ KartBody *KartSus::getKartBody() { return mBody; }
 void KartSus::InitTirePose(int n)
 {
     JGeometry::TVec3f localVec;
-    localVec.set(_128[0][3] + _100[1], _128[1][3] - mTireRadius - _b0, _128[2][3]);
-    PSMTXMultVec(getKartBody()->_110, &localVec, &_c0);
-    _cc.set(_c0);
+    localVec.set(mSusMtx[0][3] + mTireDim[1], mSusMtx[1][3] - mTireRadius - mSusBase, mSusMtx[2][3]);
+    PSMTXMultVec(getKartBody()->_110, &localVec, &mContactPos);
+    mGndPoint.set(mContactPos);
     mCrsGnd.reset();
-    mCrsGnd.search(_c0, _c0);
-    _114[3] = mCrsGnd.getHeight();
-    mCrsGnd.getNormal(&_e4);
+    mCrsGnd.search(mContactPos, mContactPos);
+    mGndHeight = mCrsGnd.getHeight();
+    mCrsGnd.getNormal(&mGndNormal);
     if (mCrsGnd.isObject()) {
-        *(u32 *)&_290[0x38] = mCrsGnd.getObject()->getKind();
+        mObjKind = mCrsGnd.getObject()->getKind();
     }
     else {
-        *(u32 *)&_290[0x38] = 0;
+        mObjKind = 0;
     }
-    localVec.set(_128[0][3] + _100[1], 0.0f, _128[2][3]);
-    PSMTXMultVec(getKartBody()->_110, &localVec, &_c0);
-    _c0.y = _114[3];
+    localVec.set(mSusMtx[0][3] + mTireDim[1], 0.0f, mSusMtx[2][3]);
+    PSMTXMultVec(getKartBody()->_110, &localVec, &mContactPos);
+    mContactPos.y = mGndHeight;
     int idx = getKartBody()->mIdx;
     if (n == 1 || n == 0) {
-        _c0.x += _e4.x * (mTireRadius - _b0 * BodyOpData[idx]->_8);
-        _c0.y += _e4.y * (mTireRadius - _b0 * BodyOpData[idx]->_8);
-        _c0.z += _e4.z * (mTireRadius - _b0 * BodyOpData[idx]->_8);
+        mContactPos.x += mGndNormal.x * (mTireRadius - mSusBase * BodyOpData[idx]->_8);
+        mContactPos.y += mGndNormal.y * (mTireRadius - mSusBase * BodyOpData[idx]->_8);
+        mContactPos.z += mGndNormal.z * (mTireRadius - mSusBase * BodyOpData[idx]->_8);
     }
     else {
-        _c0.x += _e4.x * (mTireRadius - _b0 * BodyOpData[idx]->_c);
-        _c0.y += _e4.y * (mTireRadius - _b0 * BodyOpData[idx]->_c);
-        _c0.z += _e4.z * (mTireRadius - _b0 * BodyOpData[idx]->_c);
+        mContactPos.x += mGndNormal.x * (mTireRadius - mSusBase * BodyOpData[idx]->_c);
+        mContactPos.y += mGndNormal.y * (mTireRadius - mSusBase * BodyOpData[idx]->_c);
+        mContactPos.z += mGndNormal.z * (mTireRadius - mSusBase * BodyOpData[idx]->_c);
     }
-    _284.set(0.0f, 1.0f, 0.0f);
-    _78[0].set(_c0);
-    _78[1].set(_c0);
-    _78[2].set(_c0);
-    _78[3].set(_c0);
+    mSusPos.set(0.0f, 1.0f, 0.0f);
+    mSplinePts[0].set(mContactPos);
+    mSplinePts[1].set(mContactPos);
+    mSplinePts[2].set(mContactPos);
+    mSplinePts[3].set(mContactPos);
 }
 
 void KartSus::InitSettingParam(int n)
@@ -51,16 +51,16 @@ void KartSus::InitSettingParam(int n)
     getKartBody();
     getKartBody();
     if (n == 0 || n == 1) {
-        *(f32 *)&_290[4] = 26.0f; // 0x294
-        _b0 = SusParamsData[getKartBody()->mIdx]->_30;
-        *(f32 *)&_290[0x30] = SusParamsData[getKartBody()->mIdx]->_34; // 0x2c0
+        mSusPowerMul = 26.0f;
+        mSusBase = SusParamsData[getKartBody()->mIdx]->_30;
+        mSuspFrontY = SusParamsData[getKartBody()->mIdx]->_34;
     }
     else {
-        *(f32 *)&_290[4] = 26.0f; // 0x294
-        _b0 = SusParamsData[getKartBody()->mIdx]->_38;
-        *(f32 *)&_290[0x2c] = SusParamsData[getKartBody()->mIdx]->_3c; // 0x2bc
+        mSusPowerMul = 26.0f;
+        mSusBase = SusParamsData[getKartBody()->mIdx]->_38;
+        mSuspRearY = SusParamsData[getKartBody()->mIdx]->_3c;
     }
-    *(f32 *)&_114[0] = 0.97f; // 0x114
+    mSusFactor = 0.97f;
 }
 
 void KartSus::InitParam(int n)
@@ -73,41 +73,41 @@ void KartSus::InitParam(int n)
     };
     GetKartCtrl();
     int idx = getKartBody()->mIdx;
-    _100[2] = 0.0f;
-    _10c = 0.0f;
-    _110 = 0.0f;
-    _124 = 0;
-    *(f32 *)&_27c[4] = 1.0f;
-    *(f32 *)&_290[16] = 0.0f;
-    _278 = 0.0f;
+    mTireDim[2] = 0.0f;
+    mTireDispAngle = 0.0f;
+    mWheelRPM = 0.0f;
+    mSusFlags = 0;
+    mGripScale = 1.0f;
+    mSusParam0 = 0.0f;
+    mRPM = 0.0f;
     mWheel = mLoader->getExModelWheel(n);
     mArm = mLoader->getExModelArm(n);
     mShock = mLoader->getExModelShock(n);
     InitSettingParam(n);
     if (n == 0 || n == 1) {
-        *(f32 *)&_a8[0] = SusParamsData[idx]->_00[0];
-        *(f32 *)&_a8[4] = SusParamsData[idx]->_00[1];
-        localVec.set(TireOpData[idx][n]._10, *(f32 *)&_290[0x30], TireOpData[idx][n]._14);
+        mSpring = SusParamsData[idx]->_00[0];
+        mDamp = SusParamsData[idx]->_00[1];
+        localVec.set(TireOpData[idx][n]._10, mSuspFrontY, TireOpData[idx][n]._14);
     }
     else {
-        *(f32 *)&_a8[0] = SusParamsData[idx]->_00[2];
-        *(f32 *)&_a8[4] = SusParamsData[idx]->_00[3];
-        localVec.set(TireOpData[idx][n]._10, *(f32 *)&_290[0x2c], TireOpData[idx][n]._14);
+        mSpring = SusParamsData[idx]->_00[2];
+        mDamp = SusParamsData[idx]->_00[3];
+        localVec.set(TireOpData[idx][n]._10, mSuspRearY, TireOpData[idx][n]._14);
     }
-    *(f32 *)&_290[8] = TireParamsData[idx]->_1c;
-    *(f32 *)&_290[12] = TireParamsData[idx]->_20;
+    mTireSusA = TireParamsData[idx]->_1c;
+    mTireSusB = TireParamsData[idx]->_20;
     mTireRadius = TireOpData[idx][n]._8;
-    _100[1] = TireOpData[idx][n]._c;
-    _100[0] = 1.2f * TireOpData[idx][2]._8;
-    _b4 = _b0;
-    _b8 = _b4;
-    _114[1] = SusParamsData[idx]->_00[4];
-    _114[2] = SusParamsData[idx]->_00[5];
-    *(f32 *)&_290[24] = SusParamsData[idx]->_00[7];
-    *(f32 *)&_290[28] = SusParamsData[idx]->_00[8];
-    *(f32 *)&_290[32] = SusParamsData[idx]->_00[9];
-    *(f32 *)&_290[40] = SusParamsData[idx]->_00[11];
-    *(f32 *)&_290[36] = SusParamsData[idx]->_00[10];
+    mTireDim[1] = TireOpData[idx][n]._c;
+    mTireDim[0] = 1.2f * TireOpData[idx][2]._8;
+    mSusCur = mSusBase;
+    mSusPrev = mSusCur;
+    mDampExt = SusParamsData[idx]->_00[4];
+    mDampComp = SusParamsData[idx]->_00[5];
+    mSpringBase = SusParamsData[idx]->_00[7];
+    mSpringMax = SusParamsData[idx]->_00[8];
+    mSpringMin = SusParamsData[idx]->_00[9];
+    mSpringDiv = SusParamsData[idx]->_00[11];
+    mSpringK = SusParamsData[idx]->_00[10];
     Mtx mtx2 = {
         {1.0f, 0.0f, 0.0f, 0.0f},
         {0.0f, 1.0f, 0.0f, 0.0f},
@@ -119,14 +119,14 @@ void KartSus::InitParam(int n)
     else {
         GetKartCtrl()->RotZMatrix(mtx2, -0.174444f);
     }
-    GetKartCtrl()->SetPosePosMatrix(_128, mtx2, &localVec);
-    GetKartCtrl()->SetPosePosMatrix(_188, mtx1, &localVec);
-    *(f32 *)&_27c[0] = TireParamsData[idx]->_18;
-    *(f32 *)&_290[0] = SusParamsData[idx]->_00[6];
+    GetKartCtrl()->SetPosePosMatrix(mSusMtx, mtx2, &localVec);
+    GetKartCtrl()->SetPosePosMatrix(mArmMtx, mtx1, &localVec);
+    mTireGrip = TireParamsData[idx]->_18;
+    mSusPower = SusParamsData[idx]->_00[6];
     localVec.set(ArmOpData[idx][n]._0, ArmOpData[idx][n]._4, ArmOpData[idx][n]._8);
-    GetKartCtrl()->SetPosePosMatrix(_1b8, mtx1, &localVec);
+    GetKartCtrl()->SetPosePosMatrix(mSuspArmMtx, mtx1, &localVec);
     localVec.set(DumpOpData[idx][n]._0, DumpOpData[idx][n]._4, DumpOpData[idx][n]._8);
-    GetKartCtrl()->SetPosePosMatrix(_218, mtx1, &localVec);
+    GetKartCtrl()->SetPosePosMatrix(mDumpMtx, mtx1, &localVec);
 }
 
 void KartSus::Init(int n)
@@ -136,47 +136,47 @@ void KartSus::Init(int n)
         {0.0f, 1.0f, 0.0f, 0.0f},
         {0.0f, 0.0f, 1.0f, 0.0f},
     };
-    *(f32 *)&_a8[0] = 0.0f;
-    *(f32 *)&_a8[4] = 0.0f;
-    _b0 = 0.0f;
-    _b4 = 0.0f;
-    *(f32 *)&_bc[0] = 0.0f;
+    mSpring = 0.0f;
+    mDamp = 0.0f;
+    mSusBase = 0.0f;
+    mSusCur = 0.0f;
+    mSusForce = 0.0f;
     mTireRadius = 0.0f;
-    _100[0] = 0.0f;
-    _100[1] = 0.0f;
-    _100[2] = 0.0f;
-    _10c = 0.0f;
-    _110 = 0.0f;
-    _114[0] = 0.0f;
-    _278 = 0.0f;
-    *(f32 *)&_27c[0] = 0.0f;
-    *(f32 *)&_27c[4] = 0.0f;
-    _114[1] = 0.0f;
-    _114[2] = 0.0f;
-    *(f32 *)&_290[0] = 0.0f;
-    *(f32 *)&_290[4] = 0.0f;
-    *(f32 *)&_290[8] = 0.0f;
-    *(f32 *)&_290[12] = 0.0f;
-    _114[3] = 0.0f;
-    *(f32 *)&_290[24] = 0.0f;
-    *(f32 *)&_290[28] = 0.0f;
-    *(f32 *)&_290[32] = 0.0f;
-    *(f32 *)&_290[40] = 0.0f;
-    *(f32 *)&_290[36] = 0.0f;
-    *(f32 *)&_290[52] = 0.0f;
-    _124 = 0;
-    *(f32 *)&_290[48] = 0.0f;
-    *(f32 *)&_290[44] = 0.0f;
-    _284.zero();
-    _c0.zero();
-    _cc.zero();
-    _d8.zero();
-    _e4.zero();
-    _f0.zero();
-    _290[0x14] = 0xff;
-    GetKartCtrl()->SetPosePosMatrix(_128, localMtx, &_c0);
-    GetKartCtrl()->SetPosePosMatrix(_158, localMtx, &_c0);
-    GetKartCtrl()->SetPosePosMatrix(_188, localMtx, &_c0);
+    mTireDim[0] = 0.0f;
+    mTireDim[1] = 0.0f;
+    mTireDim[2] = 0.0f;
+    mTireDispAngle = 0.0f;
+    mWheelRPM = 0.0f;
+    mSusFactor = 0.0f;
+    mRPM = 0.0f;
+    mTireGrip = 0.0f;
+    mGripScale = 0.0f;
+    mDampExt = 0.0f;
+    mDampComp = 0.0f;
+    mSusPower = 0.0f;
+    mSusPowerMul = 0.0f;
+    mTireSusA = 0.0f;
+    mTireSusB = 0.0f;
+    mGndHeight = 0.0f;
+    mSpringBase = 0.0f;
+    mSpringMax = 0.0f;
+    mSpringMin = 0.0f;
+    mSpringDiv = 0.0f;
+    mSpringK = 0.0f;
+    mSusParam2 = 0.0f;
+    mSusFlags = 0;
+    mSuspFrontY = 0.0f;
+    mSuspRearY = 0.0f;
+    mSusPos.zero();
+    mContactPos.zero();
+    mGndPoint.zero();
+    mForcePos.zero();
+    mGndNormal.zero();
+    mScratchVec.zero();
+    mSusState = 0xff;
+    GetKartCtrl()->SetPosePosMatrix(mSusMtx, localMtx, &mContactPos);
+    GetKartCtrl()->SetPosePosMatrix(mTireMtx, localMtx, &mContactPos);
+    GetKartCtrl()->SetPosePosMatrix(mArmMtx, localMtx, &mContactPos);
     InitParam(n);
     InitTirePose(n);
 }
@@ -231,7 +231,7 @@ f32 KartSus::GetCircleFric()
             ret = getKartBody()->_530;
             break;
     }
-    if (this->_290[0x14] == 6 || getKartBody()->_58c == 3) {
+    if (this->mSusState == 6 || getKartBody()->_58c == 3) {
         ret = 0.0f;
     }
     else if (getKartBody()->mCarStatus & 0x40020074000ULL) {
@@ -252,27 +252,27 @@ void KartSus::DoSusAction(int)
     f32 tmp;
 
     if (getKartBody()->getThunder()->mFlags & 1) {
-        v3c.set((_128[0][3] + _100[1]) * getKartBody()->getThunder()->getScale(),
-            _128[1][3],
-            _128[2][3] * getKartBody()->getThunder()->getScale());
+        v3c.set((mSusMtx[0][3] + mTireDim[1]) * getKartBody()->getThunder()->getScale(),
+            mSusMtx[1][3],
+            mSusMtx[2][3] * getKartBody()->getThunder()->getScale());
     }
     else {
-        v3c.set(_128[0][3] + _100[1], _128[1][3], _128[2][3]);
+        v3c.set(mSusMtx[0][3] + mTireDim[1], mSusMtx[1][3], mSusMtx[2][3]);
     }
-    PSMTXMultVec(getKartBody()->_110, &v3c, &_c0);
-    *(f32 *)&_bc[0] = 0.0f;
-    _124 &= ~4;
+    PSMTXMultVec(getKartBody()->_110, &v3c, &mContactPos);
+    mSusForce = 0.0f;
+    mSusFlags &= ~4;
     f32 tireRadius = mTireRadius;
     if (getKartBody()->getThunder()->mFlags & 1) {
-        v3c.set((_128[0][3] + _100[1]) * getKartBody()->getThunder()->getScale(),
-            _128[1][3] - tireRadius - _b4,
-            _128[2][3] * getKartBody()->getThunder()->getScale());
+        v3c.set((mSusMtx[0][3] + mTireDim[1]) * getKartBody()->getThunder()->getScale(),
+            mSusMtx[1][3] - tireRadius - mSusCur,
+            mSusMtx[2][3] * getKartBody()->getThunder()->getScale());
     }
     else {
-        v3c.set(_128[0][3] + _100[1], _128[1][3] - tireRadius - _b4, _128[2][3]);
+        v3c.set(mSusMtx[0][3] + mTireDim[1], mSusMtx[1][3] - tireRadius - mSusCur, mSusMtx[2][3]);
     }
     PSMTXMultVec(getKartBody()->_110, &v3c, &v18);
-    mCrsGnd.search(v18, _cc);
+    mCrsGnd.search(v18, mGndPoint);
 
     JGeometry::TVec3f v0c;
     bool isSpecial = false;
@@ -283,90 +283,90 @@ void KartSus::DoSusAction(int)
         isSpecial = true;
         break;
     default:
-        _114[3] = mCrsGnd.getHeight();
-        mCrsGnd.getNormal(&_e4);
-        _cc.set(v18);
-        _78[3].set(v18.x, _114[3], v18.z);
-        mSpline->setAll(_78);
+        mGndHeight = mCrsGnd.getHeight();
+        mCrsGnd.getNormal(&mGndNormal);
+        mGndPoint.set(v18);
+        mSplinePts[3].set(v18.x, mGndHeight, v18.z);
+        mSpline->setAll(mSplinePts);
         mSpline->getBezierPoint(&v0c, 0.95f);
-        _114[3] = v0c.y;
-        if (_114[3] > _c0.y) {
-            _c0.y = _114[3];
+        mGndHeight = v0c.y;
+        if (mGndHeight > mContactPos.y) {
+            mContactPos.y = mGndHeight;
         }
         break;
     }
-    _284.set(v18.x, _114[3], v18.z);
-    _78[0].set(_78[1]);
-    _78[1].set(_78[2]);
-    _78[2].set(_78[3]);
+    mSusPos.set(v18.x, mGndHeight, v18.z);
+    mSplinePts[0].set(mSplinePts[1]);
+    mSplinePts[1].set(mSplinePts[2]);
+    mSplinePts[2].set(mSplinePts[3]);
     if (mCrsGnd.isObject()) {
-        *(u32 *)&_290[0x38] = mCrsGnd.getObject()->getKind();
+        mObjKind = mCrsGnd.getObject()->getKind();
     }
     else {
-        *(u32 *)&_290[0x38] = 0;
+        mObjKind = 0;
     }
     if (isSpecial || mCrsGnd.getAttribute() == 10 || getKartBody()->_2fc.y < 0.0f ||
         (getKartBody()->_2fc.y < 0.1f && !(getKartBody()->mCarStatus & 0x100000ULL)) ||
         (getKartBody()->getRescue()->mFlags & 0x20) ||
         (getKartBody()->getCannon()->mFlags & 0x20)) {
-        _b4 = _b0;
-        _124 &= ~1;
+        mSusCur = mSusBase;
+        mSusFlags &= ~1;
         return;
     }
-    v3c.set(v18.x, _114[3], v18.z);
-    v24.sub(v3c, _c0);
+    v3c.set(v18.x, mGndHeight, v18.z);
+    v24.sub(v3c, mContactPos);
     f32 length = v24.length();
     tmp = length - tireRadius;
-    if (tmp > _b0) {
-        tmp = _b4;
-        GetKartCtrl()->ChaseFnumber(&tmp, _b0, 0.35f);
-        if (tmp > _b0) {
-            tmp = _b0;
+    if (tmp > mSusBase) {
+        tmp = mSusCur;
+        GetKartCtrl()->ChaseFnumber(&tmp, mSusBase, 0.35f);
+        if (tmp > mSusBase) {
+            tmp = mSusBase;
         }
-        _124 &= ~1;
+        mSusFlags &= ~1;
     }
     else {
-        _124 |= 1;
+        mSusFlags |= 1;
         if (tmp < 0.0f) {
             tmp = 0.0f;
         }
-        f32 f30v = tmp - _b0;
+        f32 f30v = tmp - mSusBase;
         f32 spring;
-        if (tmp == _b0) {
+        if (tmp == mSusBase) {
             spring = 0.0f;
         }
         else {
-            f32 f5 = tmp - _b4;
+            f32 f5 = tmp - mSusCur;
             if (f5 >= 0.0f) {
-                f32 t = 1.0f - f5 / *(f32 *)&_290[0x28];
+                f32 t = 1.0f - f5 / mSpringDiv;
                 if (t <= 0.1f) {
                     t = 0.1f;
                 }
-                spring = f5 * (_114[2] * t);
+                spring = f5 * (mDampComp * t);
             }
             else {
-                f32 t = 1.0f - f5 / (-*(f32 *)&_290[0x28]);
+                f32 t = 1.0f - f5 / (-mSpringDiv);
                 if (t <= 0.1f) {
                     t = 0.1f;
                 }
-                spring = f5 * (_114[1] * t);
+                spring = f5 * (mDampExt * t);
             }
         }
-        f32 f29 = *(f32 *)&_a8[0];
-        f32 f2 = 1.0f - (tmp / (_b0 * *(f32 *)&_290[0x18]) - 1.0f);
+        f32 f29 = mSpring;
+        f32 f2 = 1.0f - (tmp / (mSusBase * mSpringBase) - 1.0f);
         if (f2 > 1.0f) {
             f2 *= 0.98f;
         }
-        if (f2 > *(f32 *)&_290[0x1c]) {
-            f2 = *(f32 *)&_290[0x1c];
+        if (f2 > mSpringMax) {
+            f2 = mSpringMax;
         }
-        if (f2 < *(f32 *)&_290[0x20]) {
-            f2 = *(f32 *)&_290[0x20];
+        if (f2 < mSpringMin) {
+            f2 = mSpringMin;
         }
         f29 *= f2;
-        f32 f28 = (*(f32 *)&_a8[4] * spring) * (0.000025f * getKartBody()->_3a4);
+        f32 f28 = (mDamp * spring) * (0.000025f * getKartBody()->_3a4);
         f30v = (-f29 * f30v) * (0.00002f * getKartBody()->_3a4) - f28;
-        f30v *= *(f32 *)&_290[4] * SusPowerData[getKartBody()->mIdx];
+        f30v *= mSusPowerMul * SusPowerData[getKartBody()->mIdx];
         if (f30v >= 95.0f * getKartBody()->_3a4) {
             f30v = 95.0f * getKartBody()->_3a4;
         }
@@ -379,14 +379,14 @@ void KartSus::DoSusAction(int)
         else {
             v30.set(0.73f * (f30v * getKartBody()->_2fc.x), f30v * getKartBody()->_2fc.y, 0.73f * (f30v * getKartBody()->_2fc.z));
         }
-        _d8.set(_c0.x - length * getKartBody()->_2fc.x, _c0.y - length * getKartBody()->_2fc.y, _c0.z - length * getKartBody()->_2fc.z);
-        getKartBody()->DoForce(&_d8, &v30);
-        *(f32 *)&_bc[0] = f30v;
+        mForcePos.set(mContactPos.x - length * getKartBody()->_2fc.x, mContactPos.y - length * getKartBody()->_2fc.y, mContactPos.z - length * getKartBody()->_2fc.z);
+        getKartBody()->DoForce(&mForcePos, &v30);
+        mSusForce = f30v;
     }
-    _b4 = tmp;
-    v30.set(0.0f, *(f32 *)&_290[0] * getKartBody()->_3ac, 0.0f);
-    getKartBody()->DoForce(&_c0, &v30);
-    _290[0x14] = 0xff;
+    mSusCur = tmp;
+    v30.set(0.0f, mSusPower * getKartBody()->_3ac, 0.0f);
+    getKartBody()->DoForce(&mContactPos, &v30);
+    mSusState = 0xff;
 }
 
 void KartSus::DoTireAction()
@@ -406,28 +406,28 @@ void KartSus::DoTireAction()
     if (mCrsGnd.getAttribute() == 2) {
         return;
     }
-    if (*(f32 *)&_bc[0] == 0.0f) {
+    if (mSusForce == 0.0f) {
         return;
     }
     if (getKartBody()->mCarStatus & 0x00202000ULL) {
-        getKartBody()->GroundReflection(&_d8, &_e4, getKartBody()->_430, getKartBody()->_42c, 0.5f);
+        getKartBody()->GroundReflection(&mForcePos, &mGndNormal, getKartBody()->_430, getKartBody()->_42c, 0.5f);
         return;
     }
     A.zero();
-    GetKartCtrl()->MulMatrix(m, _128, getKartBody()->_110);
+    GetKartCtrl()->MulMatrix(m, mSusMtx, getKartBody()->_110);
     E.set(m[0][0], m[1][0], m[2][0]);
-    B.cross(E, _e4);
+    B.cross(E, mGndNormal);
     B.normalize();
-    f32 scale = 3.0f * (-200.0f * _110);
+    f32 scale = 3.0f * (-200.0f * mWheelRPM);
     D.set(B.x * scale, B.y * scale, B.z * scale);
-    E.set(_d8.x - getKartBody()->mPos.x, _d8.y - getKartBody()->mPos.y, _d8.z - getKartBody()->mPos.z);
-    E.scale(5.0f * *(f32 *)&_27c[0]);
+    E.set(mForcePos.x - getKartBody()->mPos.x, mForcePos.y - getKartBody()->mPos.y, mForcePos.z - getKartBody()->mPos.z);
+    E.scale(5.0f * mTireGrip);
     if (getKartBody()->_458 <= 30.0f && !(getKartBody()->mCarStatus & 0x3ULL)) {
-        GetKartCtrl()->ChaseFnumber((f32 *)&_27c[4], 0.4f, 0.2f);
-        E.scale(*(f32 *)&_27c[4]);
+        GetKartCtrl()->ChaseFnumber(&mGripScale, 0.4f, 0.2f);
+        E.scale(mGripScale);
     }
     else {
-        *(f32 *)&_27c[4] = 1.0f;
+        mGripScale = 1.0f;
     }
     JGeometry::TVec3f G;
     G.set(getKartBody()->_2c0);
@@ -440,7 +440,7 @@ void KartSus::DoTireAction()
     E.cross(G, E);
     C.add(getKartBody()->mVel, E);
     C.add(D);
-    GetKartCtrl()->VectorElement(&E, &C, &_e4);
+    GetKartCtrl()->VectorElement(&E, &C, &mGndNormal);
     if (getKartBody()->mBodyGround.getSpiralCode() == 1) {
         E.scale(2.3f);
     }
@@ -452,13 +452,13 @@ void KartSus::DoTireAction()
     f32 cornerForce = GetCornerForce();
     E.cross(C, B);
     E.cross(E, B);
-    E.scale(*(f32 *)&_bc[0] * cornerForce);
-    C.scale(-*(f32 *)&_bc[0]);
+    E.scale(mSusForce * cornerForce);
+    C.scale(-mSusForce);
     A.add(C, E);
-    _290[0x14] = getKartBody()->mBodyGround.getAttribute();
+    mSusState = getKartBody()->mBodyGround.getAttribute();
     f32 fric = GetCircleFric();
-    CircleFriction(&A, fric * *(f32 *)&_bc[0]);
-    getKartBody()->DoForce(&_d8, &A);
+    CircleFriction(&A, fric * mSusForce);
+    getKartBody()->DoForce(&mForcePos, &A);
     f32 dot = A.dot(B);
-    _110 = _110 - 4.0f * (dot / getKartBody()->_3a4);
+    mWheelRPM = mWheelRPM - 4.0f * (dot / getKartBody()->_3a4);
 }
