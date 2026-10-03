@@ -37,7 +37,7 @@ public:
 
 private:
     TPathMove *mPathMove; // 158
-    u8 _15c[0x160 - 0x15c]; // unknown, see reset/calc
+    u16 mRestFrame;       // 15C
 }; // Size: 0x160
 
 #endif // MAPOBJWALL_H

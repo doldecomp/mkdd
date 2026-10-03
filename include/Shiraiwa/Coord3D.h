@@ -60,13 +60,14 @@ public:
     void checkReachTarget();
 
     // Inline/Unused
+    u16 get_8() const { return _8; }
     void setTargetNode(f32, f32);
     void setTargetNode(u16);
     void getNodeDir(u16, JGeometry::TVec3f *);
 
 protected:
     const CrsData::SObject *mpObj; // 04
-    s16 _8;                      // 
+    u16 _8;                      // 
     JGeometry::TVec3f *mpPos;      // 0c
     JGeometry::TVec3f *mpVel;      // 10
     f32 _14;

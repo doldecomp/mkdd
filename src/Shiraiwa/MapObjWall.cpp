@@ -21,3 +21,13 @@ const char *TMapObjWall::getBmdFileName() {
     static const char *cBmdName = "/Objects/wl_wall1.bmd";
     return cBmdName;
 }
+
+void TMapObjWall::initFunc_Rest() {}
+
+void TMapObjWall::doFunc_Rest() {
+    if (IsPathMove()) {
+        if (mPathMove->get_8() == 0 || getStateCount() > mRestFrame) {
+            setState(0);
+        }
+    }
+}
