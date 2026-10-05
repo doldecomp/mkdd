@@ -58,7 +58,7 @@ void CharacterSoundMgr::loop() {
 void CharacterSoundMgr::frameWork(f32 p1, f32) {
     KartSoundMgr *kartSound = getKartSound();
 
-    if (mKillSw != 0 || kartSound->_66 == 2) {
+    if (mKillSw != 0 || kartSound->mKartType == 2) {
         return;
     }
     mAnimator->updateAnimation(p1, *mSoundPos, mStarter);
@@ -138,18 +138,18 @@ void CharacterSoundMgr::setVoice(u8 voiceID) {
     soundID += 0x30000 + charIdx * 0x29;
     _6c = Common::changeRandomId(soundID, _6c);
 
-    if (mKillSw || kartSound->_66 == 2) {
+    if (mKillSw || kartSound->mKartType == 2) {
         return;
     }
 
     CustomSoundTable *soundTable = Main::getAudio()->getSoundTable();
     u32 swBit = soundTable->getSwBit(soundID);
 
-    if (kartSound && kartSound->_8d == 3 && swBit & 0x8000000) {
+    if (kartSound && kartSound->mConductStatus == 3 && swBit & 0x8000000) {
         return;
     }
 
-    if (kartSound->_66 != 0 && (swBit & 0x80000000)) {
+    if (kartSound->mKartType != 0 && (swBit & 0x80000000)) {
         return;
     }
 
@@ -206,7 +206,7 @@ void CharacterSoundMgr::setVoice(u8 voiceID) {
 
     kartSound = getKartSound(); // ?
     if (kartSound) {
-        setEcho(handle, kartSound->_6c);            
+        setEcho(handle, kartSound->mEchoMix);            
     }
 
     if (Parameters::getChibiFlag(_64)) {
@@ -217,13 +217,13 @@ void CharacterSoundMgr::setVoice(u8 voiceID) {
     if (!(*handle)->getAudible()) {
         u32 unk = 0;            
         u32 cam8 = Main::getAudio()->getCamera()->getSceneMax(); // number of cameras?
-        u8 kartCount = kartSound->mKartCount;
+        u8 kartCount = kartSound->mKartIndex;
         if (cam8 > 1 && cam8 > kartCount) {
             unk = (1 << kartCount) ^ 0xf; // what
         }
         (*handle)->newAudible(JGeometry::TVec3f(*mSoundPos), &_18, unk, nullptr);
 
-        if (kartSound->_66) {
+        if (kartSound->mKartType) {
             (*handle)->getAuxiliary().moveVolume(0.55f, 0);
         }
     }
@@ -233,16 +233,16 @@ void CharacterSoundMgr::setSe(u32 seID) {
     JAISoundHandle *handle;
     KartSoundMgr *kartSound = getKartSound();
     
-    if (mKillSw != 0 || kartSound->_66 == 2)
+    if (mKillSw != 0 || kartSound->mKartType == 2)
         return;
 
-    if (kartSound && kartSound->_8d == 3 && Main::getAudio()->getSoundTable()->getSwBit(seID) & 0x8000000) {
+    if (kartSound && kartSound->mConductStatus == 3 && Main::getAudio()->getSoundTable()->getSwBit(seID) & 0x8000000) {
         return;
     }
 
     u32 unk = 0;
     u32 cam8 = Main::getAudio()->getCamera()->getSceneMax(); // number of cameras?
-    u8 kartCount = kartSound->mKartCount;
+    u8 kartCount = kartSound->mKartIndex;
     if (cam8 > 1 && cam8 > kartCount) {
         unk = 1 << kartCount ^ 0xf; // what
     } 
@@ -255,7 +255,7 @@ void CharacterSoundMgr::setSe(u32 seID) {
     }
 
     if (kartSound) {
-        setEcho(handle, kartSound->_6c);
+        setEcho(handle, kartSound->mEchoMix);
     }
 }
 
@@ -287,7 +287,7 @@ KartSoundMgr *CharacterSoundMgr::getKartSound() {
     }
     KartSoundMgr *kartSound = KartSoundMgr::smStart;
     while (kartSound) {
-        if (_64 == kartSound->_61) {
+        if (_64 == kartSound->mKartIndex) {
             mKartSound = kartSound;
             return mKartSound;
         }
@@ -303,7 +303,7 @@ void CharacterSoundMgr::checkEcho() {
         return;
     }
 
-    f32 echoVal = mKartSound->_6c;
+    f32 echoVal = mKartSound->mEchoMix;
     if (_70 == echoVal) {
         return;
     }
@@ -346,7 +346,7 @@ JAISoundHandle *CustomAnimator::getFreeHandle(const JAUSoundAnimationSound *anim
     CustomSoundTable *soundTable = Main::getAudio()->getSoundTable();
     KartSoundMgr *kartSoundMgr = charSoundMgr->getKartSound();
 
-    if (kartSoundMgr->_66 && soundTable->getSwBit(animSound->mSoundId) & 0x80000000) {
+    if (kartSoundMgr->mKartType && soundTable->getSwBit(animSound->mSoundId) & 0x80000000) {
         return nullptr;
     }
 
