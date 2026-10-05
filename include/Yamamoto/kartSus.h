@@ -6,6 +6,7 @@
 #include "Kaneshige/Course/CrsGround.h"
 
 class KartBody;
+class Spline;
 
 class KartSus
 {
@@ -24,48 +25,67 @@ public:
     void DoSusAction(int); // amogus
     void DoTireAction();
     // Inlines
-    KartBody *getKartBody() { return mBody; }
+    KartBody *getKartBody();
 
     // Unused
     void InitTestTirePose(int);
     void WallReflection(JGeometry::TVec3<float> *, JGeometry::TVec3<float> *, float, float);
 
     // TODO
-    ExModel *mWheel;
-    ExModel *mArm;
-    ExModel *mShock;
-    KartBody *mBody; // 0xc
-    KartLoader *mLoader;
-    CrsGround mCrsGnd;
-    u8 _74[4];
-    JGeometry::TVec3f _78[4];
-    u8 _a8[0xb0 - 0xa8];
-    f32 _b0;
-    f32 _b4;
-    f32 _b8;
-    u8 _bc[4];
-    JGeometry::TVec3f _c0;
-    JGeometry::TVec3f _cc;
-    JGeometry::TVec3f _d8;
-    JGeometry::TVec3f _e4;
-    JGeometry::TVec3f _f0;
-    f32 mTireRadius;
-    u8 _100[0x10c - 0x100];
-    f32 _10c;
-    f32 _110;
-    u8 _114[0x124 - 0x114];
-    u32 _124;
-    Mtx _128;
-    Mtx _158;
-    Mtx _188;
-    Mtx _1b8;
-    Mtx _1e8;
-    Mtx _218;
-    Mtx _248;
-    f32 _278;
-    u8 _27c[0x284 - 0x27c];
-    JGeometry::TVec3f _284;
-    u8 _290[0x2cc - 0x290];
-}; // _2cc
+    ExModel *mWheel;        // 0x0
+    ExModel *mArm;          // 0x4
+    ExModel *mShock;        // 0x8
+    KartBody *mBody;        // 0xc
+    KartLoader *mLoader;    // 0x10
+    CrsGround mCrsGnd;      // 0x14
+    Spline *mSpline;        // 0x74
+    JGeometry::TVec3f mSplinePts[4]; // 0x78
+    f32 mSpring;            // 0xa8
+    f32 mDamp;              // 0xac
+    f32 mSusBase;           // 0xb0
+    f32 mSusCur;            // 0xb4
+    f32 mSusPrev;           // 0xb8
+    f32 mSusForce;          // 0xbc
+    JGeometry::TVec3f mContactPos; // 0xc0
+    JGeometry::TVec3f mGndPoint;   // 0xcc
+    JGeometry::TVec3f mForcePos;   // 0xd8
+    JGeometry::TVec3f mGndNormal;  // 0xe4
+    JGeometry::TVec3f mScratchVec; // 0xf0
+    f32 mTireRadius;        // 0xfc
+    f32 mTireDim[3];        // 0x100
+    f32 mTireDispAngle;     // 0x10c
+    f32 mWheelRPM;          // 0x110
+    f32 mSusFactor;         // 0x114
+    f32 mDampExt;           // 0x118
+    f32 mDampComp;          // 0x11c
+    f32 mGndHeight;         // 0x120
+    u32 mSusFlags;          // 0x124
+    Mtx mSusMtx;            // 0x128
+    Mtx mTireMtx;           // 0x158
+    Mtx mArmMtx;            // 0x188
+    Mtx mSuspArmMtx;        // 0x1b8
+    Mtx mSuspMtx;           // 0x1e8
+    Mtx mDumpMtx;           // 0x218
+    Mtx mDumpArmMtx;        // 0x248
+    f32 mRPM;               // 0x278
+    f32 mTireGrip;          // 0x27c
+    f32 mGripScale;         // 0x280
+    JGeometry::TVec3f mSusPos; // 0x284
+    f32 mSusPower;          // 0x290
+    f32 mSusPowerMul;       // 0x294
+    f32 mTireSusA;          // 0x298
+    f32 mTireSusB;          // 0x29c
+    f32 mSusParam0;         // 0x2a0
+    u8 mSusState;           // 0x2a4
+    f32 mSpringBase;        // 0x2a8
+    f32 mSpringMax;         // 0x2ac
+    f32 mSpringMin;         // 0x2b0
+    f32 mSpringK;           // 0x2b4
+    f32 mSpringDiv;         // 0x2b8
+    f32 mSuspRearY;         // 0x2bc
+    f32 mSuspFrontY;        // 0x2c0
+    f32 mSusParam2;         // 0x2c4
+    u32 mObjKind;           // 0x2c8
+}; // 0x2cc
 
 #endif

@@ -291,7 +291,7 @@ int KartCtrl::GetTirePos(int kartIndex, int kartTireIndex, Vec *kartTireVect) {
         + tireOffsetPos[idx];
     kartTireVect->z = (kartBody->mKartSus[kartOffset]->mWheel->getBaseTRMtx()[2][3] - kartBody->_2fc.z * kartBody->mKartSus[kartOffset]->mTireRadius);
     
-    return (u8)(kartBody->mKartSus[kartOffset]->_124 & 1);
+    return (u8)(kartBody->mKartSus[kartOffset]->mSusFlags & 1);
 }
 
 f32 KartCtrl::GeTireG(int kartIndex) {
@@ -348,7 +348,7 @@ u32 KartCtrl::GetGameStatus(int idx) {
 }
 
 void KartCtrl::SetTireDispRound(KartBody *kartBody, KartSus *kartSus, f32 reverse) {
-    f32 tireDisp = 0.02f * kartSus->_110;
+    f32 tireDisp = 0.02f * kartSus->mWheelRPM;
     f32 speed = 2.16f * kartBody->mSpeed;
 
     if (kartBody->_458 < 1.0f) {
@@ -370,9 +370,9 @@ void KartCtrl::SetTireDispRound(KartBody *kartBody, KartSus *kartSus, f32 revers
         tireDisp = -0.436111f;
     }
 
-    kartSus->_10c += tireDisp;
-    if (kartSus->_10c > 3.14 || kartSus->_10c < -3.14) {
-        kartSus->_10c = 0.0f;
+    kartSus->mTireDispAngle += tireDisp;
+    if (kartSus->mTireDispAngle > 3.14 || kartSus->mTireDispAngle < -3.14) {
+        kartSus->mTireDispAngle = 0.0f;
     }
     return;
 }
@@ -795,10 +795,10 @@ void KartStrat::DoStepAccel() {
     f32 carRPM = 0.0f;
     for (int i = 0; i < 4; i++) {
         KartSus *kartSus = GetKartCtrl()->getKartSus(i + (index * 4));
-        kartSus->_278 += kartBody->_3c8;
-        kartSus->_278 -= GetKartCtrl()->LimmtNumber(kartSus->_278, 1.0f);
-        kartSus->_278 = GetKartCtrl()->LimmtNumber(kartSus->_278, kartBody->_3e4);
-        carRPM += kartSus->_278;
+        kartSus->mRPM += kartBody->_3c8;
+        kartSus->mRPM -= GetKartCtrl()->LimmtNumber(kartSus->mRPM, 1.0f);
+        kartSus->mRPM = GetKartCtrl()->LimmtNumber(kartSus->mRPM, kartBody->_3e4);
+        carRPM += kartSus->mRPM;
     }
     kartBody->mCarRPM = carRPM;
     if (kartBody->mCarRPM < 0.0f) {
@@ -835,8 +835,8 @@ void KartStrat::DoStepSterr() {
     }
 
     kartBody->_388 = (kartBody->_38c - 10.0f) / 10.0f;
-    GetKartCtrl()->RotYMatrix33(kartSus1->_188, 0.680333f * kartBody->_388);
-    GetKartCtrl()->RotYMatrix33(kartSus2->_188, 0.680333f * kartBody->_388);
+    GetKartCtrl()->RotYMatrix33(kartSus1->mArmMtx, 0.680333f * kartBody->_388);
+    GetKartCtrl()->RotYMatrix33(kartSus2->mArmMtx, 0.680333f * kartBody->_388);
 
     if (raceMgr->getRaceMode() != 8) {
         GetKartCtrl()->getKartAnime(index)->DoDriveAnime(index);
@@ -944,8 +944,8 @@ void KartStrat::DoSterr() {
         kartBody->mTireAngle = 0.0f;
     }
 
-    GetKartCtrl()->RotYMatrix33(kartSus1->_128, kartBody->mTireAngle);
-    GetKartCtrl()->RotYMatrix33(kartSus2->_128, kartBody->mTireAngle);
+    GetKartCtrl()->RotYMatrix33(kartSus1->mSusMtx, kartBody->mTireAngle);
+    GetKartCtrl()->RotYMatrix33(kartSus2->mSusMtx, kartBody->mTireAngle);
 
     f32 speedAdjustment = kartGamePad->getMainStickX() * 10.0f;
     if ((((kartBody->mGameStatus & 8) != 0) && (speedAdjustment < 4.0f)) && (speedAdjustment > -4.0f)) {
@@ -960,8 +960,8 @@ void KartStrat::DoSterr() {
     }
 
     kartBody->_388 = (kartBody->_38c - 10.0f) / 10.0f;
-    GetKartCtrl()->RotYMatrix33(kartSus1->_188, kartBody->_388 * 0.680333f);
-    GetKartCtrl()->RotYMatrix33(kartSus2->_188, kartBody->_388 * 0.680333f);
+    GetKartCtrl()->RotYMatrix33(kartSus1->mArmMtx, kartBody->_388 * 0.680333f);
+    GetKartCtrl()->RotYMatrix33(kartSus2->mArmMtx, kartBody->_388 * 0.680333f);
 
     if (raceMgr->getRaceMode() != 8) {
         // Wait... what? Why...? Why duplicate code??? Why, I say... WHY?!
@@ -1011,7 +1011,7 @@ void KartStrat::DoAccel() {
     f32 unknownRPM1 = 0.0f;
 
     for (int i = 0; i < 4; i++) {
-        unknownRPM3 += GetKartCtrl()->getKartSus(i + (index * 4))->_110;
+        unknownRPM3 += GetKartCtrl()->getKartSus(i + (index * 4))->mWheelRPM;
     }
 
     if ((kartBody->mBodyGround.getAttribute() != CrsGround::Attr_6) && (kartBody->getTouchNum() != 0) && kartGamePad->testButton(GetKartCtrl()->getKartPad(index)->mBtnB)) {
@@ -1026,14 +1026,14 @@ void KartStrat::DoAccel() {
     
     for (int i = 0; i < 4; i++) {
         KartSus *kartSus = GetKartCtrl()->getKartSus(i + (index * 4));
-        kartSus->_110 += kartBody->_3c8;
-        kartSus->_278 += kartBody->_3c8;
-        kartSus->_110 -= GetKartCtrl()->LimmtNumber(kartSus->_110, kartBody->_3e0);
-        kartSus->_278 -= GetKartCtrl()->LimmtNumber(kartSus->_278, 1.0f);
-        kartSus->_110 = GetKartCtrl()->LimmtNumber(kartSus->_110, kartBody->_3e4);
-        kartSus->_278 = GetKartCtrl()->LimmtNumber(kartSus->_278, kartBody->_3e4);
-        kartSus->_110 -= kartBody->_3cc;
-        unknownRPM1 += kartSus->_278;
+        kartSus->mWheelRPM += kartBody->_3c8;
+        kartSus->mRPM += kartBody->_3c8;
+        kartSus->mWheelRPM -= GetKartCtrl()->LimmtNumber(kartSus->mWheelRPM, kartBody->_3e0);
+        kartSus->mRPM -= GetKartCtrl()->LimmtNumber(kartSus->mRPM, 1.0f);
+        kartSus->mWheelRPM = GetKartCtrl()->LimmtNumber(kartSus->mWheelRPM, kartBody->_3e4);
+        kartSus->mRPM = GetKartCtrl()->LimmtNumber(kartSus->mRPM, kartBody->_3e4);
+        kartSus->mWheelRPM -= kartBody->_3cc;
+        unknownRPM1 += kartSus->mRPM;
     }
 
     JGeometry::TVec3f vecVelocity;
