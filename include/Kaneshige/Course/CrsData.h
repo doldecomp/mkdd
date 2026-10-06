@@ -183,7 +183,7 @@ public:
         JGeometry::TVec3<s16> zNorm; // 18
         JGeometry::TVec3<s16> yNorm; // 1e
         u16 objID;
-        u16 pathID;                  // 26
+        u16 mPathID;                 // 26
         u16 _28;                     //
         u16 pointIdx;                // 2a
         struct {
