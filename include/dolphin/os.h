@@ -136,7 +136,14 @@ BOOL OSRestoreInterrupts(BOOL level);
 #define OSSetVideoMode(on) OSSetEuRgb60Mode(on)
 #endif
 
-#define OSHalt(msg) OSPanic(__FILE__, __LINE__, msg)
+#define OSHalt(msg) OSPanic(__FILE__, __LINE__, msg) // TODO: get rid of #line usage
+
+// TODO: rename to OSHalt
+#ifdef MATCHING
+#define OSHaltLine(line, msg) OSPanic(__FILE__, line, msg)
+#else 
+#define OSHaltLine(line, msg) OSPanic(__FILE__, __LINE__, msg)
+#endif
 
 #ifdef _DEBUG
 
