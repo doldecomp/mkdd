@@ -4,6 +4,7 @@
 #include "JSystem/J3D/J3DTransform.h"
 #include "Kaneshige/ExModel.h"
 #include "Kaneshige/Objects/GeoRabbitMark.h"
+#include "Kaneshige/SimpleDrawer.h"
 #include "Kaneshige/TexLODControl.h"
 #include "Kaneshige/RaceMgr.h"
 #include "Sato/GeographyObjMgr.h"
@@ -25,6 +26,7 @@
 
 #include "Yamamoto/kartCtrl.h"
 #include "dolphin/gx/GXEnum.h"
+#include "dolphin/mtx.h"
 #include "mathHelper.h"
 
 // WIP
@@ -500,6 +502,7 @@ ItemObj *ItemObjMgr::equipItemSuccession(u32 kind, int kart_index, u8 driver_ind
 
 void ItemObjMgr::appendItemSuccession(ItemObj *obj, u32 kind, u8 driver_index)
 {
+
 }
 
 bool ItemObjMgr::robRivalOfItem(int kart_index1, int kart_index2, u8 driver_index)
@@ -608,7 +611,7 @@ bool ItemObjMgr::equipItemToKart(int kind, int kart_index, u8 driver_index, bool
     bool ret = false;
     if (mEquipItem[kart_index][driver_index] == nullptr)
     {
-        ItemObj *obj = equipItem2(kind, kart_index, driver_index); // fabricated inline
+        ItemObj *obj = equipItem2(kind, kart_index, driver_index);
 
         if (obj == nullptr)
         {
@@ -1405,22 +1408,18 @@ void ItemObjMgr::removeMiniGameList(ItemObj *obj)
     mMiniGameList.remove(&obj->mMiniGameLink);
 }
 
-void ItemObjMgr::update(ItemObjMgr::eDrawSimplModelItemType type, int id) {
+void ItemObjMgr::update(ItemObjMgr::eDrawSimplModelItemType type, int owner) {
 
     for(int i = 0; i < 15; i++) {
         for (JSUListIterator<ItemObj> it(_3e8[sJ3DUpdateItemKind[i]].getFirst()); it.isAvailable(); ++it) {
             bool doUpdate = true;
             switch(type) {
             case ItemType_1: {
-                if (it->IsState1or5AndSameOwner(id))
-                    doUpdate = false;
+                doUpdate = it->isHeldByOwner(owner);
                 break;
             }
             case ItemType_2: {
-                doUpdate = false;
-                int state = it->getState();
-                if (state != 1 && state != 5)
-                    doUpdate = true;
+                doUpdate = it->isHeld();
                 break;
             }
             }
@@ -1464,27 +1463,63 @@ void ItemObjMgr::setCurrentViewNo(u32 viewNo)
     }
 }
 
-void ItemObjMgr::drawSimpleModel(u32 viewNo, ItemObjMgr::eDrawSimplModelItemType type, int owner, LightObj *lightObj) {
+void ItemObjMgr::drawSimpleModel(u32 viewNo, ItemObjMgr::eDrawSimplModelItemType type, int owner, LightObj *lightObj) {  
+    J3DUClipper *clipper = GetKartCtrl()->getKartCam(viewNo)->GetClipper();
+    MtxPtr viewMtx = j3dSys.getViewMtx();
+    MtxPtr effectMtx = nullptr;
+    if (lightObj) {
+        effectMtx = lightObj->getEffectMtx();
+    }
     
+    SimpleDrawer drawer;
+
+    for(int i = 0; i < 5; i++) {
+        JSUList<ItemObj> &list = _3e8[sSimpleDrawItemKind[i]];
+        if (!list.getFirst())
+            continue;
+        
+        ExModel *mdl = list.getFirst()->getObject()->getModel();
+        if (!mdl->getModelData())
+            continue;
+
+        drawer.drawInit(mdl);
+        while (drawer.loadPreDrawSetting()) {
+            for (JSUListIterator<ItemObj> it(list.getFirst()); it.isAvailable(); ++it) {
+                bool doUpdate = true;
+                switch(type) {
+                case ItemType_1: {
+                    doUpdate = it->isHeldByOwner(owner);
+                    break;
+                }
+                case ItemType_2: {
+                    doUpdate = it->isHeld();
+                    break;
+                }
+                }
+
+                if (doUpdate) {
+                    it->setTevColor();
+                    it->simpleDraw(viewNo, effectMtx, sSimpleDrawSpeqEnvTexMapID[i]);
+                }
+            }
+        }
+    }
+
     for (JSUListIterator<ItemObj> it(_3e8[7].getFirst()); it.isAvailable(); ++it) {
         bool doUpdate = true;
         switch(type) {
         case ItemType_1: {
-            if (it->IsState1or5AndSameOwner(owner))
-                doUpdate = false;
+            doUpdate = it->isHeldByOwner(owner);
             break;
         }
         case ItemType_2: {
-            doUpdate = false;
-            int state = it->getState();
-            if (state != 1 && state != 5)
-                doUpdate = true;
+            doUpdate = it->isHeld();
             break;
         }
         }
 
         if (doUpdate) {
-            //it->drawSimpleModel(viewNo, j3dSys.getViewMtx(), );
+            it->drawSimpleModel(viewNo, viewMtx, clipper, effectMtx);
         }
     }
 }
@@ -1610,7 +1645,7 @@ u32 ItemShuffleMgr::getRndItemKindPossibilityGetting(stRandom *rnd, const int ka
 
     u32 randomNum = rnd->getRandomMax(numItems + numSpecialItems - 1);
     if (randomNum < numItems) {
-        return sRndSpecialSlotIndex[randomNum];
+        return sRndNormalSlotIndex[randomNum];
     }
 
     if (!special) {
