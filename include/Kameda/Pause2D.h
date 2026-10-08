@@ -54,5 +54,8 @@ public:
     static void *mPrintMessageTag;
     static void *mStarTag;
     static void *mStarDrawTag;
+
+private:
+    u8 _0[0x174];
 }; // class Pause2D
 #endif // PAUSE2D_H
