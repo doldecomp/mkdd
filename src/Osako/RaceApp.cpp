@@ -334,7 +334,7 @@ void RaceApp::calc()
     case 5:
         if (CardAgent::msState == 0)
         {
-            CardAgent::mspPrintMemoryCard->setStuff(0, 0, 0);
+            CardAgent::mspPrintMemoryCard->setStuff(false, false, false);
             SYSTEM_GetFader()->setStatus(JUTFader::Status_Out, 0);
             mState = 6;
         }
