@@ -36,6 +36,8 @@ public:
 
     static PauseManager *getManager() { return mThis; }
 
+    JKRArchive *getArchive() const { return mArchive; }
+
     bool isResultStart() const { return mResultStart; }
 
 private:

@@ -102,9 +102,22 @@ namespace JGeometry {
             y += other.y;
         }
 
-        void scale(T scalar) {
+        void sub(const TVec2<T> &other)
+        {
+            x -= other.x;
+            y -= other.y;
+        }
+
+        void scale(T scalar)
+        {
             x *= scalar;
             y *= scalar;
+        }
+
+        void div(T divisor)
+        {
+            x /= divisor;
+            y /= divisor;
         }
 
         void zero() { x = y = 0; }
@@ -130,6 +143,37 @@ namespace JGeometry {
         // TVec2<T> adding(const TVec2<T>& other) { return TVec2<T>(x + other.x, y + other.y); }
 
         bool isAbove(const TVec2<T> &other) const { return (x >= other.x) && (y >= other.y) ? true : false; }
+
+        // operators
+
+        TVec2<T> &operator+=(const TVec2<T> &other)
+        {
+            add(other);
+            return *this;
+        }
+
+        TVec2<T> &operator-=(const TVec2<T> &other)
+        {
+            sub(other);
+            return *this;
+        }
+
+        TVec2<T> &operator*=(T scalar)
+        {
+            scale(scalar);
+            return *this;
+        }
+
+        TVec2<T> &operator/=(T divisor)
+        {
+            div(divisor);
+            return *this;
+        }
+
+        TVec2<T> operator+(const TVec2<T> &other) const { return TVec2<T>(*this) += other; }
+        TVec2<T> operator-(const TVec2<T> &other) const { return TVec2<T>(*this) -= other; }
+        TVec2<T> operator*(T scalar) const { return TVec2<T>(*this) *= scalar; }
+        TVec2<T> operator/(T divisor) const { return TVec2<T>(*this) /= divisor; }
 
         T x, y;
     };
