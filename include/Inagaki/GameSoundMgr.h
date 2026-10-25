@@ -349,12 +349,15 @@ public:
 class PosMove {
 public:
     PosMove() {
-        _0 = 0;
-        _28 = 0;
+        mMoving = false;
+        mStepsLeft = 0;
     }
-    u8 _0;
-    u8 _1[0x28 - 0x1];
-    u32 _28;
+    bool mMoving; // 0x00 Or init ?
+    u8 _1[0x4 - 0x1]; // Padding
+    JGeometry::TVec3f mPos; // 0x04 Current position
+    JGeometry::TVec3f mStepMove; // 0x10 Vector to add for each step to reach target position
+    JGeometry::TVec3f mTarget; // 0x1c Final position for current position
+    u32 mStepsLeft; // 0x28 Left steps before stopping the movement
 };
 
 class ObjectSoundMgr : public SoundWithEchoMgr<ObjectSoundMgr>
@@ -409,28 +412,30 @@ private:
 
 class ShoreSoundMgr : public SoundMgr<ShoreSoundMgr> {
 public:
-    ShoreSoundMgr(JKRHeap *heap);                               // 0x8012cb18
-    ~ShoreSoundMgr();                                           // 0x8012cc38
-    void loop();                                                // 0x8012cc98
-    void frameWork();                                           // 0x8012ceec
-    void setTide(u8, JGeometry::TVec3f *, JGeometry::TVec3f *); // 0x8012cf04
-    void setStatus(bool, f32);                                  // 0x8012d814
+    ShoreSoundMgr(JKRHeap *heap);                                               // 0x8012cb18
+    ~ShoreSoundMgr();                                                           // 0x8012cc38
+    void loop();                                                                // 0x8012cc98
+    void frameWork();                                                           // 0x8012ceec
+    // pos1 and pos2 are injected from GeoTideSensor and seem to be related
+    // to "sensors" position
+    void setTide(u8 camnum, JGeometry::TVec3f *pos1, JGeometry::TVec3f *pos2);  // 0x8012cf04
+    void setStatus(bool, f32);                                                  // 0x8012d814
 
     static CustomAudience<4> *getAudience() { return smAudience; }
 private:
     static CustomAudience<4> *smAudience; // 0x80416278
 
     JGeometry::TVec3f& getPlayPos(s32 index) { // fabricated
-        return _64[index];
+        return mSoundPosition[index];
     }
 
-    u8 _5c;
-    u8 _5d;
-    u8 _5e[0x60 - 0x5e]; // padding?
-    f32 _60;
-    JGeometry::TVec3f *_64;
-    PosMove *_68;
-    PosMove *_6c;
+    u8 _5c; // Assigned but unused
+    bool _5d; // Some variable influencing the type of sound played and _68, _6c steps
+    u8 _5e[0x60 - 0x5e]; // padding
+    f32 _60; // Assigned but unused
+    JGeometry::TVec3f *mSoundPosition; // Where the sound is played for each camera (array of four)
+    PosMove *_68; // Position moving for each camera (array of four), related to setTide's pos1
+    PosMove *_6c; // Position moving for each camera (array of four), related to setTide's pos2
 };
 
 class CircleSoundMgr : public SoundMgr<CircleSoundMgr> {
