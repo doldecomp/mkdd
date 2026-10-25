@@ -107,7 +107,9 @@ public:
         JUT_MINMAX_ASSERT(0, driverNo, 2);
         return mKartCharacters[driverNo].getPad();
     }
-    
+
+    KartGamePad *getCoPad() { return mKartCharacters[1].getPad(); }
+
     ECharID getDriverCharID(int driverNo) const {
 #line 142
         JUT_MINMAX_ASSERT(0, driverNo, 2);
