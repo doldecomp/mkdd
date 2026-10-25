@@ -165,7 +165,10 @@ void Result2D::setDrawTA() {}
 
 void Result2D::setDrawMG() {}
 
-void Result2D::getResultSelector() {}
+int Result2D::getResultSelector()
+{
+    return mResultSelector;
+}
 
 void Result2D::setRaceRank() {}
 
@@ -215,6 +218,6 @@ void Result2D::setScale(int) {}
 
 void Result2D::setGPClr() {}
 
-void Result2D::getAnmEnd() {}
+bool Result2D::getAnmEnd() {}
 
 #include "JSystem/JAudio/JASFakeMatch2.h"

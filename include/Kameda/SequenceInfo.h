@@ -91,6 +91,42 @@ public:
         kartID = mDemoKart[no].kart;
     }
 
+    void set_80_kart(int kart)
+    {
+#line 188
+        JUT_MINMAX_ASSERT(0, kart, 4);
+        int count = _80[kart];
+#line 192
+        JUT_MINMAX_ASSERT(0, kart, 4);
+        if (count + 1 > 99)
+        {
+            _80[kart] = 99;
+        }
+        else
+        {
+            _80[kart] = count + 1;
+        }
+    }
+
+    void set_40_kart_rank(int kart, int rank)
+    {
+#line 200
+        JUT_MINMAX_ASSERT(0, kart, 4);
+        JUT_MINMAX_ASSERT(0, rank, 4);
+        int count = _40[kart][rank];
+#line 205
+        JUT_MINMAX_ASSERT(0, kart, 4);
+        JUT_MINMAX_ASSERT(0, rank, 4);
+        if (count + 1 > 99)
+        {
+            _40[kart][rank] = 99;
+        }
+        else
+        {
+            _40[kart][rank] = count + 1;
+        }
+    }
+
     void set_354(int val) { _354 =  val; }
     void setRaceLevel(ERaceLevel level) { mLevel = level; }
     void setGhostFlag(u8 flags) { mGhostFlags = flags; }
@@ -127,8 +163,10 @@ private:
     JMARandFast mRnd;          // 00
     int mStartNo[8];           // 004
     KartGamePad *mDecidePad;   // 024
+public:
     u8 _28;                    // 028
     int _2c;                   // 02C
+private:
     int _30;                   // 030
     u8 mGhostFlags;            // 034
     u8 _35[0x3C - 0x35];       // 035
