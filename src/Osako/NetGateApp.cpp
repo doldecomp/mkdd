@@ -106,7 +106,7 @@ void NetGateApp::titleMenu() {
         break;
     case 3:
         mState = 8;
-        mpPrintMc->setStuff(0, 0, 0);
+        mpPrintMc->setStuff(false, false, false);
         mpPrintMc->init(PrintMemoryCard::mcNoSpaceContinue);
         break;
     }

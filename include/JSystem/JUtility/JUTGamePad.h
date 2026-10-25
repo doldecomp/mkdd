@@ -298,17 +298,17 @@ public:
 
     bool testButton(u32 mask) const
     {
-        return this->mButtons.mButton & mask;
+        return (this->mButtons.mButton & mask) != 0;
     }
 
     bool testTrigger(u32 mask) const
     {
-        return this->mButtons.mTrigger & mask;
+        return (this->mButtons.mTrigger & mask) != 0;
     }
 
     bool testRepeat(u32 mask) const
     {
-        return this->mButtons.mRepeat & mask;
+        return (this->mButtons.mRepeat & mask) != 0;
     }
 
     int getPortNum() const

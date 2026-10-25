@@ -107,7 +107,7 @@ void LogoApp::calc()
         {
             break;
         }
-        CardAgent::getPrintMemoryCard()->setStuff(0, 0, 0);
+        CardAgent::getPrintMemoryCard()->setStuff(false, false, false);
         mState = mcLogoCheckFrameTime;
     case mcLogoCheckFrameTime:
     {
