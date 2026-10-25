@@ -668,7 +668,7 @@ bool KartCtrl::IsWallReact(int kartIndex) {
     }
 }
 
-u32 KartCtrl::HaveBalloon(int kartIndex) {
+bool KartCtrl::HaveBalloon(int kartIndex) {
     getKartBody(kartIndex);
     return RCMGetKartChecker(kartIndex)->getBalloonNumber() == 0;
 }
