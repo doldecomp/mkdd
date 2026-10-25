@@ -1083,7 +1083,7 @@ config.libs = [
             Object(Matching, "Kameda/J2DManager.cpp"),
             Object(Matching, "Kameda/Task.cpp"),
             Object(NonMatching, "Kameda/Goal2D.cpp"),
-            Object(NonMatching, "Kameda/PauseManager.cpp"),
+            Object(Matching, "Kameda/PauseManager.cpp"),
             Object(NonMatching, "Kameda/Pause2D.cpp"),
             Object(Matching, "Kameda/WipeManager.cpp"),
             Object(Matching, "Kameda/Fade.cpp"),
