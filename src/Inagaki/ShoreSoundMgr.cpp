@@ -1,6 +1,8 @@
 
+#include "Inagaki/GameAudioCamera.h"
 #include "Inagaki/GameSoundMgr.h"
 #include "JSystem/JGeometry/Vec.h"
+#include "JSystem/JUtility/JUTAssert.h"
 
 
 namespace GameAudio {
@@ -22,7 +24,31 @@ GameAudio::ShoreSoundMgr::ShoreSoundMgr(JKRHeap *heap) : SoundMgr<ShoreSoundMgr>
 
 GameAudio::ShoreSoundMgr::~ShoreSoundMgr() {}
 
-void GameAudio::ShoreSoundMgr::loop() {}
+void GameAudio::ShoreSoundMgr::loop() {
+    #line 79
+    JUT_ASSERT_MSG(mSoundPos != NULL, "ShoreSoundMgr::loop　disable中です！！！！！\n");
+
+    if(mKillSw) {
+        return;
+    }
+
+    const u32 sceneMax = GameAudio::Main::getAudio()->getCamera()->getSceneMax();
+
+    // Forced to cast sceneMax into its own u32 type here...
+    for(s32 index = 0; index < (u32)sceneMax; index++){
+        if ((*this)[index] == NULL) {
+            continue;
+        }
+
+        const JGeometry::TVec3f& playPos = getPlayPos(index);
+        JAIAudible *audible = (*this)[index]->getAudible();
+        if(audible) {
+            audible->setPos(playPos);
+        }
+    }
+
+    _5c = 0;
+}
 
 void GameAudio::ShoreSoundMgr::frameWork() {
     if (mKillSw)
@@ -42,9 +68,9 @@ void GameAudio::ShoreSoundMgr::setStatus(bool p1, f32 p2) {
 
 #ifdef MATCHING // TODO
 
-template <>
-JASMemPool< JAUDopplerAudible<4> > JASPoolAllocObject< JAUDopplerAudible<4> >::memPool_;
-template <>
-JASMemPool<JAISe> JASPoolAllocObject<JAISe>::memPool_;
+// template <>
+// JASMemPool< JAUDopplerAudible<4> > JASPoolAllocObject< JAUDopplerAudible<4> >::memPool_;
+// template <>
+// JASMemPool<JAISe> JASPoolAllocObject<JAISe>::memPool_;
 
 #endif
