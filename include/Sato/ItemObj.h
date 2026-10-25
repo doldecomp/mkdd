@@ -289,6 +289,7 @@ public:
     int get_1fc() const { return _1fc; }
 
     const JGeometry::TVec3f &getPos() const { return mPos; }
+    void getPos(JGeometry::TVec3f *pos) { *pos = mPos; }
     const JGeometry::TVec3f &getVel() const { return mVel; }
     const JGeometry::TVec3f getColPos() const { return mColPos; }
     ItemObjSuc *getSuccessionParent() const { return mSuccessionParent; }
