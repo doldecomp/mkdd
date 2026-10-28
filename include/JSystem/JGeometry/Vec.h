@@ -102,9 +102,22 @@ namespace JGeometry {
             y += other.y;
         }
 
-        void scale(T scalar) {
+        void sub(const TVec2<T> &other)
+        {
+            x -= other.x;
+            y -= other.y;
+        }
+
+        void scale(T scalar)
+        {
             x *= scalar;
             y *= scalar;
+        }
+
+        void div(T divisor)
+        {
+            x /= divisor;
+            y /= divisor;
         }
 
         void zero() { x = y = 0; }
@@ -130,6 +143,42 @@ namespace JGeometry {
         // TVec2<T> adding(const TVec2<T>& other) { return TVec2<T>(x + other.x, y + other.y); }
 
         bool isAbove(const TVec2<T> &other) const { return (x >= other.x) && (y >= other.y) ? true : false; }
+
+        // operators
+
+        // NOTE: Odd return type (reference to local), but appears to improve match percentage.
+        friend const TVec2 &operator+(const TVec2 &lhs, const TVec2 &rhs)
+        {
+            TVec2 result(lhs);
+            result.x += rhs.x;
+            result.y += rhs.y;
+            return result;
+        }
+
+        friend TVec2 operator-(const TVec2 &lhs, const TVec2 &rhs)
+        {
+            TVec2 result(lhs);
+            result.x -= rhs.x;
+            result.y -= rhs.y;
+            return result;
+        }
+
+        friend TVec2 operator*(const TVec2 &lhs, const f32 scalar)
+        {
+            TVec2 result(lhs);
+            result.x *= scalar;
+            result.y *= scalar;
+            return result;
+        }
+
+        // NOTE: Odd return type (reference to local), but appears to improve match percentage.
+        friend const TVec2 &operator/(const TVec2 &lhs, const f32 divisor)
+        {
+            TVec2 result(lhs);
+            result.x /= divisor;
+            result.y /= divisor;
+            return result;
+        }
 
         T x, y;
     };

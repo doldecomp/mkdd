@@ -127,8 +127,10 @@ private:
     JMARandFast mRnd;          // 00
     int mStartNo[8];           // 004
     KartGamePad *mDecidePad;   // 024
+public:
     u8 _28;                    // 028
     int _2c;                   // 02C
+private:
     int _30;                   // 030
     u8 mGhostFlags;            // 034
     u8 _35[0x3C - 0x35];       // 035
