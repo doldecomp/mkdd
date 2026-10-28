@@ -46,6 +46,7 @@ public:
     ExGeographyObj *search_boundSp(const JGeometry::TVec3f &pos, f32);
 
     GeographyObj *createSubObj(u32 id);
+    GeographyObj *createGenSubObj(u32 id);
     GeographyObj *createPrevDrawSubObj(u32 id);
 
     f32 getKartHitDepthNormalObj(int kart_index) const { return mKartHitDepth[kart_index]; }
@@ -68,6 +69,8 @@ public:
         return &mKartHitRefVec[myNum];
     }
 
+    void getKartCollidePosRadius(JGeometry::TVec3f &, f32 &, int);
+
     static GeographyObjManager *gMgr;
 
     u8 _18[0x10];               // 18
@@ -78,7 +81,10 @@ public:
     bool mKartHitItemBox[8];    // 348
     u8 _350[0xAC];              // 350
     TJugem *mJugem[4];          // 3FC
-    u8 _40C[0x491 - 0x40C];     // 40C
+    u8 _40C[0x410 - 0x40C];     // 40C
+    JGeometry::TVec3f mKartCollidePos[8]; // 410
+    f32 mKartCollideRadius[8];  // 470
+    u8 _490;                    // 490
     bool mIsBalloonBattle;      // 491
     bool mIsBombBattle;         // 492
     bool mIsRobberyBattle;      // 493

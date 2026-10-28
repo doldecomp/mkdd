@@ -16,7 +16,7 @@ public:
     void create_forMenu();                                                      // 0x8023038c
     JPABaseEmitter *createEmt(u16, const JGeometry::TVec3f &);                  // 0x8023050c
     JPABaseEmitter *createEmt(const char *, const JGeometry::TVec3f &);         // 0x80230544
-    void createEmtCameraClip(const char *, const JGeometry::TVec3f &);          // 0x80230590
+    JPABaseEmitter *createEmtCameraClip(const char *, const JGeometry::TVec3f &); // 0x80230590
     JPABaseEmitter *createEmt2D(const char *, const JGeometry::TVec3f &);       // 0x80230600
     JPABaseEmitter *createEmt(const char *, const JGeometry::TVec3f &, Mtx);    // 0x8023064c
     void createEmtThunder(const char *, const JGeometry::TVec3f &);             // 0x802306c0

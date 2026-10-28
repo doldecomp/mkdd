@@ -229,6 +229,10 @@ public:
 
     f32 getGroundThickness() const { return sGndThickness; }
 
+    JGeometry::TVec3f *getDirZ() { return &mDirZ; };
+    JGeometry::TVec3f *getDirY() { return &mDirY; };
+    JGeometry::TVec3f *getDirX() { return &mDirX; };
+
 private: // add all documented stuff from Ghidra
     static u16 sDrawAreaModel;
     static bool sForceDebugFogSetting;
