@@ -1434,7 +1434,7 @@ config.libs = [
             Object(Equivalent, "Yamamoto/kartBody.cpp"),
             Object(Matching, "Yamamoto/kartCamera.cpp"),
             Object(Matching, "Yamamoto/kartCtrl.cpp"),
-            Object(NonMatching, "Yamamoto/kartSus.cpp"),
+            Object(Matching, "Yamamoto/kartSus.cpp"),
             Object(Matching, "Yamamoto/kartvec.cpp"),
             Object(NonMatching, "Yamamoto/kartParams.cpp"),
             Object(NonMatching, "Yamamoto/kartBodyStrat.cpp"),

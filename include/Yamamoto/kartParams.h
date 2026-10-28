@@ -178,11 +178,22 @@ extern f32 tireOffsetPos[21];
 // extern UNK Jdata;
 extern f32 BodyFullHeightData[21];
 extern f32 BodyFullBumpData[21];
-// extern UNK SusPowerData;
+extern f32 SusPowerData[21];
 extern JGeometry::TVec2f ThunderOffet[21];
 extern f32 SusDushDive[21];
 extern f32 SetEngineClassData[3];
-// extern UNK SusParamsData;
+struct SusParam
+{
+    f32 _00[0x30 / 4];
+    f32 _30;
+    f32 _34;
+    f32 _38;
+    f32 _3c;
+    f32 _40;
+    f32 _44;
+}; // 48
+
+extern SusParam *SusParamsData[21];
 extern TireParamData *TireParamsData[21];
 extern BodyParamData *BodyParamsData[21];
 

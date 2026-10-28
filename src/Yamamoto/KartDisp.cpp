@@ -129,28 +129,28 @@ void KartDisp::MakeDispBodyPos()
     body->_1a0[1][3] = body->mPlayerPosMtx[1][3];
     body->_1a0[2][3] = body->mPlayerPosMtx[2][3];
 
-    f32 f1 = sus1->_b0 - sus1->_b4;
-    f32 f2 = sus2->_b0 - sus2->_b4;
-    f32 f3 = sus3->_b0 - sus3->_b4;
-    f32 f4 = sus4->_b0 - sus4->_b4;
+    f32 f1 = sus1->mSusBase - sus1->mSusCur;
+    f32 f2 = sus2->mSusBase - sus2->mSusCur;
+    f32 f3 = sus3->mSusBase - sus3->mSusCur;
+    f32 f4 = sus4->mSusBase - sus4->mSusCur;
 
-    sus1->_188[1][3] = sus1->_128[1][3];
-    sus2->_188[1][3] = sus2->_128[1][3];
-    sus3->_188[1][3] = sus3->_128[1][3];
-    sus4->_188[1][3] = sus4->_128[1][3];
+    sus1->mArmMtx[1][3] = sus1->mSusMtx[1][3];
+    sus2->mArmMtx[1][3] = sus2->mSusMtx[1][3];
+    sus3->mArmMtx[1][3] = sus3->mSusMtx[1][3];
+    sus4->mArmMtx[1][3] = sus4->mSusMtx[1][3];
 
-    sus1->_b8 = sus1->_b4;
-    sus2->_b8 = sus2->_b4;
-    sus3->_b8 = sus3->_b4;
-    sus4->_b8 = sus4->_b4;
+    sus1->mSusPrev = sus1->mSusCur;
+    sus2->mSusPrev = sus2->mSusCur;
+    sus3->mSusPrev = sus3->mSusCur;
+    sus4->mSusPrev = sus4->mSusCur;
 
     if (body->getThunder()->mFlags & 1)
     {
         f32 offset = ThunderOffet[body->mIdx].x * (1.0f - body->getThunder()->getScale());
-        sus1->_188[1][3] += offset;
-        sus2->_188[1][3] += offset;
-        sus3->_188[1][3] += offset;
-        sus4->_188[1][3] += offset;
+        sus1->mArmMtx[1][3] += offset;
+        sus2->mArmMtx[1][3] += offset;
+        sus3->mArmMtx[1][3] += offset;
+        sus4->mArmMtx[1][3] += offset;
     }
 
     f32 bumpThing = (f1 + f2 + f3 + f4) / 4.0f;
@@ -222,24 +222,24 @@ void KartDisp::MakeSusMatrix(int i)
         MatrixScale(yNorm, body->getThunder()->getScale());
 
     GetKartCtrl()->RotZMatrix(zNorm, angle);
-    PSMTXConcat(zNorm, sus->_188, sus->_158);
-    PSMTXConcat(yNorm, sus->_158, sus->_158);
-    f32 rot = (-sus->_b8 - fVal20);
-    PSMTXConcat(body->_1a0, sus->_1b8, sus->_1e8);
+    PSMTXConcat(zNorm, sus->mArmMtx, sus->mTireMtx);
+    PSMTXConcat(yNorm, sus->mTireMtx, sus->mTireMtx);
+    f32 rot = (-sus->mSusPrev - fVal20);
+    PSMTXConcat(body->_1a0, sus->mSuspArmMtx, sus->mSuspMtx);
 
-    v1.set(sus->_1e8[0][3], sus->_1e8[1][3], sus->_1e8[2][3]);
-    sus->_158[0][3] = (sus->_158[0][1] * rot + sus->_158[0][3]);
-    sus->_158[1][3] = (sus->_158[1][1] * rot + sus->_158[1][3]);
-    sus->_158[2][3] = (sus->_158[2][1] * rot + sus->_158[2][3]);
+    v1.set(sus->mSuspMtx[0][3], sus->mSuspMtx[1][3], sus->mSuspMtx[2][3]);
+    sus->mTireMtx[0][3] = (sus->mTireMtx[0][1] * rot + sus->mTireMtx[0][3]);
+    sus->mTireMtx[1][3] = (sus->mTireMtx[1][1] * rot + sus->mTireMtx[1][3]);
+    sus->mTireMtx[2][3] = (sus->mTireMtx[2][1] * rot + sus->mTireMtx[2][3]);
 
     if ((i == 2) || (i == 3))
     {
-        sus->_158[0][1] = sus->_158[0][1] * TireOpData[idx][i]._18;
-        sus->_158[1][1] = sus->_158[1][1] * TireOpData[idx][i]._18;
-        sus->_158[2][1] = sus->_158[2][1] * TireOpData[idx][i]._18;
-        sus->_158[0][2] = sus->_158[0][2] * TireOpData[idx][i]._18;
-        sus->_158[1][2] = sus->_158[1][2] * TireOpData[idx][i]._18;
-        sus->_158[2][2] = sus->_158[2][2] * TireOpData[idx][i]._18;
+        sus->mTireMtx[0][1] = sus->mTireMtx[0][1] * TireOpData[idx][i]._18;
+        sus->mTireMtx[1][1] = sus->mTireMtx[1][1] * TireOpData[idx][i]._18;
+        sus->mTireMtx[2][1] = sus->mTireMtx[2][1] * TireOpData[idx][i]._18;
+        sus->mTireMtx[0][2] = sus->mTireMtx[0][2] * TireOpData[idx][i]._18;
+        sus->mTireMtx[1][2] = sus->mTireMtx[1][2] * TireOpData[idx][i]._18;
+        sus->mTireMtx[2][2] = sus->mTireMtx[2][2] * TireOpData[idx][i]._18;
     }
     if ((i == 1) || (i == 3))
     {
@@ -252,14 +252,14 @@ void KartDisp::MakeSusMatrix(int i)
 
     PSMTXMultVecSR(body->_1a0, (Vec *)&v3, (Vec *)&v4);
     v4.add(v1);
-    v2.set(sus->_158[0][3], sus->_158[1][3], sus->_158[2][3]);
+    v2.set(sus->mTireMtx[0][3], sus->mTireMtx[1][3], sus->mTireMtx[2][3]);
     f32 tireScale = TireOpData[idx][i]._2c;
 
     if (tireScale != 1.0f)
     {
-        v2.x += sus->_158[0][1] * tireScale;
-        v2.y += sus->_158[1][1] * tireScale;
-        v2.z += sus->_158[2][1] * tireScale;
+        v2.x += sus->mTireMtx[0][1] * tireScale;
+        v2.y += sus->mTireMtx[1][1] * tireScale;
+        v2.z += sus->mTireMtx[2][1] * tireScale;
     }
 
     v5.sub(v1, v4);
@@ -275,23 +275,23 @@ void KartDisp::MakeSusMatrix(int i)
         GetKartCtrl()->RotZMatrix(zNorm, (0.18f * -angle));
     }
 
-    GetKartCtrl()->RotXMatrix(xNorm, sus->_10c);
+    GetKartCtrl()->RotXMatrix(xNorm, sus->mTireDispAngle);
     PSMTXConcat(zNorm, xNorm, xNorm);
-    PSMTXConcat(sus->_158, xNorm, xNorm);
-    PSMTXCopy(xNorm, sus->_158);
+    PSMTXConcat(sus->mTireMtx, xNorm, xNorm);
+    PSMTXCopy(xNorm, sus->mTireMtx);
 
     if (TireOpData[idx][i]._28 != 1.0f)
     {
-        sus->_158[0][0] = sus->_158[0][0] * TireOpData[idx][i]._28;
-        sus->_158[1][0] = sus->_158[1][0] * TireOpData[idx][i]._28;
-        sus->_158[2][0] = sus->_158[2][0] * TireOpData[idx][i]._28;
+        sus->mTireMtx[0][0] = sus->mTireMtx[0][0] * TireOpData[idx][i]._28;
+        sus->mTireMtx[1][0] = sus->mTireMtx[1][0] * TireOpData[idx][i]._28;
+        sus->mTireMtx[2][0] = sus->mTireMtx[2][0] * TireOpData[idx][i]._28;
     }
 
     if (body->mGameStatus & 0x1000)
     {
         JGeometry::TVec3f v7, v8, v9;
 
-        if (sus->_1b8[0][3] >= 0.0f)
+        if (sus->mSuspArmMtx[0][3] >= 0.0f)
         {
             v7.sub(v2, v1);
         }
@@ -301,48 +301,48 @@ void KartDisp::MakeSusMatrix(int i)
         }
         v7.normalize();
 
-        v9.set(sus->_1e8[0][2], sus->_1e8[1][2], sus->_1e8[2][2]);
+        v9.set(sus->mSuspMtx[0][2], sus->mSuspMtx[1][2], sus->mSuspMtx[2][2]);
         v9.normalize();
         v8.cross(v9, v7);
         v8.normalize();
         v7.cross(v8, v9);
-        sus->_1e8[0][0] = v7.x;
-        sus->_1e8[1][0] = v7.y;
-        sus->_1e8[2][0] = v7.z;
-        sus->_1e8[0][1] = v8.x;
-        sus->_1e8[1][1] = v8.y;
-        sus->_1e8[2][1] = v8.z;
-        PSMTXConcat(body->_1a0, sus->_218, sus->_248);
-        v1.set(sus->_248[0][3], sus->_248[1][3], sus->_248[2][3]);
+        sus->mSuspMtx[0][0] = v7.x;
+        sus->mSuspMtx[1][0] = v7.y;
+        sus->mSuspMtx[2][0] = v7.z;
+        sus->mSuspMtx[0][1] = v8.x;
+        sus->mSuspMtx[1][1] = v8.y;
+        sus->mSuspMtx[2][1] = v8.z;
+        PSMTXConcat(body->_1a0, sus->mDumpMtx, sus->mDumpArmMtx);
+        v1.set(sus->mDumpArmMtx[0][3], sus->mDumpArmMtx[1][3], sus->mDumpArmMtx[2][3]);
         v2.x = DumpOpData[idx][i]._c;
         v2.y = 0.0f;
         v2.z = 0.0f;
-        PSMTXMultVec(sus->_1e8, (Vec *)&v2, (Vec *)&v7);
+        PSMTXMultVec(sus->mSuspMtx, (Vec *)&v2, (Vec *)&v7);
         v8.sub(v1, v7);
 
         f32 len = v8.length();
-        v9.set(sus->_248[0][2], sus->_248[1][2], sus->_248[2][2]);
+        v9.set(sus->mDumpArmMtx[0][2], sus->mDumpArmMtx[1][2], sus->mDumpArmMtx[2][2]);
         v9.normalize();
         v7.cross(v8, v9);
         v7.normalize();
         v8.cross(v9, v7);
-        sus->_248[0][0] = v7.x;
-        sus->_248[1][0] = v7.y;
-        sus->_248[2][0] = v7.z;
-        sus->_248[0][1] = v8.x;
-        sus->_248[1][1] = v8.y;
-        sus->_248[2][1] = v8.z;
+        sus->mDumpArmMtx[0][0] = v7.x;
+        sus->mDumpArmMtx[1][0] = v7.y;
+        sus->mDumpArmMtx[2][0] = v7.z;
+        sus->mDumpArmMtx[0][1] = v8.x;
+        sus->mDumpArmMtx[1][1] = v8.y;
+        sus->mDumpArmMtx[2][1] = v8.z;
 
         f32 scale = len / DumpOpData[idx][i]._10;
-        sus->_248[0][1] = sus->_248[0][1] * scale;
-        sus->_248[1][1] = sus->_248[1][1] * scale;
-        sus->_248[2][1] = sus->_248[2][1] * scale;
+        sus->mDumpArmMtx[0][1] = sus->mDumpArmMtx[0][1] * scale;
+        sus->mDumpArmMtx[1][1] = sus->mDumpArmMtx[1][1] * scale;
+        sus->mDumpArmMtx[2][1] = sus->mDumpArmMtx[2][1] * scale;
 
         if ((i == 3) || (i == 1))
         {
             GetKartCtrl()->ClearRotMatrix(xNorm);
             GetKartCtrl()->RotYMatrix(xNorm, 3.141f);
-            PSMTXConcat(sus->_1e8, xNorm, sus->_1e8);
+            PSMTXConcat(sus->mSuspMtx, xNorm, sus->mSuspMtx);
         }
     }
 }
@@ -375,7 +375,7 @@ void KartDisp::MakeTireDispMatrix()
     f32 yNorm = body->getDossin()->_1c;
     int num = body->mMynum;
 
-    PSMTXCopy(GetKartCtrl()->getKartSus(num * 4)->_158, m);
+    PSMTXCopy(GetKartCtrl()->getKartSus(num * 4)->mTireMtx, m);
     m[0][1] *= yNorm;
     m[1][1] *= yNorm;
     m[2][1] *= yNorm;
@@ -391,7 +391,7 @@ void KartDisp::MakeTireDispMatrix()
         GetKartCtrl()->getKartAppendix(num * 2)->mModelWheel->setBaseTRMtx(m);
     }
 
-    PSMTXCopy(GetKartCtrl()->getKartSus(num * 4 + 1)->_158, m);
+    PSMTXCopy(GetKartCtrl()->getKartSus(num * 4 + 1)->mTireMtx, m);
     m[0][1] *= yNorm;
     m[1][1] *= yNorm;
     m[2][1] *= yNorm;
@@ -407,7 +407,7 @@ void KartDisp::MakeTireDispMatrix()
         GetKartCtrl()->getKartAppendix(num * 2 + 1)->mModelWheel->setBaseTRMtx(m);
     }
 
-    PSMTXCopy(GetKartCtrl()->getKartSus(num * 4 + 2)->_158, m);
+    PSMTXCopy(GetKartCtrl()->getKartSus(num * 4 + 2)->mTireMtx, m);
     m[0][1] *= yNorm;
     m[1][1] *= yNorm;
     m[2][1] *= yNorm;
@@ -423,7 +423,7 @@ void KartDisp::MakeTireDispMatrix()
         GetKartCtrl()->getKartAppendix(num * 2)->mModelWheel->setBaseTRMtx(m);
     }
 
-    PSMTXCopy(GetKartCtrl()->getKartSus(num * 4 + 3)->_158, m);
+    PSMTXCopy(GetKartCtrl()->getKartSus(num * 4 + 3)->mTireMtx, m);
     m[0][1] *= yNorm;
     m[1][1] *= yNorm;
     m[2][1] *= yNorm;
@@ -441,15 +441,15 @@ void KartDisp::MakeTireDispMatrix()
 
     if (body->mGameStatus & 0x1000)
     {
-        GetKartCtrl()->getKartSus(num * 4 + 0)->mArm->setBaseTRMtx(GetKartCtrl()->getKartSus(num * 4 + 0)->_1e8);
-        GetKartCtrl()->getKartSus(num * 4 + 1)->mArm->setBaseTRMtx(GetKartCtrl()->getKartSus(num * 4 + 1)->_1e8);
-        GetKartCtrl()->getKartSus(num * 4 + 2)->mArm->setBaseTRMtx(GetKartCtrl()->getKartSus(num * 4 + 2)->_1e8);
-        GetKartCtrl()->getKartSus(num * 4 + 3)->mArm->setBaseTRMtx(GetKartCtrl()->getKartSus(num * 4 + 3)->_1e8);
+        GetKartCtrl()->getKartSus(num * 4 + 0)->mArm->setBaseTRMtx(GetKartCtrl()->getKartSus(num * 4 + 0)->mSuspMtx);
+        GetKartCtrl()->getKartSus(num * 4 + 1)->mArm->setBaseTRMtx(GetKartCtrl()->getKartSus(num * 4 + 1)->mSuspMtx);
+        GetKartCtrl()->getKartSus(num * 4 + 2)->mArm->setBaseTRMtx(GetKartCtrl()->getKartSus(num * 4 + 2)->mSuspMtx);
+        GetKartCtrl()->getKartSus(num * 4 + 3)->mArm->setBaseTRMtx(GetKartCtrl()->getKartSus(num * 4 + 3)->mSuspMtx);
 
-        GetKartCtrl()->getKartSus(num * 4 + 0)->mShock->setBaseTRMtx(GetKartCtrl()->getKartSus(num * 4 + 0)->_248);
-        GetKartCtrl()->getKartSus(num * 4 + 1)->mShock->setBaseTRMtx(GetKartCtrl()->getKartSus(num * 4 + 1)->_248);
-        GetKartCtrl()->getKartSus(num * 4 + 2)->mShock->setBaseTRMtx(GetKartCtrl()->getKartSus(num * 4 + 2)->_248);
-        GetKartCtrl()->getKartSus(num * 4 + 3)->mShock->setBaseTRMtx(GetKartCtrl()->getKartSus(num * 4 + 3)->_248);
+        GetKartCtrl()->getKartSus(num * 4 + 0)->mShock->setBaseTRMtx(GetKartCtrl()->getKartSus(num * 4 + 0)->mDumpArmMtx);
+        GetKartCtrl()->getKartSus(num * 4 + 1)->mShock->setBaseTRMtx(GetKartCtrl()->getKartSus(num * 4 + 1)->mDumpArmMtx);
+        GetKartCtrl()->getKartSus(num * 4 + 2)->mShock->setBaseTRMtx(GetKartCtrl()->getKartSus(num * 4 + 2)->mDumpArmMtx);
+        GetKartCtrl()->getKartSus(num * 4 + 3)->mShock->setBaseTRMtx(GetKartCtrl()->getKartSus(num * 4 + 3)->mDumpArmMtx);
     }
 }
 
@@ -495,20 +495,20 @@ void KartDisp::MakeScaleMatrix()
         KartSus *sus3 = GetKartCtrl()->getKartSus(body->mMynum * 4 + 2);
         KartSus *sus4 = GetKartCtrl()->getKartSus(body->mMynum * 4 + 3);
 
-        MatrixScale(sus1->_158, body->_568);
-        MatrixScale(sus2->_158, body->_568);
-        MatrixScale(sus3->_158, body->_568);
-        MatrixScale(sus4->_158, body->_568);
+        MatrixScale(sus1->mTireMtx, body->_568);
+        MatrixScale(sus2->mTireMtx, body->_568);
+        MatrixScale(sus3->mTireMtx, body->_568);
+        MatrixScale(sus4->mTireMtx, body->_568);
 
-        MatrixScale(sus1->_1e8, body->_568);
-        MatrixScale(sus2->_1e8, body->_568);
-        MatrixScale(sus3->_1e8, body->_568);
-        MatrixScale(sus4->_1e8, body->_568);
+        MatrixScale(sus1->mSuspMtx, body->_568);
+        MatrixScale(sus2->mSuspMtx, body->_568);
+        MatrixScale(sus3->mSuspMtx, body->_568);
+        MatrixScale(sus4->mSuspMtx, body->_568);
 
-        MatrixScale(sus1->_248, body->_568);
-        MatrixScale(sus2->_248, body->_568);
-        MatrixScale(sus3->_248, body->_568);
-        MatrixScale(sus4->_248, body->_568);
+        MatrixScale(sus1->mDumpArmMtx, body->_568);
+        MatrixScale(sus2->mDumpArmMtx, body->_568);
+        MatrixScale(sus3->mDumpArmMtx, body->_568);
+        MatrixScale(sus4->mDumpArmMtx, body->_568);
     }
 }
 
