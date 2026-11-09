@@ -8,7 +8,7 @@ Make sure you can build the project first (see [README.md](README.md#building)).
 How it works
 ============
 
-The goal is to write C++ that, compiled with the original compiler (Metrowerks CodeWarrior), produces **byte-for-byte** the same code as the game.
+The goal is to write C++ code that, when compiled with the original compiler (Metrowerks CodeWarrior), produces **byte-for-byte** the same assembly code as the game.
 
 1. **Split**: `ninja` extracts `sys/main.dol` from your disc image and splits it into one object file per translation unit (TU), using [`splits.txt`](config/MarioClub_us/splits.txt) and [`symbols.txt`](config/MarioClub_us/symbols.txt). These are the **target** objects.
 2. **Compile**: Source files in `src/` are compiled with the original compiler and flags. These are the **base** objects.
@@ -52,11 +52,11 @@ We work **one TU at a time**: one TU per pull request, taken to 100%.
 Using LLMs
 ==========
 
-LLM tools (Copilot, Claude, OpenCode, local models...) are **allowed**, within these rules:
+Pull requests in which an LLM was used to decompile entire functions or to match whole TUs will be rejected.
 
-- **Same workflow.** One TU per PR, 100% matching, flagged `Matching`, `ninja` passing. Don't point an agent at the whole repository.
-- **Disclose it.** Say in the PR description that an LLM was used, and for what.
-- **Review it yourself.** You are responsible for the code you submit. Read it, understand it, and clean it up (names, types, structure) before asking for review. Maintainers shouldn't be the first humans to read it.
-- **Matching is not enough.** Code that matches but uses wrong types, nonsense names or weird hacks will be asked to change.
+LLM tools (Copilot, Claude, OpenCode, local models...) are allowed **only** for:
 
-In practice, LLMs often get most of a TU done but stall on the last few percent (register allocation, instruction ordering...). Expect to finish those by hand.
+- writing documentation;
+- getting hints when you're stuck on the last few differences in a function.
+
+As a rule of thumb, ask the community on [Discord](https://discord.gg/hKx3FJJgrV) first, and share the function on [decomp.me](https://decomp.me) so others can help you.
