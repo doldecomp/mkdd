@@ -1,6 +1,7 @@
 #ifndef RACEMGR_H
 #define RACEMGR_H
 
+#include "JSystem/JKernel/JKRArchive.h"
 #include "JSystem/JUtility/TColor.h"
 #include "Kaneshige/Blurscreen.h"
 #include "Kaneshige/KartInfo.h"
@@ -229,6 +230,10 @@ public:
         return mBestTotalTimes[recID];
     }
 
+    JKRArchive *getAwardArc() {
+        return (JKRArchive *)mAwardArc;
+    }
+
 public:
     RaceDirector *mRaceDirector;
     RaceDrawer *mRaceDrawer;
@@ -252,7 +257,7 @@ private:
     KartLoader *mKartLoader[8];
     Award2D *mAward2D;
     StaffRoll2D *mStaffRoll2D;
-    void *mAwardArc;
+    void *mAwardArc;        // Should this be declared a JKRArchive...?
     RaceTime mBestLapTime;
     RaceTime mBestTotalTimes[5];
     s16 mEvents;

@@ -102,12 +102,69 @@ namespace JGeometry {
             y += other.y;
         }
 
-        void scale(T scalar) {
+        void sub(const TVec2<T> &rOther) 
+        {
+            x = x - rOther.x;
+            y = y - rOther.y;
+        }
+
+        void sub(const TVec2<T> &rA, const TVec2<T> &rB) 
+        {
+            x = rA.x - rB.x;
+            y = rA.y - rB.y;
+        }
+
+        inline TVec2& subInline(const TVec2<T> &other) const 
+        {
+            TVec2 ret = *this;
+            ret.sub(other);
+            return ret;
+        }
+
+        void scale(T scalar) 
+        {
             x *= scalar;
             y *= scalar;
         }
 
         void zero() { x = y = 0; }
+
+        /* Operators */
+        TVec2< T > operator+(const TVec2< T >& rOther) const 
+        {
+            TVec2 ret(*this);
+            ret.x += rOther.x;
+            ret.y += rOther.y;
+            return ret;
+        }
+
+        TVec2< T > operator-(const TVec2< T >& rOther) const 
+        {
+            TVec2 ret(*this);
+            ret.x -= rOther.x;
+            ret.y -= rOther.y;
+            return ret;
+        }
+
+        TVec2< T > operator*(f32 scale) const 
+        {
+            TVec2 ret(*this);
+            ret.x *= scale;
+            ret.y *= scale;
+            return ret;
+        }
+
+        inline void operator+=(const TVec2< T >& rOther) 
+        {
+            x = x + rOther.x;
+            y = y + rOther.y;
+        }
+
+        inline void operator-=(const TVec2< T >& rOther) 
+        {
+            x = x - rOther.x;
+            y = y - rOther.y;
+        }
 
         f32 dot(const TVec2<T> &other) const { return x * other.x + y * other.y; }
         f32 length() const { return TUtilf::sqrt(squared()); }

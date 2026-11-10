@@ -73,6 +73,7 @@ public:
     GeoDrawBuffer *getGeoDrawBuffer() { return mGeoDrawBuf; }
     ShadowGeoDrawBuffer *getShadowGeoDrawBuffer() { return mShdwDrawBuf; }
     MaskScreen *getMaskScreen() { return mMaskScreen; }
+    ZCaptureMgr *getCaptureMgr() { return mCaptureMgr; }
 private:
     J2DOrthoGraph *mOrtho;
     s16 _4;
