@@ -10,6 +10,8 @@ Mario Kart Double Dash!!
 [Discord Badge]: https://img.shields.io/discord/727908905392275526?color=%237289DA&logo=discord&logoColor=%23FFFFFF
 [discord]: https://discord.gg/hKx3FJJgrV
 
+> **Note:** This pull request has been withdrawn and its contents removed. The work in it is being archived and will not be submitted here.
+
 WIP 1:1 Decompilation of Mario Kart Double Dash!!
 
 This repository does **not** contain any game assets or assembly whatsoever. An existing copy of the game is required.
