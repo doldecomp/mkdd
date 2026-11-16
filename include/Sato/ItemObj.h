@@ -3,6 +3,7 @@
 
 #include <JSystem/JGeometry.h>
 #include "Inagaki/GameSoundMgr.h"
+#include "JSystem/J3D/J3DModel.h"
 #include "JSystem/JGeometry/Vec.h"
 #include "Kaneshige/Course/CrsGround.h"
 #include "Kaneshige/DarkAnmMgr.h"
@@ -221,6 +222,7 @@ public:
     void setOwnerNum(int newOwnerNum) { mOwnerNum = newOwnerNum; }
     int getOwnerNum() const { return mOwnerNum; }
     void setOrigOwnerNum(int newOwnerNum) { mOrigOwnerNum = newOwnerNum; }
+    bool isSameOwner(int owner) const { return mOwnerNum == owner; }
     int getState() const { return mState; }
     int getKartReaction() const { return mKartReaction; }
     int getDirectHitKartNo() const { return mDirectHitKartNo; }
@@ -240,6 +242,13 @@ public:
         return mItemKind;
     }
 
+    bool isStateEquip() const {
+        return mState == StateEquip;
+    }
+    bool isStateDivested() const {
+        return mState == StateDivested;
+    }
+
     bool isCertainState() const { // brainrot
         bool ret = false;
         int state = mState;
@@ -248,12 +257,27 @@ public:
         }
         return ret;
     }
-    bool IsState1or5() const { return (mState != 1 && mState != 5);  }
-    bool IsState1or5AndSameOwner(int owner) const {
+    
+    bool isHeld() const {
+        bool ret = false;
+        if (!isStateEquip()) {
+            if (!isStateDivested())
+                ret = true;
+        }
+        return ret;
+    }
+
+    bool isHeldByOwner(int owner) const {
         bool ret = false;
         if (owner == mOwnerNum) {
-            if ((mState != 1 && mState != 5))
+            bool ret2 = true;
+            if (!isStateEquip()) {
+                if (!isStateDivested())
+                    ret2 = false;
+            }
+            if (ret2) {
                 ret = true;
+            }
         }
         return ret;
     }
@@ -292,6 +316,8 @@ public:
     const JGeometry::TVec3f &getVel() const { return mVel; }
     const JGeometry::TVec3f getColPos() const { return mColPos; }
     ItemObjSuc *getSuccessionParent() const { return mSuccessionParent; }
+    ExModel *getModel() { return &mModel; }
+    J3DModelData *getJ3DModelData() const { return mModel.getModelData(); }
 
     void setSuccessionParent(ItemObjSuc *parent) { mSuccessionParent = parent;}
     // private:
@@ -303,6 +329,7 @@ public:
         ExModel::setLightMask(mModel.getModelData(), lightId); 
     }
     void setTevColor() { mAnmPlayer->setTevColor(&mModel); }
+    
 
     typedef void (ItemObj::*StateFunc)();
 
