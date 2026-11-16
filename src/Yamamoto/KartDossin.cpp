@@ -146,9 +146,9 @@ void KartDossin::DoKeep() {
 
     for (int i = 0; i < 4; i++) {
         KartSus *kartSus = GetKartCtrl()->getKartSus(i + kartBody->mMynum * 4);
-        kartSus->_110 = 0.0f;
-        kartSus->_10c = 0.0f;
-        kartSus->_278 = 0.0f;
+        kartSus->mWheelRPM = 0.0f;
+        kartSus->mTireDispAngle = 0.0f;
+        kartSus->mRPM = 0.0f;
     }
     _1c = 0.3f;
 }

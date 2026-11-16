@@ -392,8 +392,8 @@ void KartCrash::DotornadeCrashCrl() {
             cnvge_4ac = 0.0f;
             if (body->_4ac > 17.6f) {
                 for (s32 i = 0; i < 4; i++) {
-                    body->getSus(i)->_10c = cnvge_4ac;
-                    body->getSus(i)->_110 = cnvge_4ac;
+                    body->getSus(i)->mTireDispAngle = cnvge_4ac;
+                    body->getSus(i)->mWheelRPM = cnvge_4ac;
                 }
                 body->_588 = 1;
             }
@@ -489,8 +489,8 @@ void KartCrash::DoSpinCrashCrl() {
             cnvge_4ac = 0.0f;
             if (body->_4ac > 12.55f) {
                 for (s32 i = 0; i < 4; i++) {
-                    body->getSus(i)->_10c = cnvge_4ac;
-                    body->getSus(i)->_110 = cnvge_4ac;
+                    body->getSus(i)->mTireDispAngle = cnvge_4ac;
+                    body->getSus(i)->mWheelRPM = cnvge_4ac;
                 }
                 body->getStrat()->MovingSpinClear();
             }
@@ -561,8 +561,8 @@ void KartCrash::DoHalfSpinCrashCrl() {
             cnvge_4ac = 0.0f;
             if (body->_4ac > 6.17f) {
                 for (s32 i = 0; i < 4; i++) {
-                    body->getSus(i)->_10c = cnvge_4ac;
-                    body->getSus(i)->_110 = cnvge_4ac;
+                    body->getSus(i)->mTireDispAngle = cnvge_4ac;
+                    body->getSus(i)->mWheelRPM = cnvge_4ac;
                 }
                 body->getStrat()->MovingHalfSpinClear();
                 body->mTireAngle = 0;

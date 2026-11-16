@@ -84,7 +84,7 @@ void KartSound::DoInfo(int idx)
         KartSus *sus = GetKartCtrl()->getKartSus(i + idx * 4);
         if (sus->mCrsGnd.getAttribute() == 0x11)
         {
-            mSoundMgr->setWaterDepth(i, sus->mCrsGnd.getWaterHeight() - sus->_d8.y);
+            mSoundMgr->setWaterDepth(i, sus->mCrsGnd.getWaterHeight() - sus->mForcePos.y);
         }
     }
 
@@ -130,7 +130,7 @@ void KartSound::DoSlipSound(int idx)
     for (u8 i = 0; i < 4; i++)
     {
         KartSus *sus = GetKartCtrl()->getKartSus(i + idx * 4);
-        if (sus->_124 & 1)
+        if (sus->mSusFlags & 1)
         {
             mSoundMgr->setSlip(i, sus->mCrsGnd.getAttribute(), sus->mCrsGnd.getMaterial(), dir);
         }
