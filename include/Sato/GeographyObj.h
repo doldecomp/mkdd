@@ -118,7 +118,7 @@ public:
 
     void setItemColReaction(u8 p1, u8 p2) { mReaction.setFlg(p1, p2); }
 
-    bool IsPathMove() const { return mObjData->pathID != 0xffff; }
+    bool IsPathMove() const { return mObjData->mPathID != 0xffff; }
 
     template<class T>
     static T *New(const CrsData::SObject &object) { return new T(object); }
@@ -149,13 +149,16 @@ public:
     void clrAllCheckKartHitFlag() { mCheckKartHitFlags = 0; }
     void clrAllIsHitKartFlg() { mIsHitKartFlags = 0; }
 
-    void setObjFlagCheckItemHitting() { mGeoObjFlag |= 2; }    
+    void setCheckKartHitFlag(int kartId) { mCheckKartHitFlags |=  (1 << kartId); }
+    void setObjFlagCheckGeoHitting() { mGeoObjFlag |= 1; }
+    void setObjFlagCheckItemHitting() { mGeoObjFlag |= 2; }
     void setObjFlagSimpleDraw() { mObjFlag |= 1; }
     void setObjFlagMainResource() { mObjFlag |= 2; }
     void setObjFlagNorm() { mObjFlag |= 4; }
     void setObjFlagShadow() { mObjFlag |= 8; }
     void setObjFlagNoCollision() { mObjFlag |= 0x80; }
     void setObjFlagLODBias() { mObjFlag |= 0x100; }
+    void setObjFlagAwardCup() { mObjFlag |= 0x400; }
     void setObjFlagHidding() { mGeoObjFlag |= 0x20; }
 
     void setAllCheckKartHitFlag() { mCheckKartHitFlags = 0xffffffff; }

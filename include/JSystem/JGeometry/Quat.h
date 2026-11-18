@@ -85,8 +85,10 @@ namespace JGeometry {
 
         void setRotate(const TVec3f& pVec, f32 pAngle)
         {
-            this->xyz().scale(sinf(pAngle * 0.5f), pVec);
-            this->w = cosf(pAngle * 0.5f);
+            const f32 s = sinf(pAngle * 0.5f); 
+            this->xyz().scale(s, pVec);
+            const f32 c = cosf(pAngle * 0.5f);
+            this->w = c;
         }
 
         void setRotate(const TVec3f& from, const TVec3f& to)

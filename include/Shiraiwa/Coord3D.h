@@ -17,9 +17,9 @@ public:
     void setTargetPos(const JGeometry::TVec3f &, f32, f32);
     void setTargetOffset(const JGeometry::TVec3f &, f32, f32);
     void setTargetOffsetUniform(const JGeometry::TVec3f &, int);
-    void update();
-    void checkReachTarget();
-    void velUpdate(JGeometry::TVec3f &, f32, f32);
+    bool update();
+    bool checkReachTarget();
+    bool velUpdate(JGeometry::TVec3f &, f32, f32);
     void TPathMove(const CrsData::SObject *);
 
     // Inline/Unused
@@ -35,8 +35,12 @@ public:
         _18 = false;
     }
 
+    void setUnknown24(f32 value) {
+        _24 = value;
+    }
+
 private:
-    JGeometry::TVec3f mTagret;
+    JGeometry::TVec3f mTarget;
     JGeometry::TVec3f *mpPos;
     JGeometry::TVec3f *mpVel;
     bool _18;
@@ -49,30 +53,33 @@ class TPathMove {
 public:
     TPathMove(const CrsData::SObject *);
     virtual ~TPathMove() {}
-    void update();
+    u8 update();
     void init(JGeometry::TVec3f *, JGeometry::TVec3f *);
     void reset();
     void setTargetNode();
     void setTargetNode(u16, f32, f32);
     void getNodePosition(JGeometry::TVec3f *, u16);
-    void getNextNode();
+    u16 getNextNode();
     void updatePos();
-    void checkReachTarget();
+    bool checkReachTarget();
 
     // Inline/Unused
     void setTargetNode(f32, f32);
     void setTargetNode(u16);
     void getNodeDir(u16, JGeometry::TVec3f *);
 
-protected:
-    const CrsData::SObject *mpObj; // 04
-    s16 _8;                      // 
-    JGeometry::TVec3f *mpPos;      // 0c
-    JGeometry::TVec3f *mpVel;      // 10
-    f32 _14;
-    f32 _18;
-    bool _1c;
-    PLACEHOLDER_BYTES(0x1d, 0x24);
+public:
+    const CrsData::SObject *mpObj;  // 0x4
+    u16 _8;                         // 0x8
+    s8 _a;                          // 0xa
+    JGeometry::TVec3f *mpPos;       // 0xc
+    JGeometry::TVec3f *mpVel;       // 0x10
+    f32 _14;                        // 0x14
+    f32 _18;                        // 0x18
+    bool _1c;                       // 0x1c
+    bool _1d;                       // 0x1d + 2 bytes padding
+    f32 _20;                        // 0x20
+    //PLACEHOLDER_BYTES(0x1d, 0x24);
 }; // Size: 0x24
 
 class TFreeRotate {
@@ -81,7 +88,7 @@ public:
     virtual ~TFreeRotate() {}
     void init(JGeometry::TPos3f *);
     void setTargetVec(const JGeometry::TVec3f &, const JGeometry::TVec3f &, f32, f32, f32);
-    void setTargetVec(const JGeometry::TVec3f &, f32, f32, f32, u8);
+    void setTargetVec(const JGeometry::TVec3f &, f32, f32, f32, unsigned char);
     void setTargetQuat(const JGeometry::TQuat4f &, f32, f32, f32);
     bool update();
     void angleUpdate();
@@ -109,5 +116,5 @@ public:
     f32 mTarget;
     bool _3c;
 };
- 
+
 #endif // COORD3D_H

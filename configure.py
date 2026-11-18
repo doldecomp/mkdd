@@ -1378,7 +1378,7 @@ config.libs = [
             Object(NonMatching, "Shiraiwa/TestString.cpp"),
             Object(NonMatching, "Shiraiwa/MapObjDonkyTree.cpp"),
             Object(NonMatching, "Shiraiwa/MapObjSnowRock.cpp"),
-            Object(NonMatching, "Shiraiwa/LensFlare.cpp"),
+            Object(Matching, "Shiraiwa/LensFlare.cpp"),
             Object(NonMatching, "Shiraiwa/TestRollObj.cpp"),
             Object(NonMatching, "Shiraiwa/MapObjFountain.cpp"),
             Object(NonMatching, "Shiraiwa/MapObjHeyho.cpp"),
