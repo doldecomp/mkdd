@@ -1101,7 +1101,7 @@ config.libs = [
             Object(NonMatching, "Kameda/Race2D.cpp"),
             Object(Matching, "Kameda/ReadPrintMessage.cpp"),
             Object(Matching, "Kameda/PrintProgressive.cpp"),
-            Object(NonMatching, "Kameda/PrintMemoryCard.cpp"),
+            Object(Matching, "Kameda/PrintMemoryCard.cpp"),
             Object(NonMatching, "Kameda/PreRace2D.cpp"),
             Object(Matching, "Kameda/Go2D.cpp"),
             Object(Matching, "Kameda/Mario.cpp"),
