@@ -237,7 +237,7 @@ void KartCrash::MakeBombCrash(ItemObj *itemObj) {
         body->_584 = 6;
         body->_588 = 0;
         body->mCarStatus &= 0xfffffff7fed7ffff;
-        body->getTumble()->_0[4] = 0;
+        body->getTumble()->_4[0] = 0;
         body->mVel.zero();
         body->_594 = 0;
         f32 val = 600.0f * body->_3a4;
