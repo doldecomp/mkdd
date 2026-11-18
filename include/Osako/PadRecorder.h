@@ -40,12 +40,12 @@ public:
     KartPadRecord *getGhostRecord(u8 no);
     void playGhost();
     // Inline
-    u32 getFrame() { return mFrame; };
+    s32 getFrame() { return mFrame; };
     void setFrame(u32 frame) { mFrame = frame; }
 
     static PadRecorder *mspRecorder;
 private:
-    u32 mFrame;
+    s32 mFrame;
     PadState mState;
     KartPadData mPadData[NUM_PLAYERPADS];
     JUTGamePad::CButton mButton[NUM_PLAYERPADS];
