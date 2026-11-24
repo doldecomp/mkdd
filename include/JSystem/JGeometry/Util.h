@@ -19,9 +19,9 @@ namespace JGeometry {
         {
             bool equal = false;
 
-            a1 -= a2;
+            const T diff = a1 - a2;
 
-            if (-a3 <= a1 && a1 <= a3)
+            if (-a3 <= diff && diff <= a3)
             {
                 equal = true;
             }
