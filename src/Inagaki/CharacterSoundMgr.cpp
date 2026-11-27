@@ -182,7 +182,7 @@ void CharacterSoundMgr::setVoice(u8 voiceID) {
             break;
         default:
 #line 306
-            JUT_WARNING_F2("&s", "setVoice : Iregal SwBit\n");
+            JUT_WARNING_F2("%s", "setVoice : Iregal SwBit\n");
         }
     }
 
@@ -210,14 +210,16 @@ void CharacterSoundMgr::setVoice(u8 voiceID) {
     }
 
     if (Parameters::getChibiFlag(_64)) {
-        JAISound *sound = handle->operator->();
-        sound->getAuxiliary().movePitch(Parameters::getChibiPitch(_6c), 0);
+        // handle->operator->() is required to get 100%...
+        handle->operator->();
+        JAISoundParams *params = &handle->sound_->params_;
+        params->mMove.movePitch(Parameters::getChibiPitch(_6c), 0);
     }
 
     if (!(*handle)->getAudible()) {
         u32 unk = 0;            
         u32 cam8 = Main::getAudio()->getCamera()->getSceneMax(); // number of cameras?
-        u8 kartCount = kartSound->mKartIndex;
+        u8 kartCount = kartSound->mPlayerIndex;
         if (cam8 > 1 && cam8 > kartCount) {
             unk = (1 << kartCount) ^ 0xf; // what
         }
@@ -242,7 +244,7 @@ void CharacterSoundMgr::setSe(u32 seID) {
 
     u32 unk = 0;
     u32 cam8 = Main::getAudio()->getCamera()->getSceneMax(); // number of cameras?
-    u8 kartCount = kartSound->mKartIndex;
+    u8 kartCount = kartSound->mPlayerIndex;
     if (cam8 > 1 && cam8 > kartCount) {
         unk = 1 << kartCount ^ 0xf; // what
     } 
@@ -250,8 +252,10 @@ void CharacterSoundMgr::setSe(u32 seID) {
     handle = startSoundCustom(seID, unk);
 
     if (Parameters::getChibiFlag(_64)) {
-        JAISound *sound = handle->operator->();
-        sound->getAuxiliary().movePitch(Parameters::getChibiPitch(seID), 0);
+        // handle->operator->() is required to get 100%...
+        handle->operator->();
+        JAISoundParams *params = &handle->sound_->params_;
+        params->mMove.movePitch(Parameters::getChibiPitch(seID), 0);
     }
 
     if (kartSound) {
